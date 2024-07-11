@@ -1,0 +1,13 @@
+Function; Description
+`length(x)`; returns the length of vector x (i.e. the number of elements in `x`)
+`names(x)`; get or set names of x (i.e. we can give names to the individual elements of `x` as well as just having them numbered)
+`min(x)`; returns the smallest value in `x`
+`max(x)`; returns the largest value in `x`
+`median(x)`; returns the median of `x`
+`range(x)`; returns a vector with the smallest and largest values in `x`
+`sum(x)`; returns the sum of values in `x`
+`mean(x)`; returns the mean of values in `x`
+`sd(x)`; returns the standard deviation of `x`
+`var(x)`; returns the variance of `x`
+`diff(x)`; returns a vector with all of the differences between subsequent values of `x`. This vector is of length 1 less than the length of `x`
+`summary(x)`; returns different types of summary output depending on the type of variable stored in `x`

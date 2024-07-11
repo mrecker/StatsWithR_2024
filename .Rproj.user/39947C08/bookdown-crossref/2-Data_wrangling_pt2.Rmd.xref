@@ -1,0 +1,12 @@
+h2:data-wrangling Data wrangling
+h3:tidy-data Tidy data
+h3:filter-rows Filter rows
+h3:sort-rows Sort rows
+h3:select-columns Select columns
+h3:grouping-and-summarising Grouping and summarising
+h3:reshaping-datasets Reshaping datasets
+h3:mutate Mutate
+h3:dealing-with-missing-data Dealing with missing data
+h4:detecting-missing-data 
+h4:removing-nas 
+

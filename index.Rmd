@@ -1,0 +1,63 @@
+--- 
+title: "Introduction to statistical data analysis in R"
+author: "Mario Recker"
+site: bookdown::bookdown_site
+output:
+    bookdown::gitbook:
+        config:
+            sharing: null
+        css: 'style.css'
+        includes:
+            in_header: _toggle.html
+        keep_md: TRUE
+linkcolor: blue
+documentclass: book
+link-citations: yes
+description: "Intro to Stats with R"
+---
+
+# About {-}
+
+```{r, child = "_setup.Rmd", include = FALSE, purl = FALSE, cache = FALSE}
+```
+
+This workshop is intended to introduce the R/RStudio statistical programming environment and how to use it for efficient data handling, data visualisation and data analysis. It is aimed at individuals with little experience in R/Rstudio and basic statistics. For those who are interested in a general intro to R or a refresher, please have a look at the following site for a great introduction to R/RStudio [Introduction to R](https://exeter-data-analytics.github.io/IntroToR/index.html). Equally, much of the material on statistical data analysis are based on the [Statistical Modelling in R](https://exeter-data-analytics.github.io/StatModelling/) workshop. These workshops had been developed by [TJ McKinley](https://medicine.exeter.ac.uk/people/profile/index.php?web_id=TJ_McKinley) from the University of Exeter and JJ Valletta ($\dagger$).
+
+
+## Workshop structure {-}
+
+This workshop will loosely be structured into the following themes
+
+1. General introduction to R/RStudio
+    - variables and data frames
+    - functions and loops
+    - basic plotting
+
+2. Data handling and visualisation
+    - importing data
+    - plotting data with `ggplot`
+    - data wrangling
+
+3. Statistical analysis 
+    - linear models
+    - mixed effect models
+    - generalised linear models
+    - survivial analysis
+
+
+$~$
+
+The workshop will consist of a mixture between (theoretical) background and hands-on practicals. Specific tasks, designed for you to test your new skills and understanding, are highlighted as
+
+```{task, title = 'Task'}
+This task will be explained here
+```
+
+The solution can be revealed by clicking 
+
+```{solution, title = 'Solution'}
+A solution will appear here.
+```
+
+However, please make sure you try before clicking on the `Solution` - this is the only way to make sure how fully understood the new concepts.
+

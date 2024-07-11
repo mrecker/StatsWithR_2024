@@ -1,0 +1,17 @@
+h1:introduction-to-statistical-modelling-in-r Introduction to statistical modelling in R
+h2:what-is-a-statistical-model What is a statistical model?
+h2:descriptive-vs.-inferential-statistics Descriptive vs. inferential statistics
+h2:univariate-analysis Univariate analysis
+h3:mean-vs.-median 
+h4:standard-deviation Standard deviation
+h3:interquartile-range 
+h3:skewness 
+h3:kurtosis 
+h2:multivariate-analysis Multivariate analysis
+h3:contingency-tables 
+h4:pearsons-chi-squared-test 
+h4:fishers-exact-test 
+h3:pearson-correlation 
+h3:spearmans-rank-correlation 
+h3:correlation-vs.-causation 
+

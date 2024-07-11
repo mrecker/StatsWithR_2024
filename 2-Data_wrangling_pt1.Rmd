@@ -1,0 +1,605 @@
+# Data wrangling and visualisation
+
+## Introduction
+
+In the second part of this workshop we are dealing with the handling and visualisation of (complex) data. It is expected that you should feel comfortable with basic R and, specifically, the use of data.frame objects. If not, then please ask one of the demonstrators. 
+
+At this point we are also saying goodbye to much of R's basic (i.e. inbuilt) functionalities for plotting and manipulating data and introduce you to the *tidyverse*, which is a suite of packages for performing a (growing) number of data science tasks. Here, we will introduce key `tidyverse` packages, including `dplyr` and `ggplot2`, and show how they can be used to efficiently process and visualise complex data.
+
+Although each package can be installed and loaded separately, they are designed to work together. An easier approach is to simply install and load the `tidyverse` directly.
+
+To install tidyverse, use:
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+
+and once installed, it can be loaded using:
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+
+$~$
+
+## Loading and saving data
+
+An essential part of data handling is the ability to store and read (externally stored) data. There are a myriad of different ways this can be done, here we briefly introduce two of them:
+
+  - saving data as an R object with `saveRDS` to create an `Rds` files and loading it with `load`
+  - saving data as a *comma separated version* (CSV) file and loading it with `read_csv` or `read.table`
+
+> **Note:** `tidyverse` also provides functions to handle Microsoft Excel files. For example, `read_excel()` lets you import xls or xlsx based data files. However, due to Excel often causing havoc with data (mostly due to it changing data types), we are urging caution when handling Excel files. 
+
+
+The main difference between the two approaches is that an `Rds` file stores data in a (R specific) binary format, meaning that you need R to read it. CSV files, in comparison, are (human readable) text files that can be opened by a number of different programs. In fact, on most operating systems, these are opened by MS Excel or a text editor by default. Which approach should you use? This often depends on whether you are the only one working with the data or whether you like the added benefit of viewing (or manipulating) data outside the R environment.
+
+
+### Save / load data as an R object
+
+As a first step we need to create some data that we wish to store for future use. And as before, we are dealing almost exclusively with data.frames. Recall the simply data.frame we generated in the first session
+
+```{r}
+df <- data.frame(ParticipantID = c('ID001', 'ID002', 'ID003', 'ID007', 'ID009'),
+                 Age = c(12, 8, 9, 7, 11),
+                 Episode = c('y', 'n', 'n', 'y', 'y'))
+```
+
+To save this data as an R object, simply call
+
+```{r}
+saveRDS(df, file = 'myData.Rds')
+```
+
+> **Note:** the file will be saved in your current working directory. If you want to save it in a different folder you need to provide the full file path, e.g. `saveRDS(df, file = '.../StatsWithR//Data/myData.Rds')`.
+
+Loading the data is equally simple:
+
+```{r}
+# first we remove the df object to make sure everything works
+rm(df)
+
+# load the data
+readRDS('myData.Rds')
+```
+
+At first sight this looks like it has worked. However, you might also have noticed that there is no newly created object in your global environment. This means, although R successfully loaded the data, it was not assigned to an object and essentially lost (this is one of the key differences between `save`/`load` and `saveRDS`/`readRDS`). We therefore need to assign the read in data to an object
+
+```{r}
+# read data and assign to an object / data.frame called myData
+myData <- readRDS('myData.Rds')
+
+# see if it works
+head(myData)
+```
+
+### Save / load as a CSV file
+
+One of the advantages of saving data as an Rds file is that it is more space efficient. By default, `saveRDS` compresses the data, which can significantly shrink the size of the stored data. On the downside, it can also take a bit longer to load the data subsequently. The more preferred data format, however, is a CSV file.
+
+There are two equivalent function pairs for saving / loading CSV files: `write.table()`/`read.table()` and `read_csv()`/`write_csv()` (the latter is essentially a wrapper for the former). Here we show you how to use the first function pair, but please familiarise yourself with the other one as well.
+
+First we save our data.frame `myData` as a comma separated file
+
+```{r}
+# save data in CSV format
+write.table(myData,  # data object
+            file = 'myData.csv',  # file name
+            sep = ',', # character used to separate columns
+            row.names = F) # don't save row names as additional column
+```
+
+Check if this worked by importing the CSV file
+
+```{r}
+# first remove the object form our environment
+rm(myData)
+
+# read in data
+df <- read.table('myData.csv',  # file name to be read
+                 header = TRUE, # treat first row as header / column names
+                 sep = ',')
+
+# print out first three rows
+head(df, n = 3)
+```
+
+>**Note:** here we used a comma (',') to separate individual data columns. Other commonly used characters are semi-colon (';') and tab ('\t'). If the separation is not explicitly provided via `sep = ...`, `read.table` will guess it - this is dangerous and often leads to errors. We therefore recommend to always state which character should be used - *explicit is better than implicit*!
+
+### Handling Excel files
+
+Although we strongly discourage the use of Excel for data handling, it is still one of the most common methods for storing data. We therefore briefly show you one method of how to read Excel files using the `readxl` package, which needs to be loaded explicitly, because it is not one of the core tidyverse packages that are loaded via `library(tidyverse)` 
+
+
+```{r}
+# load library
+library(readxl)
+
+# read in excel data file
+irisDF <- read_excel('iris.xls')
+
+# print first few rows
+head(irisDF, n = 5)
+```
+
+### Cheatsheet
+
+For more information of how to import and export data have a look at this [cheat sheet](https://rstudio.github.io/cheatsheets/html/data-import.html), which also provides an overview of all essential functions and their usage as a PDF for download. 
+
+$~$
+
+## Visualisation using `ggplot`
+
+We start with a motivating example to show, how using base R graphics can easily become cumbersome. For this we use the `iris` dataset, which we have imported in the previous section. This dataset contains the measurements of the sepal length, sepal width, petal length and petal width for 50 samples from each of three species of iris flowers (setosa, versicolor and virginica). 
+
+Let's say we are interested in the relationship between the length and the width of the petals. The first port of call is therefore to plot one against the other. 
+
+```{r}
+plot(x = irisDF$Petal.Width, y = irisDF$Petal.Length)
+```
+
+We can see that there is a clear relationship between those two variables. One other thing we might notice is that there are (at least) two clusters, and we might further have the suspicion that this could be due to the fact that we different species of iris. One way of checking this is to colour the points in by species. Here we do this in a slightly convoluted way but it serves the purpose of highlighting how quickly things can become complicated in base R.
+
+The first thing we want to do is to subset the data. Say, for example, we are interested in the relationship between petal length and width in *Iris setosa*. In other words, we want to only plot the data for which `Species=='setosa'`.
+
+```{r}
+plot(x = irisDF$Petal.Width[irisDF$Species=='setosa'], 
+     y = irisDF$Petal.Length[irisDF$Species=='setosa'],
+     col = 'blue', pch = 20)
+```
+
+We can now add point for samples from *Iris versicolor* in a similar fashion.
+
+```{r}
+plot(x = irisDF$Petal.Width[irisDF$Species=='setosa'], 
+     y = irisDF$Petal.Length[irisDF$Species=='setosa'],
+     col = 'blue', pch = 20)
+points(x = irisDF$Petal.Width[irisDF$Species=='versicolor'], 
+       y = irisDF$Petal.Length[irisDF$Species=='versicolor'],
+       col = 'red', pch = 20)
+```
+
+What has happened?? The problem is that the axes limits are automatically set through the first `plot` call and not updated for any additional points added to the graph. We therefore need to manually set the limits to guarantee that all points are visible.
+
+```{r}
+plot(x = irisDF$Petal.Width[irisDF$Species=='setosa'], 
+     y = irisDF$Petal.Length[irisDF$Species=='setosa'],
+     col = 'blue', pch = 20,
+     xlim = c(0, 2.5),
+     ylim = c(1,7),
+     xlab = 'Petal width',
+     ylab = 'Petal length')
+points(x = irisDF$Petal.Width[irisDF$Species=='versicolor'], 
+       y = irisDF$Petal.Length[irisDF$Species=='versicolor'],
+       col = 'red', pch = 20)
+points(x = irisDF$Petal.Width[irisDF$Species=='virginica'], 
+       y = irisDF$Petal.Length[irisDF$Species=='virginica'],
+       col = 'darkgreen', pch = 20)
+```
+
+
+The only thing missing now is a legend to note which colour belongs to what species.
+
+```{r}
+plot(x = irisDF$Petal.Width[irisDF$Species=='setosa'], 
+     y = irisDF$Petal.Length[irisDF$Species=='setosa'],
+     col = 'blue', pch = 20,
+     xlim = c(0, 2.5),
+     ylim = c(1,7),
+     xlab = 'Petal width',
+     ylab = 'Petal length')
+points(x = irisDF$Petal.Width[irisDF$Species=='versicolor'], 
+       y = irisDF$Petal.Length[irisDF$Species=='versicolor'],
+       col = 'red', pch = 20)
+points(x = irisDF$Petal.Width[irisDF$Species=='virginica'], 
+       y = irisDF$Petal.Length[irisDF$Species=='virginica'],
+       col = 'darkgreen', pch = 20)
+legend(x = 0, y = 7, 
+       legend = c('setosa', 'versicolor', 'virginica'),
+       pch = 20,
+       col =  c('blue', 'red', 'darkgreen'))
+```
+
+Now we can see that there are indeed three clusters and also get a hint that the relationship between petal length and petal width is dependent on species. In the next part of this workshop we will show you how to test this statistically. 
+
+Although you can see that we can make highly customised graphs using base R graphics, the steps needed to create the above graph were far from straight forward. So let's try to do the same using `ggplot2` instead
+
+```{r}
+ggplot(irisDF, aes(x = Petal.Width, y = Petal.Length, col = Species)) +
+    geom_point()
+```
+
+So essentially with a lone-liner we can create a highly complex graph that required no manual subsetting of the data or manipulation of the plot. We did not have to specify the legend or its position, either; this is all being taken care of by the `ggplot2` package. 
+
+Arguably, for most people `ggplot2` is not very intuitive to start with and it can take some time to get used to. However, once you have understood the basics, it becomes a very logical and powerful way to create complex and highly customised graphs.
+
+The ethos of `ggplot2` is that plots can be broken down into different features, most notably:
+
+  - **data**
+  - **aesthetic mapping**
+  - **geometric object**
+  - faceting
+  - scales
+  - *statistical transformations*
+  - *coordinate system*
+  - *position adjustments*
+
+The first three are the most most essential ingredients of a plot created with `ggplot2`. The next one (faceting) is a commonly used method when dealing with categorical data and for creating stratified graphs. The *scales* feature is useful for translating data values to visual properties and include, for example, log-transforms. The remaining features are only mentioned here but play no further part in this introductory workshop.
+
+In order to explain some of these features is to break the above code apart and add features one-by-one. Let's start with setting up the plot
+
+```{r, fig.height=4, fig.width=4}
+ggplot(irisDF)
+```
+
+Although this creates an empty plot but you will not get an error message - because you have done nothing wrong, you just forgot to add crucial ingredients! 
+
+>**Note:** In comparison to base R, `ggplot2` requires a data.frame (or tibble) object for plotting. As shown in the previous section, it is easy to manipulate most other data into an R data frame. We will revisit this at a later stage. 
+
+
+### Aesthetics
+
+The next key ingredient is how the data should be mapped onto the visual aesthetics of the plot. This was done through the `aes(x = Petal.Width, y = Petal.Length, col = Species)` argument to the `geom_point()` function (see next section). What we do here is x-coordinate to be `Petal.Width`, the y-coordinates to be `Petal.Length`, and the colour of the characters to be related to `Species`. In general, aesthetics include:
+
+  - position
+  - colour / color / col (border or line color)
+  - fill (inside color)
+  - shape
+  - linetype
+  - size.
+
+Note that not all aesthetics arguments have to be provided. For example, leaving out the `col = ` argument generates the following graph
+
+```{r}
+ggplot(irisDF, aes(x = Petal.Width, y = Petal.Length)) +
+    geom_point()
+```
+
+
+### Geoms
+
+The next ingredient is the **geom**, which defines the type of plot we want. In the above example we used `geom_point()`, which produces a scatterplot. Here are the most common geoms:
+
+  - `geom_point()`
+  - `geom_jitter()`
+  - `geom_line()`
+  - `geom_bar()`
+  - `geom_boxplot()`
+  - `geom_violin()`
+  - `geom_histogram()`
+  - `geom_density()`
+
+Let's try one of them: `geom_boxplot`. This creates a box-and-whisker plot, that we have already come across. Say for example we are interested in the distribution of sepal lengths but want to stratify this by species. 
+
+```{r}
+ggplot(irisDF, aes(x = Species, y = Sepal.Length, fill = Species)) +
+    geom_boxplot()
+```
+
+Nice! Notice that we did not have to specify the actual x-positioning for the three species; instead, `ggplot2` recognised that `Species` was not a numerical variable and treated it internally as a categorical variable (even though we did not specify it as such).
+
+
+As you will have noticed, `ggplot2` builds up plots by adding together components. Here we first set up "global" options for the plot using the `ggplot()` function, where we also specified the plot aesthetics, e.g. through `aes(x = Petal.Width, y = Petal.Length, col = Species)`. We then added (+) to this the type of plot we wanted, e.g. `geom_point()`. 
+One of the advantages of `ggplot2` is that it allows us to layer geoms and thus let us built complex graphs in different ways. To demonstrate this, we are going to add the individual data points to the boxplot generated above using the `geom_jitter()` geom.
+
+```{r}
+ggplot(irisDF, aes(x = Species, y = Sepal.Length, fill = Species)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1, height = 0, size = 0.5)
+```
+
+```{task}
+Three extra arguments were provided to `geom_jitter()`. By changing their respective values find out what they do?
+```
+
+```(solution)
+These arguments control the horizontal spread of the data (width), the vertical 'noise' added to each data point and the size of each point 
+```
+
+$~$
+
+```{task}
+Change the aesthetics setting such that the colour, and not the fill, are determined by `Species`. What do you observe?
+```
+
+```{solution}
+
+``
+ggplot(irisDF, aes(x = Species, y = Sepal.Length, col = Species)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1, height = 0, size = 0.5)
+``
+
+Specifying the colour aesthetics instead now changes the colour of each data point and the line colour of the boxplots.
+```
+
+$~$
+
+### Labels 
+
+`ggplot2` generally does a good job decorating the plot with the right axes labels etc. However, this is still dependent on the variable (i.e. column) names, and sometimes we want to add a bit more information or change or even remove labels manually. This can easily done by *adding* labels in a similar way as adding geoms and other features.
+
+```{r}
+ggplot(irisDF, aes(x = Species, y = Sepal.Length, col = Species)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1, height = 0, size = 0.5) +
+    labs(x = '',  # remove x label
+         y = 'Sepal length',  # set y label
+         col = 'Iris species', # set legend title)
+         title = 'Distribution of sepal length by species') # set plot title
+```
+
+Note that providing a legend in this case is not strictly necessary. Unfortunately, `ggplot` adds a legend by default. If you want to remove the legend, you have various options. The two most intuitive ones are
+
+```{r}
+ggplot(irisDF, aes(x = Species, y = Sepal.Length, col = Species)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1, height = 0, size = 0.5) +
+    labs(x = 'Iris species',
+         y = 'Sepal length',
+         title = 'Distribution of sepal length by species') +
+    guides(col = "none")
+```
+or
+
+```
+ggplot(irisDF, aes(x = Species, y = Sepal.Length, col = Species)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1, height = 0, size = 0.5) +
+    labs(x = 'Iris species',
+         y = 'Sepal length',
+         title = 'Distribution of sepal length by species') +
+    theme(legend.position = "none")
+```
+
+As a quick aside, notice how we set the arguments in `geom_jitter()` not as an aesthetics but as a generic option that was applied to all the data. We can use this *mixing* of aesthetics and generic options to further customise our plot. For example, if we do not wish the individual data points to be coloured by species but simply plotted in black, we can set this as a generic argument
+
+```{r}
+ggplot(irisDF, aes(x = Species, y = Sepal.Length, col = Species)) +
+    geom_boxplot() +
+    geom_jitter(width = 0.1, height = 0, size = 0.5, col = 'black') +
+    labs(x = 'Iris species',
+         y = 'Sepal length',
+         title = 'Distribution of sepal length by species') +
+    theme(legend.position = "none")
+```
+
+
+```{task}
+Produce a density plot for `Sepal.Length` using `geom_density()`, which only requires an `x` aesthetics argument, and fill these in by species. Now add an alpha channel (by adding an argument `alpha = ...` to the `geom_density()` function), which controls the opacity of the fill colour, ranging from 0 (complete transparent) to 1 (complete opague).
+```
+
+```{solution}
+
+``{r}
+ggplot(irisDF, aes(x = Sepal.Length, fill = Species)) +
+    geom_density(alpha=0.3) +
+    labs(x = 'Sepal length',
+         y = 'Density',
+         fill = 'Iris species')
+``
+
+```
+
+$~$
+
+
+### Faceting
+
+A very useful feature of `ggplot` is the ability to use faceting to display sub-plots according to some grouping variable. For example, let’s assume that we want to produce separate scatter plots of petal length vs. width for each of the three flower species. We can do this using faceting:
+
+```{r, fig.width=6, fig.height=4}
+ggplot(irisDF, aes(x = Petal.Width, y = Petal.Length)) +
+    geom_point() +
+    facet_wrap(~ Species)
+```
+
+> **Note:** there is also the `facet_grid()` option, which allows you to stratify your data by more than one (categorical) variable. 
+
+As before, we can use the same aesthetics settings as before, which are then applied to each of the facets. 
+
+```{r, fig.width=6, fig.height=4}
+ggplot(irisDF, aes(x = Petal.Width, y = Petal.Length, col = Species)) +
+    geom_point() +
+    facet_wrap(~ Species) +
+    labs(x = 'Petal width',
+         y = 'Petal length',
+         col = 'Iris species')
+```
+
+```{task}
+By default, `ggplot` will use the same x and y limits for each of the facets. This can be overwritten by explicitly setting the `scales = ` argument, which must set to one of "fixed" (default), "free_x", "free_y", or "free". Explore what happens when you change this argument. 
+```
+
+```{solution}
+Setting the `scales` argument is useful when the data are on very different scales and essentially allows you to *zoom in*. It is generally considered good practice *not* to use different scales, however, so always notify the reader in case you change this.
+```
+
+$~$
+
+
+```{task}
+Use the `geom_histogram()` function (geom) to produce a histogram plot of `Sepal.Width` and stratified (faceted) by `Species`. Explore what happens when you set extra arguments `bin = ...` (for the number of bins) *or* `binwidth = ...` (the width of each bin).  
+```
+
+```{solution}
+
+``{r, fig.height=4, fig.width=6}
+ggplot(irisDF, aes(x = Sepal.Width, fill = Species)) +
+    geom_histogram(binwidth = 0.1) +
+    facet_wrap(~ Species)
+``
+
+```
+
+$~$
+
+### Statistical transformation
+
+A very useful feature of `ggplot2` is that it allows us to easily add *statistical transformations* on top of our data. Here we briefly introduce two (related) methods for adding trend lines to a scatterplot via `geom_smooth()`
+
+```{r}
+ggplot(irisDF, aes(x = Sepal.Length, y = Sepal.Width)) +
+    geom_point() +
+    stat_smooth()
+```
+
+By default, `geom_smooth()` adds a LOESS (*locally estimated scatterplot smoothing*) smoothed line together with a shaded area that highlights the confidence bounds (which can be turned off by setting `se = FALSE`.
+
+If we are more interested in a linear trend line, we have to explicitly set the `method` to `lm`
+
+```{r}
+ggplot(irisDF, aes(x = Sepal.Length, y = Sepal.Width)) +
+    geom_point() +
+    stat_smooth(method = 'lm') 
+```
+
+> **Note:** these trend lines can be added to our plot even if we do not need the scatterplot itself. That is, if, for some reason, you decide you do not want to show the actual data, you can run the above without `geom_point()` to only show the (linear) trend line.
+
+```{task}
+Produce a similar scatterplot as above but not stratified by `Species` (either faceted or simply coloured in a single graph). What do you observe?
+```
+
+```{solution}
+
+``{r, fig.height=4, fig.width=6}
+ggplot(irisDF, aes(x = Sepal.Length, y = Sepal.Width, col = Species)) +
+    geom_point() +
+    stat_smooth(method = 'lm')
+``
+
+This is an example of [Simpson’s Paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox), where an apparent trend in the data disappears or even reverses (as in our case) when the trend is explored in subsets of the data. 
+```
+
+
+### Scales
+
+Scales control the details of how data values are translated to visual properties and include features such as modifying axes limits and axis transformation. Here we only provide brief example but follow [this link](http://www.sthda.com/english/wiki/ggplot2-axis-scales-and-transformations) for a more in-depth tutorial. 
+
+To manually set axes limits we can either directly specify which axis we want to modify (e.g. through `+ xlim(min, max)`) or go the more generic way such as
+
+```{r}
+ggplot(irisDF, aes(x = Sepal.Length, y = Sepal.Width)) +
+    geom_point() +
+    stat_smooth(method = 'lm') +
+    lims(x = c(3.8, 8.3),
+         y = c(1.5, 5))
+```
+
+Much more control and customisation options over limits, axes labels, breaks (i.e. tick marks) etc are provided by the `scale_xx()` functions
+```
+scale_x_continuous(name, breaks, labels, limits, trans)
+scale_y_continuous(name, breaks, labels, limits, trans)
+```
+For more information about these please have a look at the above mentioned tutorial or check R Help through the command `?scale_x_continuous`.
+
+`ggplot2` offers various inbuilt functions to perform axis transformations, including:
+
+  - `scale_x_log10()`, `scale_y_log10()` : for log10 transformation
+  - `scale_x_sqrt()`, `scale_y_sqrt()` : for sqrt transformation
+  - `scale_x_reverse()`, `scale_y_reverse()` : to reverse coordinates
+
+
+Here is an easy example showing how these can be mixed in a single plot
+
+```{r}
+df <- data.frame(x = c(10, 100, 1000, 10000, 100000),
+                 y = c(1, 4, 9, 16, 25))
+
+ggplot(df, aes(x = x, y = y)) +
+    geom_point() +
+    scale_x_log10() +
+    scale_y_sqrt() +
+    stat_smooth(method = 'lm') 
+```
+
+
+### Assigning plots to objects
+
+So far we have used a separate code block for each plot. One thing to remember is that R is an object oriented language. This means that plots generated with `ggplot`, for example, can also be assigned as an object. This allows us to add extra layers / features to our plot without rewriting the entire code; here is an example. 
+
+```{r}
+p1 <- ggplot(df, aes(x = x, y = y)) +
+    geom_point(size = 1.4, col = 'red')
+p1
+```
+Next we add a line connecting the data points
+
+```{r}
+p2 <- p1 + geom_line(linewidth = 0.3, col = 'blue')
+p2
+```
+
+and finally let's do some axis transformation
+
+```{r}
+p2 + scale_x_log10() + scale_y_sqrt()
+```
+
+### Putting it all together
+
+As a final step we are going to show you how combining different aesthetics and features in `ggplot2` allows you to make very complex - but both informative and beautiful - graphs. For this we will use a different dataset (`LifeExpectancy.csv`), start with a simple plot of life expectancy against GDP and then add layers and modifications as we go along.
+
+```{r, warning=F}
+# load data
+LifeExpectancy <- read.table('LifeExpectancyData.csv', sep = ',', header = T)
+
+# have a quick glimpse at the data
+head(LifeExpectancy)
+
+# subset to only contain data from the year 2000
+DF <- LifeExpectancy[LifeExpectancy$Year == 2000,]
+
+# scatterplot of life expectancy against GDP
+ggplot(DF, aes(x = GDP, y = Life.expectancy)) +
+    geom_point() +
+    ylab('Life expectancy (years)')
+```
+> Note: you might get a warning about rows being removed due to missing value. We will get on to this in the next section. For now you can just ignore this.
+
+We can see a clear relationship between life expectancy and GDP. Next we want to see if there is a difference by status of a country (*developed* or *developing*)
+
+```{r, warning=FALSE, fig.height=4, fig.width=6}
+# scatterplot of life expectancy against GDP
+ggplot(DF, aes(x = GDP, y = Life.expectancy, col = Status)) +
+    geom_point() +
+    ylab('Life expectancy (years)')
+```
+And again we see a clear patter whereby developed countries appear to have on average a higher life expectancy. Next we can add an additional aesthetics, or stratification, changing the size of each data point according to the respective country's population size.
+
+```{r, warning=FALSE, fig.height=4, fig.width=6}
+# scatterplot of life expectancy against GDP
+ggplot(DF, aes(x = GDP, y = Life.expectancy, col = Status, size = Population)) +
+    geom_point() +
+    ylab('Life expectancy (years)')
+```
+Although there seems to be a relationship it is hard to see as most countries are squashed into the left-hand side of the graph. To the trained eye it also looks like the GDP data is not normally distributed (which in fact explains the clustering to the left) and we will therefore log-transform the x-axis
+
+```{r, warning=FALSE, fig.height=4, fig.width=6}
+# scatterplot of life expectancy against GDP
+ggplot(DF, aes(x = GDP, y = Life.expectancy, col = Status, size = Population)) +
+    geom_point() +
+    scale_x_log10() +
+    ylab('Life expectancy (years)')
+```
+
+Finally, we might be interested to see how life expectancy and its relationship with GDP and the size of the population has evolved over time and across the five continents. Let's say we want to compare the years 2000, 2005 and 2010. 
+
+```{r, warning=FALSE, fig.height=8, fig.width=8}
+# subset data to now contain information for 2000, 2005 and 2010
+DF <- LifeExpectancy[LifeExpectancy$Year %in% c(2000, 2005, 2010),]
+
+ggplot(DF, aes(x = GDP, y = Life.expectancy, col = Status, size = Population)) +
+    geom_point() +
+    facet_grid(Continent ~ Year) +
+    scale_x_log10() +
+    theme(legend.position = 'top')
+```
+NICE!
+
+
+```{task}
+Explore the `LifeExpectancy` dataset using the different features that `ggplot` has to offer. Can you find any interesting relationships in the data? If so, take note and revist them when we are entering the statistics part of this workshop. 
+```
+

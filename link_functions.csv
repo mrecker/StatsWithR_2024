@@ -1,0 +1,7 @@
+Family;Link
+`gaussian`;**`identity`**
+`binomial`;**`logit`**, `probit` or `cloglog`
+`poisson`;**`log`**, `identity` or `sqrt`
+`Gamma`;**`inverse`**, `identity` or `log`
+`quasibinomial`;**`logit`**
+`quasipoisson`;**`log`**

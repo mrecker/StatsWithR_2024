@@ -1,0 +1,4 @@
+rmd_files:
+    html: ['index.Rmd', '1-Introduction.Rmd', '2-Data_wrangling_pt1.Rmd', '2-Data_wrangling_pt2.Rmd', '3-Descriptive_statistics.Rmd', 
+    '4-Linear_models.Rmd', '5-Mixed_effect_models.Rmd', '6-Generalised_linear_models.Rmd', '7-Survival_analysis.Rmd']
+output_dir: "docs"

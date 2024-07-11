@@ -1,0 +1,314 @@
+# Survival Analysis 
+
+In the previous section we have learned how logistic regression can be used to analyse the influence of some factors (i.e. explanatory variables) on an observed event (the response variable). One example was how the number of positive detected anxillary nodes affected the probability of survival of cancer patients. Other studies, in particular clinical studies, are often more concerned with *when* an event happens and, relatedly, how specific covariates may influence the *time-to-event*. For example, how does treatment A affect the time to disease clearance compared to treatment B. This type of data requires a different analytic approach and is the subject of *survival analysis*.
+
+Note, this part of our workshop was partially adapted from the excellent [Survival Analysis in R](https://www.emilyzabor.com/tutorials/survival_analysis_in_r_tutorial.html#Calculating_survival_times) tutorial by Emily C. Zabor, which also covers different methods and advanced topics than those briefly introduced here. 
+
+
+## Terminology and notation 
+
+Before we go into details on how to conduct survival analysis in R, we need to clarify some of the common notations and terminologies.
+
+### Censoring
+
+An important concept in survival analysis is *censoring*. Survival times are often incompletely determined for some individuals, for example because of withdrawal, loss to follow-up or the study ended before the event occurred. These are examples of *right censoring*. There are also **left censored** data, for example when an event happened before the study started, and **interval censored** data, for when we know that an event happened within a certain time interval but we are not exactly sure when. Including censored data in our analysis is important as they still provide important information and make our inferences more reliable. 
+
+In this workshop we are only concerned with right censored data, and an example of how this might look like is given here
+
+```{r, echo=FALSE, fig.height=4, fig.width=6}
+library(tidyverse)
+
+survDF <- data.frame(Patient = 1:8,
+                     Time = c(4, 6.7, 6.3, 7.3, 5, 3, 4, 7),
+                     Start = rep(0,8),
+                     Status = c(0,1,0,1,1,0,1,0)) %>%
+    mutate(Status = factor(ifelse(Status == 0, 'censored', 'event')))
+
+ggplot(survDF, aes(x = Patient, y = Time)) +
+    geom_bar(stat = 'identity', width=0.2, fill = 'grey') +
+    geom_point(aes(shape = Status, col = Status), size = 5) +
+    geom_point(aes(x = Patient, y = Start), shape = 20, col = 'black', size = 5) +
+    coord_flip() +
+    theme_classic() +
+    theme(legend.position = 'top') +
+    scale_x_continuous(breaks = 1:8) +
+    scale_color_manual(values = c('orange', 'darkblue')) +
+    labs(x = 'Patient number',
+         y = 'time (days)')
+```
+We could ask the question, what is the proportion of individuals who were event-free by day 6. We know that patients 5 and 7 experienced an event and that patients 2, 3, 4 and 8 did not experience an event by day 6. Patients 1 and 6, on the other hand, may have left the study before day 6. However, we do have some information about them, which is that they did not experience the event for a certain period of time, and we can use this information for our analysis. 
+
+>**Note:** A key assumption about censoring is that it is non-informative about the event. That is, the censoring is caused by something other than the impending event.
+
+### Survival and hazard functions
+
+There are two related probabilities are used to describe survival data: the *survival probability* $S(t)$ and the *hazard probability* $h(t)$.
+
+#### **Survival function** {-}
+
+The survival probability, also known as the survival function $S(t)$, is the probability that an individual will survive beyond any given specified time $$ S(t) = Pr(T > t) = 1 − F(t) $$ with $F(t) = Pr(t \leq T)$ being the cumulative distribution function and seen as the compliment of the survival function. 
+
+The survival function has the following properties:
+
+  - it is not increasing
+  - at time $t=0$, $S(t)=1$
+  - at time $t=\infty$, $S(t)=0$
+
+Note, as we usually measure time in discrete units, e.g days or years, the survival function is often discrete in practice.
+
+#### **Hazard function** {-}
+
+The hazard function, $h(t)$, describes the *hazard* at time $t$. It is the probability that an event occurs in the
+neighborhood of time $t$ divided by the probability that the subject is alive at that time. It is a bit more difficult to illustrate because it measures the instantaneous risk of an event. However, we need the hazard function to consider  *covariates* when we compare survival of patient groups at a later section. 
+
+
+### Calculating survival times in R
+
+Datasets often do not readily contain survival times, or time-to-event, but rather have information of the start and end of the study or date of the event. Here, by means of an illustrative example, we briefly show you how to deal with dates in R. Imagine you had the following data, where we deliberately have two different date formats.
+
+```{r}
+trialDF <- data.frame(
+    enrolled = c("2017-05-02", "2017-05-03", "2017-05-17"),  # date patient was enrolled in study
+    last_fup = c("15/4/18", "4/7/18", "31/10/18"))   # date of last follow-up
+
+head(trialDF)
+```
+You can see that the dates are currently in character format. The next step it to transform them into a date format, which we need to calculate the survival times.
+
+```{r}
+trialDF <- trialDF %>% 
+    mutate(enrolled = as.Date(enrolled, format = "%Y-%m-%d"),
+           last_fup = as.Date(last_fup, format = "%d/%m/%y"))
+
+head(trialDF)
+```
+
+Now that we have the dates in the right format we can calculate the survival time simply by subtracting the enrollment date from the last follow-up date 
+
+```{r}
+trialDF$Surv_time <- as.numeric(trialDF$last_fup - trialDF$enrolled)
+
+head(trialDF)
+```
+
+### R libraries and example data
+
+To implement survival analysis in R, we will make use of the `survival` and `survminer` packages, which provide all the necessary functionalities for our purposes. Also, we will use the `ovarian` dataset, that comes with the `survival` package and contains data on survival of 26 patients in a randomised trial comparing two treatments for ovarian cancer. It contains the following 6 variables:
+
+  - `futime`: survival or censoring time
+  - `fustat`: censoring status
+  - `age`: in years
+  - `resid.ds`: residual disease present (1=no, 2=yes)
+  - `rx`: treatment group
+  - `ecog.ps`: ECOG performance status (1 is better)
+
+```{r, message=FALSE}
+library(survival)
+library(survminer)
+
+ovarianDF <- ovarian
+head(ovarianDF)
+```
+
+For downstream analysis we need to transform a few of these variables to the right format, i.e. from numeric to categorical
+
+```{r}
+ovarianDF <- ovarianDF %>%
+    mutate(resid.ds = factor(resid.ds, labels = c('no', 'yes')),
+           rx = factor(rx, labels = c('treatment A', 'treatment B')),
+           ecog.ps = factor(ecog.ps))
+```
+
+
+## Kaplan-Meier
+
+The (non-parametric) Kaplan-Meier method is the most common way to estimate survival probabilities from observed survival times. Using discrete times $t_i$, the survival probability at $t_i$, $S(t_i)$ can be calculated as
+$$ S(t_i) = S(t_{i-1})\left(1 - \frac{d_i}{n_i}\right) $$
+with
+
+  - $S(t_{i-1})$ : the probability of being alive (or not having experienced the event) at time $t_{i-1}$
+  - $n_i$: number of individuals alive just before $t_i$
+  - $d_i$: number of events at $t_i$
+  - $t_0=0, \, S(t_0)=1$
+
+and results in a step function, where there is a step down each time an event occurs.
+
+To implement this in R we first have to create a *survival object*, which is done by the `Surv()` function of the `survival` package.
+
+```{r}
+survObj <- Surv(time = ovarianDF$futime, event = ovarianDF$fustat)
+survObj
+```
+
+As you can see, some survival times are followed by a '+', which indicates that these individuals were censored. The next step is to fit the Kaplan-Meier curves, which is done by passing the `survObj` to the `survfit()` function and can be done in a stratified way, for example by treatment group (`rx`)
+
+```{r}
+sfit <- survfit(survObj ~ rx, data = ovarianDF)
+summary(sfit)
+```
+
+From the summary we can see, amongst other things, survival times, the number of patients at risk, the proportion of surviving patients at every time point and the associated confidence intervals. 
+
+Plotting survival curves is equally easy and done by passing the fitted Kaplan-Meier curves to `ggsurvplot()`
+
+```{r, fig.height=4, fig.width=5}
+ggsurvplot(sfit, data = ovarianDF, pval = T) 
+```
+
+The vertical lines indicate the time when censoring occurred and the $P$ value corresponds to a log-rank test, which here indicates that there is non-significant difference between the survival curves for the two different treatment arms, even though patients receiving treatment B appear to be doing better in the first few months of follow-up. 
+
+Note, the log-rank test is a widely used method for comparing survival curves. It is a non-parametric test (i.e. it makes no assumptions about the survival distributions) and compares the observed number of events in each group to the expectation that the null hypothesis (the survival curves are identical) is true. We can get the statistic using the `survdiff()` function as follow:
+
+```{r}
+survdiff(survObj ~ rx, data = ovarianDF)
+```
+
+which is exactly what has been added to the graph above.
+
+```{task}
+Redo the analysis but this time stratified by residual disease status (`resid.ds`).
+```
+
+```{solution}
+
+``{r}
+sfit2 <- survfit(survObj ~ resid.ds, data = ovarianDF)
+ggsurvplot(sfit2, data = ovarianDF, pval = T) 
+``
+
+Although the $P$ value does not suggest significance at the 0.05 level, the curves clearly diverge early. One could therefore argue that a follow-up study with an increased sample size could validate that patients with negative residual disease status have a better prognosis compared to patients with residual disease.
+```
+
+<br>
+
+Note, the `ggsurvplot()` function provides a lot more tools to produce highly customised and informative outputs, as shown in the two examples below. As always, please refer to the help function (`?ggsurvplot()`) or the [online version](https://www.rdocumentation.org/packages/survminer/versions/0.4.9/topics/ggsurvplot) for full details.
+
+```{r, fig.height=6, fig.width=6}
+ggsurvplot(sfit,
+           pval = TRUE,  # Add P value (log-rank test)
+           pval.size = 4, # Size of P value
+           conf.int = TRUE,  # Plot confidence intervals
+           risk.table = TRUE, # Add risk table
+           risk.table.col = "strata", # Change risk table color by groups
+           linetype = "strata", # Change line type by groups
+           ggtheme = theme_bw(base_size = 12), # Change ggplot2 theme
+           palette = c("darkgreen", "orange"), # Change colour of strata
+           xlab = 'Time (days)',  # Change label of x-axis
+           legend.title = 'Treatment', # Change title of the legend
+           legend.labs = c('A', 'B'))  # Change the name of the legend labels
+```
+
+```{r, fig.height=6, fig.width=6}
+ggsurvplot(sfit,
+           fun = "event", # Plot cumulative events
+           conf.int = TRUE,  # Plot confidence intervals
+           ncensor.plot = TRUE, # Plot the number of censored subjects at time t
+           linetype = "strata", # Change line type by groups
+           ggtheme = theme_classic(base_size = 12), # Change ggplot2 theme
+           palette = c("darkgreen", "orange"), # Change colour of strata
+           xlab = 'Time (days)',  # Change label of x-axis
+           legend.title = 'Treatment', # Change title of the legend
+           legend.labs = c('A', 'B'))  # Change the name of the legend labels
+```
+
+### **Median survival time**
+
+We can calculate the median survival time, which corresponds to a survival probability of 0.5, directly from the `survfit` object. This is shown here for unstratified data, i.e. we ignore the two different treatment regimes (note the change in formula)
+
+```{r}
+survfit(survObj ~ 1, data = ovarianDF)
+```
+
+which we can also indicate on the graph
+
+```{r, fig.height=6, fig.width=6, warning=FALSE}
+ggsurvplot(survfit(survObj ~ 1, data = ovarianDF),
+           conf.int = TRUE,
+           risk.table = TRUE,
+           surv.median.line = "hv", # specify horizontal and vertical line
+           xlab = 'Time (days)',
+           legend = 'none')
+```
+
+```{task}
+Calculate the median survival times stratfied by residual disease status, what do you notice?
+```
+
+
+```{solution}
+
+``{r}
+survfit(survObj ~ resid.ds, data = ovarianDF)
+``
+
+The `NA` indicates that we do not have enough data to robustly infer median survival times. A larger study would help remedy this problem.
+```
+
+$~$
+
+## Cox regression model
+
+As we have seen, the Kaplan-Meier method is an easy way to compare survival data for different strata (e.g. treatment arms). However, this is restricted to categorical covariates. What we might want instead is a way to infer the effect of one or more different covariates, or explanatory variables. This is where Cox regression, or Cox proportional hazard analysis comes into play.
+
+The Cox regression model is a (semi-parametric) model that allows us to fit uni- and multi-variable regression models that have survival outcomes. They are defined as
+$$ h(t|X_i) = h_0(t) e^{\beta_1 X_{i1}+ ... + \beta_p X_{ip}} $$
+with $h(t)$ being the *hazard*, or the instantaneous rate at which an events occur, and $h_0(t)$ being the underlying baseline hazard.
+
+Without going deeper into the mathematical details, here we show how to fit Cox proportional hazard models to survival data using the `coxph()` function, which takes a survival object as the response variable and otherwise follows common syntax for regression models as we have used before. Here we are interested in the effect of all four covariates: `age`, `rx`, `resid.ds` and `ecog.ps`
+
+```{r}
+# fit cox proportional hazard ratio
+cph <- coxph(survObj ~ age + rx + resid.ds + ecog.ps, data = ovarianDF)
+
+# get model summary
+summary(cph)
+```
+
+The model summary looks slightly different to the ones we have come across before. Of interest here are the regression coefficients `coef` and `exp(coef)` and their associated $P$ values. From the output above we can conclude that 
+
+  - age has statistically significant effect on survival probability, whereas the effects of treatment, residual disease status or ECOG performance status are not significant
+  - age, residual disease and ECOG performance have *positive* (beta) coefficients, indicating that they are associated with *poorer* survival
+  - treatment B has a *negative* (beta) coefficient, indicating that it is associated with *better* survival
+  
+Note, the quantity `exp(coef)` is known as the **hazard ratio (HR)**. It is best explained for categorical predictors, where it represents the ratio hazard between two groups at any point in time. A hazard ratio of HR>1 indicates increased hazard of an event, whereas HR<1 indicates a lower hazard. From the example above, the HR for treatment B was 0.4, which means that individuals in treatment group B had a 0.4 times lower rate of dying at any given time.
+
+We can extract the regression results and put them into a nice table format using the `tbl_regression()` function from the `gtsummary` library
+
+```{r}
+gtsummary::tbl_regression(cph, exp=TRUE)
+```
+
+A nicer way to display the results from a Cox regression model is by using the `ggforest()` function, which creates a *forest plot* that plots the hazard ratios, together with their associated confidence intervals and $P$ values for all model covariates and stratified for those that are categorical (indicating the level used as reference). 
+
+```{r}
+ggforest(cph, data = ovarianDF)
+```
+
+As a final step we show you how to get prediction based on our Cox proportional hazard model. As before we can use the `predict()` function but unfortunately this is slightly more complicated before as it does not work on vectors but rather individual parameter values, which need to be provided as a `list`. For example, to predict the survival probability of a 72 year old at time $t=300$ 
+
+```{r}
+# fit cox proportional hazard ratio based on age only
+cph <- coxph(Surv(futime, fustat) ~ age, data = ovarianDF)
+predict(cph, newdata = list(age = 80, futime = 300, fustat = 0), type='survival')
+```
+
+And to get survival curves for all ages between 50 and 80 years
+
+```{r}
+age <- as.matrix(50:80, ncol=1)
+pred_surv <- apply(age, 1, function(x) predict(cph, newdata = list(age = x, futime = 300, fustat = 0), type='survival'))
+
+data.frame(Age = age,
+           Survival = pred_surv) %>%
+    ggplot(aes(x = Age, y = Survival)) +
+    geom_line() +
+    labs(y = 'Survival probability at t=300')
+```
+
+
+```{task, title = "Practical"}
+
+  1. Modify the aboce code to plot survival probabilities of a 70 year old against time
+  2. Perform an indepth survival analysis of the `colon` dataset (provided by the `survival` package), which contains data from one of the first successful trials of adjuvant chemotherapy for colon cancer. You can get more information on the data and the various variables using `?colon`. 
+  
+```

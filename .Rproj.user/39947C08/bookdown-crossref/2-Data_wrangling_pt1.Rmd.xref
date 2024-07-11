@@ -1,0 +1,17 @@
+h1:data-wrangling-and-visualisation Data wrangling and visualisation
+h2:introduction Introduction
+h2:loading-and-saving-data Loading and saving data
+h3:save-load-data-as-an-r-object Save / load data as an R object
+h3:save-load-as-a-csv-file Save / load as a CSV file
+h3:handling-excel-files Handling Excel files
+h3:cheatsheet Cheatsheet
+h2:visualisation-using-ggplot Visualisation using 
+h3:aesthetics Aesthetics
+h3:geoms Geoms
+h3:labels Labels
+h3:faceting Faceting
+h3:statistical-transformation Statistical transformation
+h3:scales Scales
+h3:assigning-plots-to-objects Assigning plots to objects
+h3:putting-it-all-together Putting it all together
+

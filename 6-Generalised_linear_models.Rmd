@@ -1,0 +1,378 @@
+# Generalised Linear Models (GLM)
+
+In the previous part of this workshop we have seen that linear models are a powerful modelling tool. However, we have to remember that these rely on the following assumptions:
+
+  1. A linear mean function is relevant
+  2. Variances are equal across all predicted values of the response (homoscedatic)
+  3. Errors are normally distributed
+  4. Samples are collected at random
+  5. Errors are independent
+  
+If assumptions 1–3 are violated we can transform our response variable to try and fix this. Common transforms include the log and power (sqrt) transforms but also Tukey’s ladder-of-powers, Box-Cox transformation, or Tukey and Mosteller’s bulging rule. Here is a toy example showing the effect of log transforming (artificial) data on the distribution of the residuals.
+
+```{r, echo=F, message=F, warning=F}
+library(tidyverse)
+
+x <- rnorm(100, 3, 0.2)
+y <- rnorm(100, 10^x, 0.01*10^x)
+df <- data.frame(x = x, y = y)
+fit1 <- lm(y ~ x, data = df)
+fit2 <- lm(log10(y) ~ x, data = df)
+
+par(mfrow=c(2,3))
+hist(y)
+plot(fit1, pch=19, cex=0.8, which=1)
+plot(fit1, pch=19, cex=0.8, which=2)
+hist(log10(y))
+plot(fit2, pch=19, cex=0.8, which=1)
+plot(fit2, pch=19, cex=0.8, which=2)
+```
+
+However, in a lot of other cases this is either not possible, for example when the output is binary, or we want to explicitly model the underlying distribution, e.g. if we are dealing with count data. In these cases we have to use **Generalised Linear Models (GLMs)** instead, which allow us to change the *error structure* of our data by using different *link functions*.
+
+**Generalised Linear Models** have:
+
+  1. a linear mean
+  2. a **link function**
+  3. an **error structure**
+
+## Link functions
+
+A link functions is equivalent to an "internal" transformation, which links the *mean* (regression) function (i.e. the usual $\beta_0 + \beta_1 x_1 + \beta_2 x_2 + ...$) to the *scale* of the *observed data*. Take for example one of our previous examples of data containing the number of malaria episodes an individual has experienced. There is nothing that constraints our regression model to produce negative values; these, however, are obviously nonsensical. Or, imagine you are interested whether some treatment improves patient outcome, where the response would be a yes or no (which in modelling terms is interpreted as 1 or 0). Again, there is nothing to constrain the model to produce values outside this [0,1] range. And this is what we mean by the *scale* of the *observed data*.
+
+>**Note:** The simple linear regression model is a special case of a GLM, i.e. 
+```{r, eval=F}
+lm(weight ~ height)
+```
+is equivalent to
+```{r, eval=F}
+glm(weight ~ height, family=gaussian(link=identity))
+```
+
+Compared to the `lm()` function, the `glm()` function takes an extra argument `family`, which identifies the **error structure** and the **link function**. 
+
+The default link function for the normal (Gaussian) error structure is the *identity* function (equivalent to no transformation). In fact, we often do not need to specify the link function explicitly and instead use the defaults for the various families. Commonly used error structures and associated link functions are (defaults highlighted in **bold**) 
+
+```{r, echo=FALSE}
+Rfuns <- read.csv('link_functions.csv', sep = ';')
+knitr::kable(Rfuns, align = 'cc')
+```
+
+Don't worry if this sounds confusing to you. We will go through this in more detail, or rather by means of worked out examples, when we deal with modelling two different types of data: count data and binary data.
+
+$~$
+
+## Poisson regression (for count data)
+
+There are many occasions where we encounter count data. Count data have two main characteristics: (1) they are discrete (we cannot have, say, 2.3 occurrences or entities), and (2) are bound below by zero (we cannot have less than 0 occurrences or entities). This needs to be taken into consideration when we are trying to fit statistical models to count data. The probability distribution that has these required properties is the *Poisson distribution*, and this is the distribution *family* we will have to specify in our GLM.
+
+### Background
+Let’s consider a single explanatory variable and omit the indices $i$, the simple linear regression model is given as
+$$
+\begin{align}
+Y &= \beta_0 + \beta_1 X + \epsilon\\
+\epsilon &\sim \mathcal{N}(\mu,\sigma^2)
+\end{align}
+$$
+which can be rewritten as 
+$$
+\begin{align}
+Y &\sim \mathcal{N}(\mu,\sigma^2)\\
+\mu &= \beta_0 + \beta_1 X
+\end{align}
+$$
+
+Recall that the mean (regression) function is unconstrained, meaning that the value of $\beta_0 + \beta_1 X$ can range from $-\infty$ to $\infty$. This obviously violated the constraints of count data. Taking the logarithm of the mean transforms this range to $(0, \infty]$, which is what we are after. To to be consistent with the statistics literature we will rename $\mu$ to $\lambda$ and thus get the Poisson regression model as: 
+$$
+\begin{align}
+Y &\sim Pois(\lambda)\\
+\log \lambda &= \beta_0 + \beta_1 X
+\end{align}
+$$
+Following the rules of logarithms:
+$$
+\begin{align}
+\log \lambda &= \beta_0 + \beta_1 X \\
+\lambda &= e^{\beta_0 + \beta_1 X}
+\end{align}
+$$
+This means that we are effectively modelling the observed count data using an exponential mean function.
+
+<br>
+
+### Poisson regression in R
+
+Now we know what is behind the Poisson model and understand what link functions do we can concentrate on how to perform Poisson regression in R. For this we use our previous malaria episodes example but with a slightly modified dataset, where we discard the effect of different transmission settings(EIR).
+
+```{r, fig.width=5, fig.height=4}
+# create random data points for age and EIR
+Age <- runif(100, 2, 10)
+Bednet <- sample(c('yes', 'no'), 100, replace = T)
+
+# assume there is an interaction between age and bednet use, which influences the number of episodes
+episodes <- round(exp(ifelse(Bednet=='no', 0.32*Age, 0.22*Age) + rnorm(100, 0, 0.3)))
+
+# put into new data.frame
+epiData <- data.frame(Age = Age, Episodes = episodes, Bednet = factor(Bednet))
+
+# plot data
+ggplot(epiData, aes(x = Age, y = Episodes, col = Bednet)) +
+    geom_point() 
+```
+
+There is a clear relationship between age and the number of recorded episodes, and we might be tempted to fit a linear regression to this data. So let's do this and then add the regression lines to this graph.
+
+```{r, fig.width=5, fig.height=4}
+# fit the model wuth lm() and consider an interaction term 
+fit <- lm(Episodes ~ Age*Bednet, data = epiData)
+
+# make model predictions
+newdata <- expand.grid(Age = seq(0,10,length.out=20),
+                       Bednet = c('no', 'yes'))
+newdata <- mutate(newdata, Bednet = factor(Bednet))
+newdata$Episodes <- predict(fit, newdata = newdata)
+
+ggplot(mapping = aes(x = Age, y = Episodes, col = Bednet)) +
+    geom_point(data = epiData) +
+    geom_line(data = newdata)
+```
+
+Now we can start to appreciate the problem with fitting a linear model to count data: the intersects (number of episodes at age 0) are both negative in this case, which is biologically not feasible.
+
+We can also see from the model diagnostics that the residuals do follow the assumptions of a linear model, as there are clear signs of *heteroscedasticiy* (here indicated by an increasing variance with increasing values of the fitted response variable).
+
+```{r}
+# plot model diagnostics
+plot(fit, which = 1)
+```
+
+
+Now we fit a GLM to the data instead, assuming a Poisson error structure and using the (default) log link function.
+
+```{r, fig.width=5, fig.height=4}
+# fit data using Poisson regression with default link function
+fit_glm <- glm(Episodes ~ Age*Bednet, data = epiData, family = poisson(link = log))
+
+# when using default link functions, we can also call
+# fit_glm <- glm(Episodes ~ Age*Bednet, data = epiData, family = "poisson")
+
+# get model summary
+summary(fit_glm)
+```
+
+At a first glance, the model summary looks very similar to the one based on linear regression. However, instead of information regarding R-squared or the residual standard error, we now have information on the null and residual variance, as well as something called the *AIC*, which stands for the *Akaike Information Criterion* and is an estimator of prediction error that takes model complexity into account (for model selection we aim to minimise the AIC).
+
+One thing we need to remember is that we are still working on the log-scale. That is, making a prediction based on our inferred model estimates relies on a back-transformation. For example, to obtain an estimate of the average number of episodes for a 5-year old sleeping under a bednet we have to calculate
+<center> Episodes = exp(`r round(fit_glm$coefficients[[1]],4)` + 5 $\times$ `r round(fit_glm$coefficients[[2]],4)` - `r round(-fit_glm$coefficients[[3]],4)` - 5 $\times$ `r round(-fit_glm$coefficients[[4]],4)`) = `r round(predict(fit_glm, newdata = data.frame(Age=5, Bednet='yes'), type = 'response'),4)`</center>
+
+In reality we would use the `predict()` function for this. But beware, as we are dealing with a link function that is not the *identity* function, we need to set an extra argument `type = 'response'` to back-transform the predicted values to the scale of our response variable.
+
+```{r}
+# make model predictions
+newdata$Episodes <- predict(fit_glm, newdata = newdata, type='response')
+
+ggplot(mapping = aes(x = Age, y = Episodes, col = Bednet)) +
+    geom_point(data = epiData) +
+    geom_line(data = newdata)
+```
+
+This looks like a much better fit to the data and also satisfies the necessary condition of a non-negative intersect.
+
+$~$
+
+## Logistic regression (for binary data)
+
+So far we have  considered continuous and discrete data as the response variables. What if our response is a categorical variable, such as successful treatment / treatment failure or infected / protected? In this case we can model the probability *p* of being in one class or another as a function of the explanatory variables. Here we will only consider **binary** response data, i.e. where the response is one of two types. In this case we talk about binomial or simply *logistic regression*. Cases where the outcome has more than two levels we talk about multinomial regression; this, however, will not be considered here.
+
+### Background
+
+Recall the previous case of dealing with count data. We noted that the mean function $\beta_0 + \beta_1 X$ is unconstrained and thus needs to undergo internal transformation to make sure it fit the characteristic of count data. For a binary outcome, the restriction on the modelled response is that is needs to be within the range [0,1] because we are dealing with probabilities. A probability distribution that works for this is the **Bernouille distribution**, which has the following characteristics
+$$ Y \sim \mathcal{Bern}(P) $$
+
+  - binary variable, taking the values 0 or 1 (yes/no, pass/fail)
+  - a probability parameter, $p$, where $0<p<1$
+  - mean = $p$
+  - variance = $p(1-p)$
+
+Remember that for the case of count data (Poisson regression), we took the exponential of the mean function, or rather modelled the modeled the logarithm of the response. In the case of binary data, we are trying to model the probability, which has values between 0 and 1. Note that the possible range of $p/(1-p)$ is $(0,\infty)$, such that $\log p/(1-p) \in (-\infty,\infty)$, which is exactly what we want. This function is called **logit** and also known as **log odds**. Our regression model therefore becomes 
+
+$$ 
+\begin{align}
+Y &\sim \mathcal{Bern}(P) \\
+\log\left(\frac{p}{1-p}\right) &= \beta_0 + \beta_1 X
+\end{align}
+$$
+Again, note that we are still fitting straight lines through our data, but this time in the log odds space. As a shorthand notation we write $\log\left(\frac{p}{1-p}\right) = \text{logit}(p) = \beta_0 + \beta_1 X$.
+
+<br>
+
+### Logistic regression in R
+
+In order to show how to perform logistic regression we will use Haberman's Survival Data, which contains data from a study conducted between 1958 and 1970 at the University of Chicago’s Billings Hospital on the survival of patients who had undergone surgery for breast cancer. Our dataset contains data from 306 patients and has four columns:
+
+  1. `Age`: age of the patient at the time of the operation 
+  2. `Year`: year of the operation
+  3. `Nodes`: number of positive axillary nodes detected
+  4. `Survivial`: survival status (1 = survived for more than 5 years, 2 = died within 5 years)
+
+```{r}
+haberman <- read.csv('haberman.csv')
+head(haberman)
+```
+
+As you will notice, `Survival` is currently treated like a numerical variable, so the first thing we need to do is turn this into a categorical one, which indicates whether the patient survived for more than 5 years or not
+
+```{r}
+haberman <- mutate(haberman, Survival = factor(ifelse(Survival==1, 'yes', 'no')))
+```
+
+Our intuition would be that the predictor variables of interest are `Age` and `Nodes`; so let's see how they relate with survival. 
+
+```{task}
+Plot the distribution of `Age` and `Nodes` stratified by `Survival`.
+```
+
+```{solution}
+
+**Option 1:** histograms
+
+``{r, fig.height = 6, fig.width=6}
+p1 <- ggplot(haberman, aes(x = Age, col = Survival)) +
+    geom_histogram(bins = 10, alpha = 0.7) +
+    facet_wrap(~Survival) +
+    theme(legend.position = '')
+
+p2 <- ggplot(haberman, aes(x = Nodes, col = Survival)) +
+    geom_histogram(binwidth = 1, alpha = 0.7) +
+    facet_wrap(~Survival) +
+    theme(legend.position = '')
+
+p1 / p2
+``
+
+**Option 2:** box-and-whisker plots
+
+``{r, fig.height = 4, fig.width=6}
+p1 <- ggplot(haberman, aes(y = Age, x = Survival, fill = Survival)) +
+    geom_boxplot(alpha = 0.7) +
+    theme(legend.position = '')
+
+p2 <- ggplot(haberman, aes(y = Nodes, x = Survival, fill = Survival)) +
+    geom_boxplot(alpha = 0.7) +
+    theme(legend.position = '')
+
+p1 + p2
+``
+
+```
+
+$~$
+
+From these graphs it is difficult to say if and by how much these variables had an influence on patient survival. But we cannot always trust our eyes so we are going to test this statistically by means of logistic regression. The syntax should be very familiar to you by now. In fact, the only argument we need to change from the previous GLM is to set the family to `binomial` and the link to `logit` (although this is not strictly necessary as it is the default link for this family).
+
+```{r}
+fit_bin <- glm(Survival ~ Age + Nodes, data = haberman, family = binomial(link='logit'))
+summary(fit_bin)
+```
+
+This suggests that patient age is not a statistically significant predictor of patient survival. We can also test this directly by comparing models with and without this predictor using `anova`
+
+```{r}
+fit_bin_b <- glm(Survival ~ Nodes, data = haberman, family = binomial(link='logit'))
+anova(fit_bin, fit_bin_b, test = "Chisq")
+```
+
+This confirms that there is no statistical significant effect of Age, so we will drop this explanatory variable and proceed with the less complex model. Let's have a look at the model summary
+
+```{r}
+summary(fit_bin_b)
+```
+
+How do we interpret the model summary, and in particular the variable estimates. Remember that we are now working on the logit scale, and to make predictions about the probability of a patient surviving for more than 5 years we have to use the back-transform
+$$
+\begin{align}
+\text{logit } p &= \beta_0 + \beta_1 X \\
+\Rightarrow p &= \text{logit}^{-1} \beta_0 + \beta_1 X = \frac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
+\end{align} \\
+$$
+
+```{task}
+
+  1. Calculate the probability of survivial for a patient with 3 positive axillery nodes. 
+  2. Calculate the decrease in the probability of survival for one additional positive node.
+
+```
+
+```{solution}
+
+1. The probability of survivial for a patient with 3 positive axillery nodes
+
+``{r}
+lin_mean <- exp(fit_bin_b$coefficients[[1]] + 3*fit_bin_b$coefficients[[2]])
+p <- lin_mean / (1 + lin_mean)
+print(p)
+``
+
+2. The decrease in survivial probability for one additional positive axillery node
+
+``{r}
+p1 <- predict(fit_bin_b, newdata = data.frame(Nodes = 3), type = 'response')
+p2 <- predict(fit_bin_b, newdata = data.frame(Nodes = 4), type = 'response')
+round(p2-p1,4)
+``
+
+```
+
+$~$
+
+The next thing we would like do is to plot the regression line. As before this involves making a new dataset for prediction and then add this to our graph of survival vs. nodes. Also, we need to make sure that the original response variable (`Survival`) is projected onto the same probability scale 0 to 1. 
+
+```{r}
+newdata <- data.frame(Nodes = seq(min(haberman$Nodes), max(haberman$Nodes)))
+newdata$pSurvival <- predict(fit_bin_b, newdata = newdata, type = 'response')
+
+haberman2 <- mutate(haberman, pSurvival = ifelse(as.numeric(Survival)==1, 1, 0))
+
+ggplot(mapping = aes(x = Nodes, y = pSurvival)) +
+    geom_point(data = haberman2, aes(col = Survival)) +
+    geom_line(data = newdata)
+```
+
+### Odds ratios {-}
+Another, and sometimes more and sometimes less intuitive interpretation of the coefficients of a logistic regression model is in terms of **odds ratios**:
+
+**Odds:**
+$$ \frac{P(\text{event happens})}{P(\text{event does not happen})} = \frac{P(\text{event happens})}{1 - P(\text{event happens})}$$
+
+**Odds ratio:**
+$$ \frac{\text{odds in one group}}{\text{odds in another group}} $$
+
+From the previous task we could for example calculate the odds ratio (of survival) in individuals with 3 detected nodes compared to 2 detected nodes, which will leave to the interested reader to work out. It turns out that if you take the log of the odds ratio you will recover $\beta_1$, i.e. $e^{\beta_1}$ is the odds ratio for a unit increase.
+
+As mentioned earlier, odds ratio are tricky to understand but generally make more sense and are easier to interpret for categorical variable than for numerical ones.
+
+
+
+```{task, title = "Practical"}
+Download the titanic dataset (titanic.csv), which contains data of over 800 passengers of the [Titanic](https://en.wikipedia.org/wiki/Titanic) together with information on whether they survived or not (0 and 1, respectively), their age, sex, passenger class, the fare they paid and whether they had siblings/spouse or children/parents on board. Perform a full logistic regression analysis (survival yes/no).
+```
+
+```{solution}
+There are plenty of way this dataset can and should be analyed. Here we just show one example for a logistic regression analysis examining the survival probability as dependent on sex and age and their interaction.
+
+``{r}
+titanic <- read.csv('titanic.csv')
+
+fit <- glm(Survived ~ Age * Sex, data = titanic, family = "binomial")
+summary(fit)
+
+newdata <- data.frame(Age = rep(seq(min(titanic$Age), max(titanic$Age), length.out = 50),2),
+                      Sex = rep(c('male', 'female'), each = 50))
+newdata$Survived <- predict(fit, newdata = newdata, type = 'response')
+
+ggplot(mapping = aes(x = Age, y = Survived, col = Sex)) +
+    geom_point(data = titanic) +
+    geom_line(data = newdata)
+``
+
+```
