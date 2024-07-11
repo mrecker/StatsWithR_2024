@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>6 Generalised Linear Models (GLM) | Introduction to statistical data analysis in R</title>
+  <meta name="description" content="Intro to Stats with R" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="6 Generalised Linear Models (GLM) | Introduction to statistical data analysis in R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Intro to Stats with R" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6 Generalised Linear Models (GLM) | Introduction to statistical data analysis in R" />
+  
+  <meta name="twitter:description" content="Intro to Stats with R" />
+  
+
+<meta name="author" content="Mario Recker" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="mixed-effect-models-mem.html"/>
+<link rel="next" href="survival-analysis.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script language="javascript"> 
+    function toggle(id) {
+        var ele = document.getElementById("toggleText" + id);
+        var text = document.getElementById("displayText" + id);
+        var buttonText = text.innerHTML.replace("Show: ", "");
+        buttonText = buttonText.replace("Hide: ", "");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "Show: " + buttonText;
+        } else {
+            ele.style.display = "block";
+            text.innerHTML = "Hide: " + buttonText;
+        }
+    } 
+</script>
+
+<script language="javascript">
+    function openCode(evt, codeName, id) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent" + id);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks" + id);
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(codeName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<script language="javascript">
+    function hide(id){
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-structure"><i class="fa fa-check"></i>Workshop structure</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html"><i class="fa fa-check"></i><b>1</b> General introduction to R/RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#setting-up-an-r-session"><i class="fa fa-check"></i><b>1.1</b> Setting up an R session</a></li>
+<li class="chapter" data-level="1.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#r-packages"><i class="fa fa-check"></i><b>1.2</b> R packages</a></li>
+<li class="chapter" data-level="1.3" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#variables-vectors-and-data-frames-in-r"><i class="fa fa-check"></i><b>1.3</b> Variables, vectors and data frames in R</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#data-frames"><i class="fa fa-check"></i><b>1.3.1</b> Data frames</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#functions-in-r"><i class="fa fa-check"></i><b>1.4</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#useful-inbuilt-functions"><i class="fa fa-check"></i><b>1.4.1</b> Useful inbuilt functions</a></li>
+<li class="chapter" data-level="1.4.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#custom-functions"><i class="fa fa-check"></i><b>1.4.2</b> Custom functions</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#basic-plotting-in-r"><i class="fa fa-check"></i><b>1.5</b> Basic plotting in R</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#scatter-plot"><i class="fa fa-check"></i><b>1.5.1</b> Scatter plot</a></li>
+<li class="chapter" data-level="1.5.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#line-graph"><i class="fa fa-check"></i><b>1.5.2</b> Line graph</a></li>
+<li class="chapter" data-level="1.5.3" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#combined-graph"><i class="fa fa-check"></i><b>1.5.3</b> Combined graph</a></li>
+<li class="chapter" data-level="1.5.4" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#barplot"><i class="fa fa-check"></i><b>1.5.4</b> Barplot</a></li>
+<li class="chapter" data-level="1.5.5" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#boxplots"><i class="fa fa-check"></i><b>1.5.5</b> Boxplots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html"><i class="fa fa-check"></i><b>2</b> Data wrangling and visualisation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#introduction"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
+<li class="chapter" data-level="2.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#loading-and-saving-data"><i class="fa fa-check"></i><b>2.2</b> Loading and saving data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#save-load-data-as-an-r-object"><i class="fa fa-check"></i><b>2.2.1</b> Save / load data as an R object</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#save-load-as-a-csv-file"><i class="fa fa-check"></i><b>2.2.2</b> Save / load as a CSV file</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#handling-excel-files"><i class="fa fa-check"></i><b>2.2.3</b> Handling Excel files</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#cheatsheet"><i class="fa fa-check"></i><b>2.2.4</b> Cheatsheet</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#visualisation-using-ggplot"><i class="fa fa-check"></i><b>2.3</b> Visualisation using <code>ggplot</code></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#aesthetics"><i class="fa fa-check"></i><b>2.3.1</b> Aesthetics</a></li>
+<li class="chapter" data-level="2.3.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#geoms"><i class="fa fa-check"></i><b>2.3.2</b> Geoms</a></li>
+<li class="chapter" data-level="2.3.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#labels"><i class="fa fa-check"></i><b>2.3.3</b> Labels</a></li>
+<li class="chapter" data-level="2.3.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#faceting"><i class="fa fa-check"></i><b>2.3.4</b> Faceting</a></li>
+<li class="chapter" data-level="2.3.5" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#statistical-transformation"><i class="fa fa-check"></i><b>2.3.5</b> Statistical transformation</a></li>
+<li class="chapter" data-level="2.3.6" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#scales"><i class="fa fa-check"></i><b>2.3.6</b> Scales</a></li>
+<li class="chapter" data-level="2.3.7" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#assigning-plots-to-objects"><i class="fa fa-check"></i><b>2.3.7</b> Assigning plots to objects</a></li>
+<li class="chapter" data-level="2.3.8" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#putting-it-all-together"><i class="fa fa-check"></i><b>2.3.8</b> Putting it all together</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#data-wrangling"><i class="fa fa-check"></i><b>2.4</b> Data wrangling</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#tidy-data"><i class="fa fa-check"></i><b>2.4.1</b> Tidy data</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#filter-rows"><i class="fa fa-check"></i><b>2.4.2</b> Filter rows</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#sort-rows"><i class="fa fa-check"></i><b>2.4.3</b> Sort rows</a></li>
+<li class="chapter" data-level="2.4.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#select-columns"><i class="fa fa-check"></i><b>2.4.4</b> Select columns</a></li>
+<li class="chapter" data-level="2.4.5" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#grouping-and-summarising"><i class="fa fa-check"></i><b>2.4.5</b> Grouping and summarising</a></li>
+<li class="chapter" data-level="2.4.6" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#reshaping-datasets"><i class="fa fa-check"></i><b>2.4.6</b> Reshaping datasets</a></li>
+<li class="chapter" data-level="2.4.7" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#mutate"><i class="fa fa-check"></i><b>2.4.7</b> Mutate</a></li>
+<li class="chapter" data-level="2.4.8" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#dealing-with-missing-data"><i class="fa fa-check"></i><b>2.4.8</b> Dealing with missing data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html"><i class="fa fa-check"></i><b>3</b> Introduction to statistical modelling in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#what-is-a-statistical-model"><i class="fa fa-check"></i>What is a statistical model?</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#descriptive-vs.-inferential-statistics"><i class="fa fa-check"></i>Descriptive vs. inferential statistics</a></li>
+<li class="chapter" data-level="3.1" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#univariate-analysis"><i class="fa fa-check"></i><b>3.1</b> Univariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#mean-vs.-median"><i class="fa fa-check"></i><strong>Mean vs. median</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#interquartile-range"><i class="fa fa-check"></i><strong>Interquartile range</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#skewness"><i class="fa fa-check"></i><strong>Skewness</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#kurtosis"><i class="fa fa-check"></i><strong>Kurtosis</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#multivariate-analysis"><i class="fa fa-check"></i><b>3.2</b> Multivariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#contingency-tables"><i class="fa fa-check"></i><strong>Contingency tables</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#pearson-correlation"><i class="fa fa-check"></i><strong>Pearson correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#spearmans-rank-correlation"><i class="fa fa-check"></i><strong>Spearman’s rank correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#correlation-vs.-causation"><i class="fa fa-check"></i><strong>Correlation vs. causation</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="linear-models-lm.html"><a href="linear-models-lm.html"><i class="fa fa-check"></i><b>4</b> Linear Models (LM)</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#simple-linear-regression"><i class="fa fa-check"></i><b>4.1</b> Simple linear regression</a></li>
+<li class="chapter" data-level="4.2" data-path="linear-models-lm.html"><a href="linear-models-lm.html#linear-regression-in-r"><i class="fa fa-check"></i><b>4.2</b> Linear regression in R</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#using-the-summary-function"><i class="fa fa-check"></i><b>4.2.1</b> <strong>Using the <code>summary()</code> function</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="linear-models-lm.html"><a href="linear-models-lm.html#model-checking"><i class="fa fa-check"></i><b>4.3</b> Model checking</a>
+<ul>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-fitted"><i class="fa fa-check"></i><strong>Residuals vs Fitted</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#normal-q-q"><i class="fa fa-check"></i><strong>Normal Q-Q</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#scale-location"><i class="fa fa-check"></i><strong>Scale-Location</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-leverage"><i class="fa fa-check"></i><strong>Residuals vs Leverage</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="linear-models-lm.html"><a href="linear-models-lm.html#prediction"><i class="fa fa-check"></i><b>4.4</b> Prediction</a></li>
+<li class="chapter" data-level="4.5" data-path="linear-models-lm.html"><a href="linear-models-lm.html#multiple-linear-regression"><i class="fa fa-check"></i><b>4.5</b> Multiple linear regression</a></li>
+<li class="chapter" data-level="4.6" data-path="linear-models-lm.html"><a href="linear-models-lm.html#categorical-explanatory-variables"><i class="fa fa-check"></i><b>4.6</b> Categorical explanatory variables</a></li>
+<li class="chapter" data-level="4.7" data-path="linear-models-lm.html"><a href="linear-models-lm.html#interactions"><i class="fa fa-check"></i><b>4.7</b> Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html"><i class="fa fa-check"></i><b>5</b> Mixed Effect Models (MEM)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#model-checking-1"><i class="fa fa-check"></i><b>5.1</b> Model checking</a></li>
+<li class="chapter" data-level="5.2" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#further-reading"><i class="fa fa-check"></i><b>5.2</b> Further reading</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html"><i class="fa fa-check"></i><b>6</b> Generalised Linear Models (GLM)</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#link-functions"><i class="fa fa-check"></i><b>6.1</b> Link functions</a></li>
+<li class="chapter" data-level="6.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-for-count-data"><i class="fa fa-check"></i><b>6.2</b> Poisson regression (for count data)</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background"><i class="fa fa-check"></i><b>6.2.1</b> Background</a></li>
+<li class="chapter" data-level="6.2.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-in-r"><i class="fa fa-check"></i><b>6.2.2</b> Poisson regression in R</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-for-binary-data"><i class="fa fa-check"></i><b>6.3</b> Logistic regression (for binary data)</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background-1"><i class="fa fa-check"></i><b>6.3.1</b> Background</a></li>
+<li class="chapter" data-level="6.3.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-in-r"><i class="fa fa-check"></i><b>6.3.2</b> Logistic regression in R</a></li>
+<li class="chapter" data-level="" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#odds-ratios"><i class="fa fa-check"></i>Odds ratios</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="survival-analysis.html"><a href="survival-analysis.html"><i class="fa fa-check"></i><b>7</b> Survival Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="survival-analysis.html"><a href="survival-analysis.html#terminology-and-notation"><i class="fa fa-check"></i><b>7.1</b> Terminology and notation</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="survival-analysis.html"><a href="survival-analysis.html#censoring"><i class="fa fa-check"></i><b>7.1.1</b> Censoring</a></li>
+<li class="chapter" data-level="7.1.2" data-path="survival-analysis.html"><a href="survival-analysis.html#survival-and-hazard-functions"><i class="fa fa-check"></i><b>7.1.2</b> Survival and hazard functions</a></li>
+<li class="chapter" data-level="7.1.3" data-path="survival-analysis.html"><a href="survival-analysis.html#calculating-survival-times-in-r"><i class="fa fa-check"></i><b>7.1.3</b> Calculating survival times in R</a></li>
+<li class="chapter" data-level="7.1.4" data-path="survival-analysis.html"><a href="survival-analysis.html#r-libraries-and-example-data"><i class="fa fa-check"></i><b>7.1.4</b> R libraries and example data</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="survival-analysis.html"><a href="survival-analysis.html#kaplan-meier"><i class="fa fa-check"></i><b>7.2</b> Kaplan-Meier</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="survival-analysis.html"><a href="survival-analysis.html#median-survival-time"><i class="fa fa-check"></i><b>7.2.1</b> <strong>Median survival time</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="survival-analysis.html"><a href="survival-analysis.html#cox-regression-model"><i class="fa fa-check"></i><b>7.3</b> Cox regression model</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to statistical data analysis in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="generalised-linear-models-glm" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Generalised Linear Models (GLM)<a href="generalised-linear-models-glm.html#generalised-linear-models-glm" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In the previous part of this workshop we have seen that linear models are a powerful modelling tool. However, we have to remember that these rely on the following assumptions:</p>
+<ol style="list-style-type: decimal">
+<li>A linear mean function is relevant</li>
+<li>Variances are equal across all predicted values of the response (homoscedatic)</li>
+<li>Errors are normally distributed</li>
+<li>Samples are collected at random</li>
+<li>Errors are independent</li>
+</ol>
+<p>If assumptions 1–3 are violated we can transform our response variable to try and fix this. Common transforms include the log and power (sqrt) transforms but also Tukey’s ladder-of-powers, Box-Cox transformation, or Tukey and Mosteller’s bulging rule. Here is a toy example showing the effect of log transforming (artificial) data on the distribution of the residuals.</p>
+<p><img src="_main_files/figure-html/unnamed-chunk-193-1.png" style="display: block; margin: auto;" /></p>
+<p>However, in a lot of other cases this is either not possible, for example when the output is binary, or we want to explicitly model the underlying distribution, e.g. if we are dealing with count data. In these cases we have to use <strong>Generalised Linear Models (GLMs)</strong> instead, which allow us to change the <em>error structure</em> of our data by using different <em>link functions</em>.</p>
+<p><strong>Generalised Linear Models</strong> have:</p>
+<ol style="list-style-type: decimal">
+<li>a linear mean</li>
+<li>a <strong>link function</strong></li>
+<li>an <strong>error structure</strong></li>
+</ol>
+<div id="link-functions" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Link functions<a href="generalised-linear-models-glm.html#link-functions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A link functions is equivalent to an “internal” transformation, which links the <em>mean</em> (regression) function (i.e. the usual <span class="math inline">\(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + ...\)</span>) to the <em>scale</em> of the <em>observed data</em>. Take for example one of our previous examples of data containing the number of malaria episodes an individual has experienced. There is nothing that constraints our regression model to produce negative values; these, however, are obviously nonsensical. Or, imagine you are interested whether some treatment improves patient outcome, where the response would be a yes or no (which in modelling terms is interpreted as 1 or 0). Again, there is nothing to constrain the model to produce values outside this [0,1] range. And this is what we mean by the <em>scale</em> of the <em>observed data</em>.</p>
+<blockquote>
+<p><strong>Note:</strong> The simple linear regression model is a special case of a GLM, i.e. </p>
+</blockquote>
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="generalised-linear-models-glm.html#cb290-1" tabindex="-1"></a><span class="fu">lm</span>(weight <span class="sc">~</span> height)</span></code></pre></div>
+<p>is equivalent to</p>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="generalised-linear-models-glm.html#cb291-1" tabindex="-1"></a><span class="fu">glm</span>(weight <span class="sc">~</span> height, <span class="at">family=</span><span class="fu">gaussian</span>(<span class="at">link=</span>identity))</span></code></pre></div>
+<p>Compared to the <code>lm()</code> function, the <code>glm()</code> function takes an extra argument <code>family</code>, which identifies the <strong>error structure</strong> and the <strong>link function</strong>.</p>
+<p>The default link function for the normal (Gaussian) error structure is the <em>identity</em> function (equivalent to no transformation). In fact, we often do not need to specify the link function explicitly and instead use the defaults for the various families. Commonly used error structures and associated link functions are (defaults highlighted in <strong>bold</strong>)</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Family</th>
+<th align="center">Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>gaussian</code></td>
+<td align="center"><strong><code>identity</code></strong></td>
+</tr>
+<tr class="even">
+<td align="center"><code>binomial</code></td>
+<td align="center"><strong><code>logit</code></strong>, <code>probit</code> or <code>cloglog</code></td>
+</tr>
+<tr class="odd">
+<td align="center"><code>poisson</code></td>
+<td align="center"><strong><code>log</code></strong>, <code>identity</code> or <code>sqrt</code></td>
+</tr>
+<tr class="even">
+<td align="center"><code>Gamma</code></td>
+<td align="center"><strong><code>inverse</code></strong>, <code>identity</code> or <code>log</code></td>
+</tr>
+<tr class="odd">
+<td align="center"><code>quasibinomial</code></td>
+<td align="center"><strong><code>logit</code></strong></td>
+</tr>
+<tr class="even">
+<td align="center"><code>quasipoisson</code></td>
+<td align="center"><strong><code>log</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>Don’t worry if this sounds confusing to you. We will go through this in more detail, or rather by means of worked out examples, when we deal with modelling two different types of data: count data and binary data.</p>
+<p><span class="math inline">\(~\)</span></p>
+</div>
+<div id="poisson-regression-for-count-data" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Poisson regression (for count data)<a href="generalised-linear-models-glm.html#poisson-regression-for-count-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are many occasions where we encounter count data. Count data have two main characteristics: (1) they are discrete (we cannot have, say, 2.3 occurrences or entities), and (2) are bound below by zero (we cannot have less than 0 occurrences or entities). This needs to be taken into consideration when we are trying to fit statistical models to count data. The probability distribution that has these required properties is the <em>Poisson distribution</em>, and this is the distribution <em>family</em> we will have to specify in our GLM.</p>
+<div id="background" class="section level3 hasAnchor" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Background<a href="generalised-linear-models-glm.html#background" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let’s consider a single explanatory variable and omit the indices <span class="math inline">\(i\)</span>, the simple linear regression model is given as
+<span class="math display">\[
+\begin{align}
+Y &amp;= \beta_0 + \beta_1 X + \epsilon\\
+\epsilon &amp;\sim \mathcal{N}(\mu,\sigma^2)
+\end{align}
+\]</span>
+which can be rewritten as
+<span class="math display">\[
+\begin{align}
+Y &amp;\sim \mathcal{N}(\mu,\sigma^2)\\
+\mu &amp;= \beta_0 + \beta_1 X
+\end{align}
+\]</span></p>
+<p>Recall that the mean (regression) function is unconstrained, meaning that the value of <span class="math inline">\(\beta_0 + \beta_1 X\)</span> can range from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(\infty\)</span>. This obviously violated the constraints of count data. Taking the logarithm of the mean transforms this range to <span class="math inline">\((0, \infty]\)</span>, which is what we are after. To to be consistent with the statistics literature we will rename <span class="math inline">\(\mu\)</span> to <span class="math inline">\(\lambda\)</span> and thus get the Poisson regression model as:
+<span class="math display">\[
+\begin{align}
+Y &amp;\sim Pois(\lambda)\\
+\log \lambda &amp;= \beta_0 + \beta_1 X
+\end{align}
+\]</span>
+Following the rules of logarithms:
+<span class="math display">\[
+\begin{align}
+\log \lambda &amp;= \beta_0 + \beta_1 X \\
+\lambda &amp;= e^{\beta_0 + \beta_1 X}
+\end{align}
+\]</span>
+This means that we are effectively modelling the observed count data using an exponential mean function.</p>
+<p><br></p>
+</div>
+<div id="poisson-regression-in-r" class="section level3 hasAnchor" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> Poisson regression in R<a href="generalised-linear-models-glm.html#poisson-regression-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Now we know what is behind the Poisson model and understand what link functions do we can concentrate on how to perform Poisson regression in R. For this we use our previous malaria episodes example but with a slightly modified dataset, where we discard the effect of different transmission settings(EIR).</p>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="generalised-linear-models-glm.html#cb292-1" tabindex="-1"></a><span class="co"># create random data points for age and EIR</span></span>
+<span id="cb292-2"><a href="generalised-linear-models-glm.html#cb292-2" tabindex="-1"></a>Age <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">10</span>)</span>
+<span id="cb292-3"><a href="generalised-linear-models-glm.html#cb292-3" tabindex="-1"></a>Bednet <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&#39;yes&#39;</span>, <span class="st">&#39;no&#39;</span>), <span class="dv">100</span>, <span class="at">replace =</span> T)</span>
+<span id="cb292-4"><a href="generalised-linear-models-glm.html#cb292-4" tabindex="-1"></a></span>
+<span id="cb292-5"><a href="generalised-linear-models-glm.html#cb292-5" tabindex="-1"></a><span class="co"># assume there is an interaction between age and bednet use, which influences the number of episodes</span></span>
+<span id="cb292-6"><a href="generalised-linear-models-glm.html#cb292-6" tabindex="-1"></a>episodes <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">exp</span>(<span class="fu">ifelse</span>(Bednet<span class="sc">==</span><span class="st">&#39;no&#39;</span>, <span class="fl">0.32</span><span class="sc">*</span>Age, <span class="fl">0.22</span><span class="sc">*</span>Age) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="fl">0.3</span>)))</span>
+<span id="cb292-7"><a href="generalised-linear-models-glm.html#cb292-7" tabindex="-1"></a></span>
+<span id="cb292-8"><a href="generalised-linear-models-glm.html#cb292-8" tabindex="-1"></a><span class="co"># put into new data.frame</span></span>
+<span id="cb292-9"><a href="generalised-linear-models-glm.html#cb292-9" tabindex="-1"></a>epiData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Age =</span> Age, <span class="at">Episodes =</span> episodes, <span class="at">Bednet =</span> <span class="fu">factor</span>(Bednet))</span>
+<span id="cb292-10"><a href="generalised-linear-models-glm.html#cb292-10" tabindex="-1"></a></span>
+<span id="cb292-11"><a href="generalised-linear-models-glm.html#cb292-11" tabindex="-1"></a><span class="co"># plot data</span></span>
+<span id="cb292-12"><a href="generalised-linear-models-glm.html#cb292-12" tabindex="-1"></a><span class="fu">ggplot</span>(epiData, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> Episodes, <span class="at">col =</span> Bednet)) <span class="sc">+</span></span>
+<span id="cb292-13"><a href="generalised-linear-models-glm.html#cb292-13" tabindex="-1"></a>    <span class="fu">geom_point</span>() </span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-197-1.png" style="display: block; margin: auto;" /></p>
+<p>There is a clear relationship between age and the number of recorded episodes, and we might be tempted to fit a linear regression to this data. So let’s do this and then add the regression lines to this graph.</p>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="generalised-linear-models-glm.html#cb293-1" tabindex="-1"></a><span class="co"># fit the model wuth lm() and consider an interaction term </span></span>
+<span id="cb293-2"><a href="generalised-linear-models-glm.html#cb293-2" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(Episodes <span class="sc">~</span> Age<span class="sc">*</span>Bednet, <span class="at">data =</span> epiData)</span>
+<span id="cb293-3"><a href="generalised-linear-models-glm.html#cb293-3" tabindex="-1"></a></span>
+<span id="cb293-4"><a href="generalised-linear-models-glm.html#cb293-4" tabindex="-1"></a><span class="co"># make model predictions</span></span>
+<span id="cb293-5"><a href="generalised-linear-models-glm.html#cb293-5" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">Age =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="at">length.out=</span><span class="dv">20</span>),</span>
+<span id="cb293-6"><a href="generalised-linear-models-glm.html#cb293-6" tabindex="-1"></a>                       <span class="at">Bednet =</span> <span class="fu">c</span>(<span class="st">&#39;no&#39;</span>, <span class="st">&#39;yes&#39;</span>))</span>
+<span id="cb293-7"><a href="generalised-linear-models-glm.html#cb293-7" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">mutate</span>(newdata, <span class="at">Bednet =</span> <span class="fu">factor</span>(Bednet))</span>
+<span id="cb293-8"><a href="generalised-linear-models-glm.html#cb293-8" tabindex="-1"></a>newdata<span class="sc">$</span>Episodes <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit, <span class="at">newdata =</span> newdata)</span>
+<span id="cb293-9"><a href="generalised-linear-models-glm.html#cb293-9" tabindex="-1"></a></span>
+<span id="cb293-10"><a href="generalised-linear-models-glm.html#cb293-10" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> Episodes, <span class="at">col =</span> Bednet)) <span class="sc">+</span></span>
+<span id="cb293-11"><a href="generalised-linear-models-glm.html#cb293-11" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> epiData) <span class="sc">+</span></span>
+<span id="cb293-12"><a href="generalised-linear-models-glm.html#cb293-12" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> newdata)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-198-1.png" style="display: block; margin: auto;" /></p>
+<p>Now we can start to appreciate the problem with fitting a linear model to count data: the intersects (number of episodes at age 0) are both negative in this case, which is biologically not feasible.</p>
+<p>We can also see from the model diagnostics that the residuals do follow the assumptions of a linear model, as there are clear signs of <em>heteroscedasticiy</em> (here indicated by an increasing variance with increasing values of the fitted response variable).</p>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="generalised-linear-models-glm.html#cb294-1" tabindex="-1"></a><span class="co"># plot model diagnostics</span></span>
+<span id="cb294-2"><a href="generalised-linear-models-glm.html#cb294-2" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-199-1.png" style="display: block; margin: auto;" /></p>
+<p>Now we fit a GLM to the data instead, assuming a Poisson error structure and using the (default) log link function.</p>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="generalised-linear-models-glm.html#cb295-1" tabindex="-1"></a><span class="co"># fit data using Poisson regression with default link function</span></span>
+<span id="cb295-2"><a href="generalised-linear-models-glm.html#cb295-2" tabindex="-1"></a>fit_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(Episodes <span class="sc">~</span> Age<span class="sc">*</span>Bednet, <span class="at">data =</span> epiData, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> log))</span>
+<span id="cb295-3"><a href="generalised-linear-models-glm.html#cb295-3" tabindex="-1"></a></span>
+<span id="cb295-4"><a href="generalised-linear-models-glm.html#cb295-4" tabindex="-1"></a><span class="co"># when using default link functions, we can also call</span></span>
+<span id="cb295-5"><a href="generalised-linear-models-glm.html#cb295-5" tabindex="-1"></a><span class="co"># fit_glm &lt;- glm(Episodes ~ Age*Bednet, data = epiData, family = &quot;poisson&quot;)</span></span>
+<span id="cb295-6"><a href="generalised-linear-models-glm.html#cb295-6" tabindex="-1"></a></span>
+<span id="cb295-7"><a href="generalised-linear-models-glm.html#cb295-7" tabindex="-1"></a><span class="co"># get model summary</span></span>
+<span id="cb295-8"><a href="generalised-linear-models-glm.html#cb295-8" tabindex="-1"></a><span class="fu">summary</span>(fit_glm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = Episodes ~ Age * Bednet, family = poisson(link = log), 
+##     data = epiData)
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)   -0.02768    0.15931  -0.174   0.8621    
+## Age            0.34247    0.02024  16.919   &lt;2e-16 ***
+## Bednetyes     -0.15752    0.34519  -0.456   0.6482    
+## Age:Bednetyes -0.08893    0.04355  -2.042   0.0412 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 524.198  on 99  degrees of freedom
+## Residual deviance:  63.666  on 96  degrees of freedom
+## AIC: 438.39
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>At a first glance, the model summary looks very similar to the one based on linear regression. However, instead of information regarding R-squared or the residual standard error, we now have information on the null and residual variance, as well as something called the <em>AIC</em>, which stands for the <em>Akaike Information Criterion</em> and is an estimator of prediction error that takes model complexity into account (for model selection we aim to minimise the AIC).</p>
+One thing we need to remember is that we are still working on the log-scale. That is, making a prediction based on our inferred model estimates relies on a back-transformation. For example, to obtain an estimate of the average number of episodes for a 5-year old sleeping under a bednet we have to calculate
+<center>
+Episodes = exp(-0.0277 + 5 <span class="math inline">\(\times\)</span> 0.3425 - 0.1575 - 5 <span class="math inline">\(\times\)</span> 0.0889) = 2.952
+</center>
+<p>In reality we would use the <code>predict()</code> function for this. But beware, as we are dealing with a link function that is not the <em>identity</em> function, we need to set an extra argument <code>type = 'response'</code> to back-transform the predicted values to the scale of our response variable.</p>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="generalised-linear-models-glm.html#cb297-1" tabindex="-1"></a><span class="co"># make model predictions</span></span>
+<span id="cb297-2"><a href="generalised-linear-models-glm.html#cb297-2" tabindex="-1"></a>newdata<span class="sc">$</span>Episodes <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_glm, <span class="at">newdata =</span> newdata, <span class="at">type=</span><span class="st">&#39;response&#39;</span>)</span>
+<span id="cb297-3"><a href="generalised-linear-models-glm.html#cb297-3" tabindex="-1"></a></span>
+<span id="cb297-4"><a href="generalised-linear-models-glm.html#cb297-4" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> Episodes, <span class="at">col =</span> Bednet)) <span class="sc">+</span></span>
+<span id="cb297-5"><a href="generalised-linear-models-glm.html#cb297-5" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> epiData) <span class="sc">+</span></span>
+<span id="cb297-6"><a href="generalised-linear-models-glm.html#cb297-6" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> newdata)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-201-1.png" style="display: block; margin: auto;" /></p>
+<p>This looks like a much better fit to the data and also satisfies the necessary condition of a non-negative intersect.</p>
+<p><span class="math inline">\(~\)</span></p>
+</div>
+</div>
+<div id="logistic-regression-for-binary-data" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Logistic regression (for binary data)<a href="generalised-linear-models-glm.html#logistic-regression-for-binary-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>So far we have considered continuous and discrete data as the response variables. What if our response is a categorical variable, such as successful treatment / treatment failure or infected / protected? In this case we can model the probability <em>p</em> of being in one class or another as a function of the explanatory variables. Here we will only consider <strong>binary</strong> response data, i.e. where the response is one of two types. In this case we talk about binomial or simply <em>logistic regression</em>. Cases where the outcome has more than two levels we talk about multinomial regression; this, however, will not be considered here.</p>
+<div id="background-1" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Background<a href="generalised-linear-models-glm.html#background-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Recall the previous case of dealing with count data. We noted that the mean function <span class="math inline">\(\beta_0 + \beta_1 X\)</span> is unconstrained and thus needs to undergo internal transformation to make sure it fit the characteristic of count data. For a binary outcome, the restriction on the modelled response is that is needs to be within the range [0,1] because we are dealing with probabilities. A probability distribution that works for this is the <strong>Bernouille distribution</strong>, which has the following characteristics
+<span class="math display">\[ Y \sim \mathcal{Bern}(P) \]</span></p>
+<ul>
+<li>binary variable, taking the values 0 or 1 (yes/no, pass/fail)</li>
+<li>a probability parameter, <span class="math inline">\(p\)</span>, where <span class="math inline">\(0&lt;p&lt;1\)</span></li>
+<li>mean = <span class="math inline">\(p\)</span></li>
+<li>variance = <span class="math inline">\(p(1-p)\)</span></li>
+</ul>
+<p>Remember that for the case of count data (Poisson regression), we took the exponential of the mean function, or rather modelled the modeled the logarithm of the response. In the case of binary data, we are trying to model the probability, which has values between 0 and 1. Note that the possible range of <span class="math inline">\(p/(1-p)\)</span> is <span class="math inline">\((0,\infty)\)</span>, such that <span class="math inline">\(\log p/(1-p) \in (-\infty,\infty)\)</span>, which is exactly what we want. This function is called <strong>logit</strong> and also known as <strong>log odds</strong>. Our regression model therefore becomes</p>
+<p><span class="math display">\[
+\begin{align}
+Y &amp;\sim \mathcal{Bern}(P) \\
+\log\left(\frac{p}{1-p}\right) &amp;= \beta_0 + \beta_1 X
+\end{align}
+\]</span>
+Again, note that we are still fitting straight lines through our data, but this time in the log odds space. As a shorthand notation we write <span class="math inline">\(\log\left(\frac{p}{1-p}\right) = \text{logit}(p) = \beta_0 + \beta_1 X\)</span>.</p>
+<p><br></p>
+</div>
+<div id="logistic-regression-in-r" class="section level3 hasAnchor" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Logistic regression in R<a href="generalised-linear-models-glm.html#logistic-regression-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In order to show how to perform logistic regression we will use Haberman’s Survival Data, which contains data from a study conducted between 1958 and 1970 at the University of Chicago’s Billings Hospital on the survival of patients who had undergone surgery for breast cancer. Our dataset contains data from 306 patients and has four columns:</p>
+<ol style="list-style-type: decimal">
+<li><code>Age</code>: age of the patient at the time of the operation</li>
+<li><code>Year</code>: year of the operation</li>
+<li><code>Nodes</code>: number of positive axillary nodes detected</li>
+<li><code>Survivial</code>: survival status (1 = survived for more than 5 years, 2 = died within 5 years)</li>
+</ol>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="generalised-linear-models-glm.html#cb298-1" tabindex="-1"></a>haberman <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&#39;haberman.csv&#39;</span>)</span>
+<span id="cb298-2"><a href="generalised-linear-models-glm.html#cb298-2" tabindex="-1"></a><span class="fu">head</span>(haberman)</span></code></pre></div>
+<pre><code>##   Age Year Nodes Survival
+## 1  30 1964     1        1
+## 2  30 1962     3        1
+## 3  30 1965     0        1
+## 4  31 1959     2        1
+## 5  31 1965     4        1
+## 6  33 1958    10        1</code></pre>
+<p>As you will notice, <code>Survival</code> is currently treated like a numerical variable, so the first thing we need to do is turn this into a categorical one, which indicates whether the patient survived for more than 5 years or not</p>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="generalised-linear-models-glm.html#cb300-1" tabindex="-1"></a>haberman <span class="ot">&lt;-</span> <span class="fu">mutate</span>(haberman, <span class="at">Survival =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(Survival<span class="sc">==</span><span class="dv">1</span>, <span class="st">&#39;yes&#39;</span>, <span class="st">&#39;no&#39;</span>)))</span></code></pre></div>
+<p>Our intuition would be that the predictor variables of interest are <code>Age</code> and <code>Nodes</code>; so let’s see how they relate with survival.</p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+Plot the distribution of <code>Age</code> and <code>Nodes</code> stratified by <code>Survival</code>.
+</div>
+</div>
+<button id="displayTextunnamed-chunk-205" onclick="javascript:toggle(&#39;unnamed-chunk-205&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-205" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<p><strong>Option 1:</strong> histograms</p>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="generalised-linear-models-glm.html#cb301-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(haberman, <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">col =</span> Survival)) <span class="sc">+</span></span>
+<span id="cb301-2"><a href="generalised-linear-models-glm.html#cb301-2" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb301-3"><a href="generalised-linear-models-glm.html#cb301-3" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>Survival) <span class="sc">+</span></span>
+<span id="cb301-4"><a href="generalised-linear-models-glm.html#cb301-4" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb301-5"><a href="generalised-linear-models-glm.html#cb301-5" tabindex="-1"></a></span>
+<span id="cb301-6"><a href="generalised-linear-models-glm.html#cb301-6" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(haberman, <span class="fu">aes</span>(<span class="at">x =</span> Nodes, <span class="at">col =</span> Survival)) <span class="sc">+</span></span>
+<span id="cb301-7"><a href="generalised-linear-models-glm.html#cb301-7" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb301-8"><a href="generalised-linear-models-glm.html#cb301-8" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>Survival) <span class="sc">+</span></span>
+<span id="cb301-9"><a href="generalised-linear-models-glm.html#cb301-9" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb301-10"><a href="generalised-linear-models-glm.html#cb301-10" tabindex="-1"></a></span>
+<span id="cb301-11"><a href="generalised-linear-models-glm.html#cb301-11" tabindex="-1"></a>p1 <span class="sc">/</span> p2</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-541-1.png" style="display: block; margin: auto;" /></p>
+<p><strong>Option 2:</strong> box-and-whisker plots</p>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="generalised-linear-models-glm.html#cb302-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(haberman, <span class="fu">aes</span>(<span class="at">y =</span> Age, <span class="at">x =</span> Survival, <span class="at">fill =</span> Survival)) <span class="sc">+</span></span>
+<span id="cb302-2"><a href="generalised-linear-models-glm.html#cb302-2" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb302-3"><a href="generalised-linear-models-glm.html#cb302-3" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb302-4"><a href="generalised-linear-models-glm.html#cb302-4" tabindex="-1"></a></span>
+<span id="cb302-5"><a href="generalised-linear-models-glm.html#cb302-5" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(haberman, <span class="fu">aes</span>(<span class="at">y =</span> Nodes, <span class="at">x =</span> Survival, <span class="at">fill =</span> Survival)) <span class="sc">+</span></span>
+<span id="cb302-6"><a href="generalised-linear-models-glm.html#cb302-6" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb302-7"><a href="generalised-linear-models-glm.html#cb302-7" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb302-8"><a href="generalised-linear-models-glm.html#cb302-8" tabindex="-1"></a></span>
+<span id="cb302-9"><a href="generalised-linear-models-glm.html#cb302-9" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-542-1.png" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+<p>From these graphs it is difficult to say if and by how much these variables had an influence on patient survival. But we cannot always trust our eyes so we are going to test this statistically by means of logistic regression. The syntax should be very familiar to you by now. In fact, the only argument we need to change from the previous GLM is to set the family to <code>binomial</code> and the link to <code>logit</code> (although this is not strictly necessary as it is the default link for this family).</p>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="generalised-linear-models-glm.html#cb303-1" tabindex="-1"></a>fit_bin <span class="ot">&lt;-</span> <span class="fu">glm</span>(Survival <span class="sc">~</span> Age <span class="sc">+</span> Nodes, <span class="at">data =</span> haberman, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&#39;logit&#39;</span>))</span>
+<span id="cb303-2"><a href="generalised-linear-models-glm.html#cb303-2" tabindex="-1"></a><span class="fu">summary</span>(fit_bin)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = Survival ~ Age + Nodes, family = binomial(link = &quot;logit&quot;), 
+##     data = haberman)
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  2.46290    0.70643   3.486  0.00049 ***
+## Age         -0.01965    0.01269  -1.549  0.12144    
+## Nodes       -0.08832    0.01982  -4.456 8.34e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 353.69  on 305  degrees of freedom
+## Residual deviance: 328.31  on 303  degrees of freedom
+## AIC: 334.31
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>This suggests that patient age is not a statistically significant predictor of patient survival. We can also test this directly by comparing models with and without this predictor using <code>anova</code></p>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="generalised-linear-models-glm.html#cb305-1" tabindex="-1"></a>fit_bin_b <span class="ot">&lt;-</span> <span class="fu">glm</span>(Survival <span class="sc">~</span> Nodes, <span class="at">data =</span> haberman, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&#39;logit&#39;</span>))</span>
+<span id="cb305-2"><a href="generalised-linear-models-glm.html#cb305-2" tabindex="-1"></a><span class="fu">anova</span>(fit_bin, fit_bin_b, <span class="at">test =</span> <span class="st">&quot;Chisq&quot;</span>)</span></code></pre></div>
+<pre><code>## Analysis of Deviance Table
+## 
+## Model 1: Survival ~ Age + Nodes
+## Model 2: Survival ~ Nodes
+##   Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)
+## 1       303     328.31                     
+## 2       304     330.72 -1  -2.4132   0.1203</code></pre>
+<p>This confirms that there is no statistical significant effect of Age, so we will drop this explanatory variable and proceed with the less complex model. Let’s have a look at the model summary</p>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="generalised-linear-models-glm.html#cb307-1" tabindex="-1"></a><span class="fu">summary</span>(fit_bin_b)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = Survival ~ Nodes, family = binomial(link = &quot;logit&quot;), 
+##     data = haberman)
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  1.41250    0.16297   8.667  &lt; 2e-16 ***
+## Nodes       -0.08577    0.01955  -4.387 1.15e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 353.69  on 305  degrees of freedom
+## Residual deviance: 330.72  on 304  degrees of freedom
+## AIC: 334.72
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>How do we interpret the model summary, and in particular the variable estimates. Remember that we are now working on the logit scale, and to make predictions about the probability of a patient surviving for more than 5 years we have to use the back-transform
+<span class="math display">\[
+\begin{align}
+\text{logit } p &amp;= \beta_0 + \beta_1 X \\
+\Rightarrow p &amp;= \text{logit}^{-1} \beta_0 + \beta_1 X = \frac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
+\end{align} \\
+\]</span></p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+
+<ol style="list-style-type: decimal">
+<li>Calculate the probability of survivial for a patient with 3 positive axillery nodes.</li>
+<li>Calculate the decrease in the probability of survival for one additional positive node.
+</div>
+</div></li>
+</ol>
+<button id="displayTextunnamed-chunk-210" onclick="javascript:toggle(&#39;unnamed-chunk-210&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-210" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<ol style="list-style-type: decimal">
+<li>The probability of survivial for a patient with 3 positive axillery nodes</li>
+</ol>
+<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="generalised-linear-models-glm.html#cb309-1" tabindex="-1"></a>lin_mean <span class="ot">&lt;-</span> <span class="fu">exp</span>(fit_bin_b<span class="sc">$</span>coefficients[[<span class="dv">1</span>]] <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>fit_bin_b<span class="sc">$</span>coefficients[[<span class="dv">2</span>]])</span>
+<span id="cb309-2"><a href="generalised-linear-models-glm.html#cb309-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> lin_mean <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> lin_mean)</span>
+<span id="cb309-3"><a href="generalised-linear-models-glm.html#cb309-3" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<pre><code>## [1] 0.7604547</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>The decrease in survivial probability for one additional positive axillery node</li>
+</ol>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="generalised-linear-models-glm.html#cb311-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_bin_b, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Nodes =</span> <span class="dv">3</span>), <span class="at">type =</span> <span class="st">&#39;response&#39;</span>)</span>
+<span id="cb311-2"><a href="generalised-linear-models-glm.html#cb311-2" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_bin_b, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">Nodes =</span> <span class="dv">4</span>), <span class="at">type =</span> <span class="st">&#39;response&#39;</span>)</span>
+<span id="cb311-3"><a href="generalised-linear-models-glm.html#cb311-3" tabindex="-1"></a><span class="fu">round</span>(p2<span class="sc">-</span>p1,<span class="dv">4</span>)</span></code></pre></div>
+<pre><code>##      1 
+## -0.016</code></pre>
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+<p>The next thing we would like do is to plot the regression line. As before this involves making a new dataset for prediction and then add this to our graph of survival vs. nodes. Also, we need to make sure that the original response variable (<code>Survival</code>) is projected onto the same probability scale 0 to 1.</p>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="generalised-linear-models-glm.html#cb313-1" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Nodes =</span> <span class="fu">seq</span>(<span class="fu">min</span>(haberman<span class="sc">$</span>Nodes), <span class="fu">max</span>(haberman<span class="sc">$</span>Nodes)))</span>
+<span id="cb313-2"><a href="generalised-linear-models-glm.html#cb313-2" tabindex="-1"></a>newdata<span class="sc">$</span>pSurvival <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_bin_b, <span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">&#39;response&#39;</span>)</span>
+<span id="cb313-3"><a href="generalised-linear-models-glm.html#cb313-3" tabindex="-1"></a></span>
+<span id="cb313-4"><a href="generalised-linear-models-glm.html#cb313-4" tabindex="-1"></a>haberman2 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(haberman, <span class="at">pSurvival =</span> <span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(Survival)<span class="sc">==</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb313-5"><a href="generalised-linear-models-glm.html#cb313-5" tabindex="-1"></a></span>
+<span id="cb313-6"><a href="generalised-linear-models-glm.html#cb313-6" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Nodes, <span class="at">y =</span> pSurvival)) <span class="sc">+</span></span>
+<span id="cb313-7"><a href="generalised-linear-models-glm.html#cb313-7" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> haberman2, <span class="fu">aes</span>(<span class="at">col =</span> Survival)) <span class="sc">+</span></span>
+<span id="cb313-8"><a href="generalised-linear-models-glm.html#cb313-8" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> newdata)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-211-1.png" style="display: block; margin: auto;" /></p>
+</div>
+<div id="odds-ratios" class="section level3 unnumbered hasAnchor">
+<h3>Odds ratios<a href="generalised-linear-models-glm.html#odds-ratios" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Another, and sometimes more and sometimes less intuitive interpretation of the coefficients of a logistic regression model is in terms of <strong>odds ratios</strong>:</p>
+<p><strong>Odds:</strong>
+<span class="math display">\[ \frac{P(\text{event happens})}{P(\text{event does not happen})} = \frac{P(\text{event happens})}{1 - P(\text{event happens})}\]</span></p>
+<p><strong>Odds ratio:</strong>
+<span class="math display">\[ \frac{\text{odds in one group}}{\text{odds in another group}} \]</span></p>
+<p>From the previous task we could for example calculate the odds ratio (of survival) in individuals with 3 detected nodes compared to 2 detected nodes, which will leave to the interested reader to work out. It turns out that if you take the log of the odds ratio you will recover <span class="math inline">\(\beta_1\)</span>, i.e. <span class="math inline">\(e^{\beta_1}\)</span> is the odds ratio for a unit increase.</p>
+<p>As mentioned earlier, odds ratio are tricky to understand but generally make more sense and are easier to interpret for categorical variable than for numerical ones.</p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Practical
+</div>
+<div class="panel-body">
+Download the titanic dataset (titanic.csv), which contains data of over 800 passengers of the <a href="https://en.wikipedia.org/wiki/Titanic">Titanic</a> together with information on whether they survived or not (0 and 1, respectively), their age, sex, passenger class, the fare they paid and whether they had siblings/spouse or children/parents on board. Perform a full logistic regression analysis (survival yes/no).
+</div>
+</div>
+<button id="displayTextunnamed-chunk-213" onclick="javascript:toggle(&#39;unnamed-chunk-213&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-213" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<p>There are plenty of way this dataset can and should be analyed. Here we just show one example for a logistic regression analysis examining the survival probability as dependent on sex and age and their interaction.</p>
+<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="generalised-linear-models-glm.html#cb314-1" tabindex="-1"></a>titanic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&#39;titanic.csv&#39;</span>)</span>
+<span id="cb314-2"><a href="generalised-linear-models-glm.html#cb314-2" tabindex="-1"></a></span>
+<span id="cb314-3"><a href="generalised-linear-models-glm.html#cb314-3" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(Survived <span class="sc">~</span> Age <span class="sc">*</span> Sex, <span class="at">data =</span> titanic, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>)</span>
+<span id="cb314-4"><a href="generalised-linear-models-glm.html#cb314-4" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = Survived ~ Age * Sex, family = &quot;binomial&quot;, data = titanic)
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  0.41192    0.28211   1.460 0.144254    
+## Age          0.02423    0.00980   2.472 0.013437 *  
+## Sexmale     -1.28930    0.37615  -3.428 0.000609 ***
+## Age:Sexmale -0.04376    0.01265  -3.459 0.000541 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1182.77  on 886  degrees of freedom
+## Residual deviance:  903.49  on 883  degrees of freedom
+## AIC: 911.49
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="generalised-linear-models-glm.html#cb316-1" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Age =</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="fu">min</span>(titanic<span class="sc">$</span>Age), <span class="fu">max</span>(titanic<span class="sc">$</span>Age), <span class="at">length.out =</span> <span class="dv">50</span>),<span class="dv">2</span>),</span>
+<span id="cb316-2"><a href="generalised-linear-models-glm.html#cb316-2" tabindex="-1"></a>                      <span class="at">Sex =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&#39;male&#39;</span>, <span class="st">&#39;female&#39;</span>), <span class="at">each =</span> <span class="dv">50</span>))</span>
+<span id="cb316-3"><a href="generalised-linear-models-glm.html#cb316-3" tabindex="-1"></a>newdata<span class="sc">$</span>Survived <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit, <span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">&#39;response&#39;</span>)</span>
+<span id="cb316-4"><a href="generalised-linear-models-glm.html#cb316-4" tabindex="-1"></a></span>
+<span id="cb316-5"><a href="generalised-linear-models-glm.html#cb316-5" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> Survived, <span class="at">col =</span> Sex)) <span class="sc">+</span></span>
+<span id="cb316-6"><a href="generalised-linear-models-glm.html#cb316-6" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> titanic) <span class="sc">+</span></span>
+<span id="cb316-7"><a href="generalised-linear-models-glm.html#cb316-7" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> newdata)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-561-1.png" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="mixed-effect-models-mem.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="survival-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

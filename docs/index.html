@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Introduction to statistical data analysis in R</title>
+  <meta name="description" content="Intro to Stats with R" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Introduction to statistical data analysis in R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Intro to Stats with R" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Introduction to statistical data analysis in R" />
+  
+  <meta name="twitter:description" content="Intro to Stats with R" />
+  
+
+<meta name="author" content="Mario Recker" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="general-introduction-to-rrstudio.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script language="javascript"> 
+    function toggle(id) {
+        var ele = document.getElementById("toggleText" + id);
+        var text = document.getElementById("displayText" + id);
+        var buttonText = text.innerHTML.replace("Show: ", "");
+        buttonText = buttonText.replace("Hide: ", "");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "Show: " + buttonText;
+        } else {
+            ele.style.display = "block";
+            text.innerHTML = "Hide: " + buttonText;
+        }
+    } 
+</script>
+
+<script language="javascript">
+    function openCode(evt, codeName, id) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent" + id);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks" + id);
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(codeName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<script language="javascript">
+    function hide(id){
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-structure"><i class="fa fa-check"></i>Workshop structure</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html"><i class="fa fa-check"></i><b>1</b> General introduction to R/RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#setting-up-an-r-session"><i class="fa fa-check"></i><b>1.1</b> Setting up an R session</a></li>
+<li class="chapter" data-level="1.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#r-packages"><i class="fa fa-check"></i><b>1.2</b> R packages</a></li>
+<li class="chapter" data-level="1.3" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#variables-vectors-and-data-frames-in-r"><i class="fa fa-check"></i><b>1.3</b> Variables, vectors and data frames in R</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#data-frames"><i class="fa fa-check"></i><b>1.3.1</b> Data frames</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#functions-in-r"><i class="fa fa-check"></i><b>1.4</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#useful-inbuilt-functions"><i class="fa fa-check"></i><b>1.4.1</b> Useful inbuilt functions</a></li>
+<li class="chapter" data-level="1.4.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#custom-functions"><i class="fa fa-check"></i><b>1.4.2</b> Custom functions</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#basic-plotting-in-r"><i class="fa fa-check"></i><b>1.5</b> Basic plotting in R</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#scatter-plot"><i class="fa fa-check"></i><b>1.5.1</b> Scatter plot</a></li>
+<li class="chapter" data-level="1.5.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#line-graph"><i class="fa fa-check"></i><b>1.5.2</b> Line graph</a></li>
+<li class="chapter" data-level="1.5.3" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#combined-graph"><i class="fa fa-check"></i><b>1.5.3</b> Combined graph</a></li>
+<li class="chapter" data-level="1.5.4" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#barplot"><i class="fa fa-check"></i><b>1.5.4</b> Barplot</a></li>
+<li class="chapter" data-level="1.5.5" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#boxplots"><i class="fa fa-check"></i><b>1.5.5</b> Boxplots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html"><i class="fa fa-check"></i><b>2</b> Data wrangling and visualisation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#introduction"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
+<li class="chapter" data-level="2.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#loading-and-saving-data"><i class="fa fa-check"></i><b>2.2</b> Loading and saving data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#save-load-data-as-an-r-object"><i class="fa fa-check"></i><b>2.2.1</b> Save / load data as an R object</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#save-load-as-a-csv-file"><i class="fa fa-check"></i><b>2.2.2</b> Save / load as a CSV file</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#handling-excel-files"><i class="fa fa-check"></i><b>2.2.3</b> Handling Excel files</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#cheatsheet"><i class="fa fa-check"></i><b>2.2.4</b> Cheatsheet</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#visualisation-using-ggplot"><i class="fa fa-check"></i><b>2.3</b> Visualisation using <code>ggplot</code></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#aesthetics"><i class="fa fa-check"></i><b>2.3.1</b> Aesthetics</a></li>
+<li class="chapter" data-level="2.3.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#geoms"><i class="fa fa-check"></i><b>2.3.2</b> Geoms</a></li>
+<li class="chapter" data-level="2.3.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#labels"><i class="fa fa-check"></i><b>2.3.3</b> Labels</a></li>
+<li class="chapter" data-level="2.3.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#faceting"><i class="fa fa-check"></i><b>2.3.4</b> Faceting</a></li>
+<li class="chapter" data-level="2.3.5" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#statistical-transformation"><i class="fa fa-check"></i><b>2.3.5</b> Statistical transformation</a></li>
+<li class="chapter" data-level="2.3.6" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#scales"><i class="fa fa-check"></i><b>2.3.6</b> Scales</a></li>
+<li class="chapter" data-level="2.3.7" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#assigning-plots-to-objects"><i class="fa fa-check"></i><b>2.3.7</b> Assigning plots to objects</a></li>
+<li class="chapter" data-level="2.3.8" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#putting-it-all-together"><i class="fa fa-check"></i><b>2.3.8</b> Putting it all together</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#data-wrangling"><i class="fa fa-check"></i><b>2.4</b> Data wrangling</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#tidy-data"><i class="fa fa-check"></i><b>2.4.1</b> Tidy data</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#filter-rows"><i class="fa fa-check"></i><b>2.4.2</b> Filter rows</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#sort-rows"><i class="fa fa-check"></i><b>2.4.3</b> Sort rows</a></li>
+<li class="chapter" data-level="2.4.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#select-columns"><i class="fa fa-check"></i><b>2.4.4</b> Select columns</a></li>
+<li class="chapter" data-level="2.4.5" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#grouping-and-summarising"><i class="fa fa-check"></i><b>2.4.5</b> Grouping and summarising</a></li>
+<li class="chapter" data-level="2.4.6" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#reshaping-datasets"><i class="fa fa-check"></i><b>2.4.6</b> Reshaping datasets</a></li>
+<li class="chapter" data-level="2.4.7" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#mutate"><i class="fa fa-check"></i><b>2.4.7</b> Mutate</a></li>
+<li class="chapter" data-level="2.4.8" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#dealing-with-missing-data"><i class="fa fa-check"></i><b>2.4.8</b> Dealing with missing data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html"><i class="fa fa-check"></i><b>3</b> Introduction to statistical modelling in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#what-is-a-statistical-model"><i class="fa fa-check"></i>What is a statistical model?</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#descriptive-vs.-inferential-statistics"><i class="fa fa-check"></i>Descriptive vs. inferential statistics</a></li>
+<li class="chapter" data-level="3.1" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#univariate-analysis"><i class="fa fa-check"></i><b>3.1</b> Univariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#mean-vs.-median"><i class="fa fa-check"></i><strong>Mean vs. median</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#interquartile-range"><i class="fa fa-check"></i><strong>Interquartile range</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#skewness"><i class="fa fa-check"></i><strong>Skewness</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#kurtosis"><i class="fa fa-check"></i><strong>Kurtosis</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#multivariate-analysis"><i class="fa fa-check"></i><b>3.2</b> Multivariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#contingency-tables"><i class="fa fa-check"></i><strong>Contingency tables</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#pearson-correlation"><i class="fa fa-check"></i><strong>Pearson correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#spearmans-rank-correlation"><i class="fa fa-check"></i><strong>Spearman’s rank correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#correlation-vs.-causation"><i class="fa fa-check"></i><strong>Correlation vs. causation</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="linear-models-lm.html"><a href="linear-models-lm.html"><i class="fa fa-check"></i><b>4</b> Linear Models (LM)</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#simple-linear-regression"><i class="fa fa-check"></i><b>4.1</b> Simple linear regression</a></li>
+<li class="chapter" data-level="4.2" data-path="linear-models-lm.html"><a href="linear-models-lm.html#linear-regression-in-r"><i class="fa fa-check"></i><b>4.2</b> Linear regression in R</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#using-the-summary-function"><i class="fa fa-check"></i><b>4.2.1</b> <strong>Using the <code>summary()</code> function</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="linear-models-lm.html"><a href="linear-models-lm.html#model-checking"><i class="fa fa-check"></i><b>4.3</b> Model checking</a>
+<ul>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-fitted"><i class="fa fa-check"></i><strong>Residuals vs Fitted</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#normal-q-q"><i class="fa fa-check"></i><strong>Normal Q-Q</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#scale-location"><i class="fa fa-check"></i><strong>Scale-Location</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-leverage"><i class="fa fa-check"></i><strong>Residuals vs Leverage</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="linear-models-lm.html"><a href="linear-models-lm.html#prediction"><i class="fa fa-check"></i><b>4.4</b> Prediction</a></li>
+<li class="chapter" data-level="4.5" data-path="linear-models-lm.html"><a href="linear-models-lm.html#multiple-linear-regression"><i class="fa fa-check"></i><b>4.5</b> Multiple linear regression</a></li>
+<li class="chapter" data-level="4.6" data-path="linear-models-lm.html"><a href="linear-models-lm.html#categorical-explanatory-variables"><i class="fa fa-check"></i><b>4.6</b> Categorical explanatory variables</a></li>
+<li class="chapter" data-level="4.7" data-path="linear-models-lm.html"><a href="linear-models-lm.html#interactions"><i class="fa fa-check"></i><b>4.7</b> Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html"><i class="fa fa-check"></i><b>5</b> Mixed Effect Models (MEM)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#model-checking-1"><i class="fa fa-check"></i><b>5.1</b> Model checking</a></li>
+<li class="chapter" data-level="5.2" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#further-reading"><i class="fa fa-check"></i><b>5.2</b> Further reading</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html"><i class="fa fa-check"></i><b>6</b> Generalised Linear Models (GLM)</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#link-functions"><i class="fa fa-check"></i><b>6.1</b> Link functions</a></li>
+<li class="chapter" data-level="6.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-for-count-data"><i class="fa fa-check"></i><b>6.2</b> Poisson regression (for count data)</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background"><i class="fa fa-check"></i><b>6.2.1</b> Background</a></li>
+<li class="chapter" data-level="6.2.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-in-r"><i class="fa fa-check"></i><b>6.2.2</b> Poisson regression in R</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-for-binary-data"><i class="fa fa-check"></i><b>6.3</b> Logistic regression (for binary data)</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background-1"><i class="fa fa-check"></i><b>6.3.1</b> Background</a></li>
+<li class="chapter" data-level="6.3.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-in-r"><i class="fa fa-check"></i><b>6.3.2</b> Logistic regression in R</a></li>
+<li class="chapter" data-level="" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#odds-ratios"><i class="fa fa-check"></i>Odds ratios</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="survival-analysis.html"><a href="survival-analysis.html"><i class="fa fa-check"></i><b>7</b> Survival Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="survival-analysis.html"><a href="survival-analysis.html#terminology-and-notation"><i class="fa fa-check"></i><b>7.1</b> Terminology and notation</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="survival-analysis.html"><a href="survival-analysis.html#censoring"><i class="fa fa-check"></i><b>7.1.1</b> Censoring</a></li>
+<li class="chapter" data-level="7.1.2" data-path="survival-analysis.html"><a href="survival-analysis.html#survival-and-hazard-functions"><i class="fa fa-check"></i><b>7.1.2</b> Survival and hazard functions</a></li>
+<li class="chapter" data-level="7.1.3" data-path="survival-analysis.html"><a href="survival-analysis.html#calculating-survival-times-in-r"><i class="fa fa-check"></i><b>7.1.3</b> Calculating survival times in R</a></li>
+<li class="chapter" data-level="7.1.4" data-path="survival-analysis.html"><a href="survival-analysis.html#r-libraries-and-example-data"><i class="fa fa-check"></i><b>7.1.4</b> R libraries and example data</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="survival-analysis.html"><a href="survival-analysis.html#kaplan-meier"><i class="fa fa-check"></i><b>7.2</b> Kaplan-Meier</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="survival-analysis.html"><a href="survival-analysis.html#median-survival-time"><i class="fa fa-check"></i><b>7.2.1</b> <strong>Median survival time</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="survival-analysis.html"><a href="survival-analysis.html#cox-regression-model"><i class="fa fa-check"></i><b>7.3</b> Cox regression model</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to statistical data analysis in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Introduction to statistical data analysis in R</h1>
+<p class="author"><em>Mario Recker</em></p>
+</div>
+<div id="about" class="section level1 unnumbered hasAnchor">
+<h1>About<a href="index.html#about" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This workshop is intended to introduce the R/RStudio statistical programming environment and how to use it for efficient data handling, data visualisation and data analysis. It is aimed at individuals with little experience in R/Rstudio and basic statistics. For those who are interested in a general intro to R or a refresher, please have a look at the following site for a great introduction to R/RStudio <a href="https://exeter-data-analytics.github.io/IntroToR/index.html">Introduction to R</a>. Equally, much of the material on statistical data analysis are based on the <a href="https://exeter-data-analytics.github.io/StatModelling/">Statistical Modelling in R</a> workshop. These workshops had been developed by <a href="https://medicine.exeter.ac.uk/people/profile/index.php?web_id=TJ_McKinley">TJ McKinley</a> from the University of Exeter and JJ Valletta (<span class="math inline">\(\dagger\)</span>).</p>
+<div id="workshop-structure" class="section level2 unnumbered hasAnchor">
+<h2>Workshop structure<a href="index.html#workshop-structure" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This workshop will loosely be structured into the following themes</p>
+<ol style="list-style-type: decimal">
+<li>General introduction to R/RStudio
+<ul>
+<li>variables and data frames</li>
+<li>functions and loops</li>
+<li>basic plotting</li>
+</ul></li>
+<li>Data handling and visualisation
+<ul>
+<li>importing data</li>
+<li>plotting data with <code>ggplot</code></li>
+<li>data wrangling</li>
+</ul></li>
+<li>Statistical analysis
+<ul>
+<li>linear models</li>
+<li>mixed effect models</li>
+<li>generalised linear models</li>
+<li>survivial analysis</li>
+</ul></li>
+</ol>
+<p><span class="math inline">\(~\)</span></p>
+<p>The workshop will consist of a mixture between (theoretical) background and hands-on practicals. Specific tasks, designed for you to test your new skills and understanding, are highlighted as</p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+This task will be explained here
+</div>
+</div>
+<p>The solution can be revealed by clicking</p>
+<button id="displayTextunnamed-chunk-3" onclick="javascript:toggle(&#39;unnamed-chunk-3&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-3" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+A solution will appear here.
+</div>
+</div>
+</div>
+<p>However, please make sure you try before clicking on the <code>Solution</code> - this is the only way to make sure how fully understood the new concepts.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="general-introduction-to-rrstudio.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
