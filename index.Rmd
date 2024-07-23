@@ -28,21 +28,22 @@ This workshop is intended to introduce the R/RStudio statistical programming env
 
 This workshop will loosely be structured into the following themes
 
-1. General introduction to R/RStudio
-    - variables and data frames
-    - functions and loops
-    - basic plotting
-
-2. Data handling and visualisation
+1. Data handling 
     - importing data
-    - plotting data with `ggplot`
-    - data wrangling
+    - data types
+    - missing data
+    
+2. Descriptive statistics
+    - summary statistics
+    - contingency tables
+    - graphical representation
 
-3. Statistical analysis 
+3. Inferential statistics 
     - linear models
     - mixed effect models
     - generalised linear models
     - survivial analysis
+    - Latent Class Analysis
 
 
 $~$
@@ -61,3 +62,15 @@ A solution will appear here.
 
 However, please make sure you try before clicking on the `Solution` - this is the only way to make sure how fully understood the new concepts.
 
+
+$~$
+
+**Prerequisites**
+
+It is expected that you feel comfortable with basic R / RStudio and, specifically, the use of `data.frame` objects. The Appendix provides extra background material, covering a lot of necessary background. Also, for this workshop we will be relying on the  *tidyverse* package, or rather suite of packages for performing a (growing) number of data science tasks, which include `ggplot2` and `dplyr`. Please have a look in the Appendix for a brief introduction to their uses.
+
+$~$
+
+**Important**
+
+There will be plenty of time to practice your new skills, and please feel to aks if anything is not 100% clear.

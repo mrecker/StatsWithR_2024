@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7 Survival Analysis | Introduction to statistical data analysis in R (2024)</title>
+  <meta name="description" content="Intro to Stats with R" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="7 Survival Analysis | Introduction to statistical data analysis in R (2024)" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Intro to Stats with R" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7 Survival Analysis | Introduction to statistical data analysis in R (2024)" />
+  
+  <meta name="twitter:description" content="Intro to Stats with R" />
+  
+
+<meta name="author" content="Mario Recker" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="generalised-linear-models-glm.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script language="javascript"> 
+    function toggle(id) {
+        var ele = document.getElementById("toggleText" + id);
+        var text = document.getElementById("displayText" + id);
+        var buttonText = text.innerHTML.replace("Show: ", "");
+        buttonText = buttonText.replace("Hide: ", "");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "Show: " + buttonText;
+        } else {
+            ele.style.display = "block";
+            text.innerHTML = "Hide: " + buttonText;
+        }
+    } 
+</script>
+
+<script language="javascript">
+    function openCode(evt, codeName, id) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent" + id);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks" + id);
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(codeName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<script language="javascript">
+    function hide(id){
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-structure"><i class="fa fa-check"></i>Workshop structure</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html"><i class="fa fa-check"></i><b>1</b> General introduction to R/RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#setting-up-an-r-session"><i class="fa fa-check"></i><b>1.1</b> Setting up an R session</a></li>
+<li class="chapter" data-level="1.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#r-packages"><i class="fa fa-check"></i><b>1.2</b> R packages</a></li>
+<li class="chapter" data-level="1.3" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#variables-vectors-and-data-frames-in-r"><i class="fa fa-check"></i><b>1.3</b> Variables, vectors and data frames in R</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#data-frames"><i class="fa fa-check"></i><b>1.3.1</b> Data frames</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#functions-in-r"><i class="fa fa-check"></i><b>1.4</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#useful-inbuilt-functions"><i class="fa fa-check"></i><b>1.4.1</b> Useful inbuilt functions</a></li>
+<li class="chapter" data-level="1.4.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#custom-functions"><i class="fa fa-check"></i><b>1.4.2</b> Custom functions</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#basic-plotting-in-r"><i class="fa fa-check"></i><b>1.5</b> Basic plotting in R</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#scatter-plot"><i class="fa fa-check"></i><b>1.5.1</b> Scatter plot</a></li>
+<li class="chapter" data-level="1.5.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#line-graph"><i class="fa fa-check"></i><b>1.5.2</b> Line graph</a></li>
+<li class="chapter" data-level="1.5.3" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#combined-graph"><i class="fa fa-check"></i><b>1.5.3</b> Combined graph</a></li>
+<li class="chapter" data-level="1.5.4" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#barplot"><i class="fa fa-check"></i><b>1.5.4</b> Barplot</a></li>
+<li class="chapter" data-level="1.5.5" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#boxplots"><i class="fa fa-check"></i><b>1.5.5</b> Boxplots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html"><i class="fa fa-check"></i><b>2</b> Data wrangling and visualisation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#introduction"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
+<li class="chapter" data-level="2.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#loading-and-saving-data"><i class="fa fa-check"></i><b>2.2</b> Loading and saving data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#save-load-data-as-an-r-object"><i class="fa fa-check"></i><b>2.2.1</b> Save / load data as an R object</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#save-load-as-a-csv-file"><i class="fa fa-check"></i><b>2.2.2</b> Save / load as a CSV file</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#handling-excel-files"><i class="fa fa-check"></i><b>2.2.3</b> Handling Excel files</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#cheatsheet"><i class="fa fa-check"></i><b>2.2.4</b> Cheatsheet</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#visualisation-using-ggplot"><i class="fa fa-check"></i><b>2.3</b> Visualisation using <code>ggplot</code></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#aesthetics"><i class="fa fa-check"></i><b>2.3.1</b> Aesthetics</a></li>
+<li class="chapter" data-level="2.3.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#geoms"><i class="fa fa-check"></i><b>2.3.2</b> Geoms</a></li>
+<li class="chapter" data-level="2.3.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#labels"><i class="fa fa-check"></i><b>2.3.3</b> Labels</a></li>
+<li class="chapter" data-level="2.3.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#faceting"><i class="fa fa-check"></i><b>2.3.4</b> Faceting</a></li>
+<li class="chapter" data-level="2.3.5" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#statistical-transformation"><i class="fa fa-check"></i><b>2.3.5</b> Statistical transformation</a></li>
+<li class="chapter" data-level="2.3.6" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#scales"><i class="fa fa-check"></i><b>2.3.6</b> Scales</a></li>
+<li class="chapter" data-level="2.3.7" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#assigning-plots-to-objects"><i class="fa fa-check"></i><b>2.3.7</b> Assigning plots to objects</a></li>
+<li class="chapter" data-level="2.3.8" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#putting-it-all-together"><i class="fa fa-check"></i><b>2.3.8</b> Putting it all together</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#data-wrangling"><i class="fa fa-check"></i><b>2.4</b> Data wrangling</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#tidy-data"><i class="fa fa-check"></i><b>2.4.1</b> Tidy data</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#filter-rows"><i class="fa fa-check"></i><b>2.4.2</b> Filter rows</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#sort-rows"><i class="fa fa-check"></i><b>2.4.3</b> Sort rows</a></li>
+<li class="chapter" data-level="2.4.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#select-columns"><i class="fa fa-check"></i><b>2.4.4</b> Select columns</a></li>
+<li class="chapter" data-level="2.4.5" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#grouping-and-summarising"><i class="fa fa-check"></i><b>2.4.5</b> Grouping and summarising</a></li>
+<li class="chapter" data-level="2.4.6" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#reshaping-datasets"><i class="fa fa-check"></i><b>2.4.6</b> Reshaping datasets</a></li>
+<li class="chapter" data-level="2.4.7" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#mutate"><i class="fa fa-check"></i><b>2.4.7</b> Mutate</a></li>
+<li class="chapter" data-level="2.4.8" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#dealing-with-missing-data"><i class="fa fa-check"></i><b>2.4.8</b> Dealing with missing data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html"><i class="fa fa-check"></i><b>3</b> Introduction to statistical modelling in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#what-is-a-statistical-model"><i class="fa fa-check"></i>What is a statistical model?</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#descriptive-vs.-inferential-statistics"><i class="fa fa-check"></i>Descriptive vs. inferential statistics</a></li>
+<li class="chapter" data-level="3.1" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#univariate-analysis"><i class="fa fa-check"></i><b>3.1</b> Univariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#mean-vs.-median"><i class="fa fa-check"></i><strong>Mean vs. median</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#standard-deviation"><i class="fa fa-check"></i><strong>Standard deviation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#interquartile-range"><i class="fa fa-check"></i><strong>Interquartile range</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#skewness"><i class="fa fa-check"></i><strong>Skewness</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#kurtosis"><i class="fa fa-check"></i><strong>Kurtosis</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#multivariate-analysis"><i class="fa fa-check"></i><b>3.2</b> Multivariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#contingency-tables"><i class="fa fa-check"></i><strong>Contingency tables</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#pearson-correlation"><i class="fa fa-check"></i><strong>Pearson correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#spearmans-rank-correlation"><i class="fa fa-check"></i><strong>Spearman’s rank correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#correlation-vs.-causation"><i class="fa fa-check"></i><strong>Correlation vs. causation</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="linear-models-lm.html"><a href="linear-models-lm.html"><i class="fa fa-check"></i><b>4</b> Linear Models (LM)</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#simple-linear-regression"><i class="fa fa-check"></i><b>4.1</b> Simple linear regression</a></li>
+<li class="chapter" data-level="4.2" data-path="linear-models-lm.html"><a href="linear-models-lm.html#linear-regression-in-r"><i class="fa fa-check"></i><b>4.2</b> Linear regression in R</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#using-the-summary-function"><i class="fa fa-check"></i><b>4.2.1</b> <strong>Using the <code>summary()</code> function</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="linear-models-lm.html"><a href="linear-models-lm.html#model-checking"><i class="fa fa-check"></i><b>4.3</b> Model checking</a>
+<ul>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-fitted"><i class="fa fa-check"></i><strong>Residuals vs Fitted</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#normal-q-q"><i class="fa fa-check"></i><strong>Normal Q-Q</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#scale-location"><i class="fa fa-check"></i><strong>Scale-Location</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-leverage"><i class="fa fa-check"></i><strong>Residuals vs Leverage</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="linear-models-lm.html"><a href="linear-models-lm.html#prediction"><i class="fa fa-check"></i><b>4.4</b> Prediction</a>
+<ul>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#confidence-vs-prediction-interval"><i class="fa fa-check"></i><strong>Confidence vs prediction interval</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="linear-models-lm.html"><a href="linear-models-lm.html#multiple-linear-regression"><i class="fa fa-check"></i><b>4.5</b> Multiple linear regression</a></li>
+<li class="chapter" data-level="4.6" data-path="linear-models-lm.html"><a href="linear-models-lm.html#categorical-explanatory-variables"><i class="fa fa-check"></i><b>4.6</b> Categorical explanatory variables</a></li>
+<li class="chapter" data-level="4.7" data-path="linear-models-lm.html"><a href="linear-models-lm.html#interactions"><i class="fa fa-check"></i><b>4.7</b> Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html"><i class="fa fa-check"></i><b>5</b> Mixed Effect Models (MEM)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#model-checking-1"><i class="fa fa-check"></i><b>5.1</b> Model checking</a></li>
+<li class="chapter" data-level="5.2" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#further-reading"><i class="fa fa-check"></i><b>5.2</b> Further reading</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html"><i class="fa fa-check"></i><b>6</b> Generalised Linear Models (GLM)</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#link-functions"><i class="fa fa-check"></i><b>6.1</b> Link functions</a></li>
+<li class="chapter" data-level="6.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-for-count-data"><i class="fa fa-check"></i><b>6.2</b> Poisson regression (for count data)</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background"><i class="fa fa-check"></i><b>6.2.1</b> Background</a></li>
+<li class="chapter" data-level="6.2.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-in-r"><i class="fa fa-check"></i><b>6.2.2</b> Poisson regression in R</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-for-binary-data"><i class="fa fa-check"></i><b>6.3</b> Logistic regression (for binary data)</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background-1"><i class="fa fa-check"></i><b>6.3.1</b> Background</a></li>
+<li class="chapter" data-level="6.3.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-in-r"><i class="fa fa-check"></i><b>6.3.2</b> Logistic regression in R</a></li>
+<li class="chapter" data-level="" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#odds-ratios"><i class="fa fa-check"></i>Odds ratios</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="survival-analysis.html"><a href="survival-analysis.html"><i class="fa fa-check"></i><b>7</b> Survival Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="survival-analysis.html"><a href="survival-analysis.html#terminology-and-notation"><i class="fa fa-check"></i><b>7.1</b> Terminology and notation</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="survival-analysis.html"><a href="survival-analysis.html#censoring"><i class="fa fa-check"></i><b>7.1.1</b> Censoring</a></li>
+<li class="chapter" data-level="7.1.2" data-path="survival-analysis.html"><a href="survival-analysis.html#survival-and-hazard-functions"><i class="fa fa-check"></i><b>7.1.2</b> Survival and hazard functions</a></li>
+<li class="chapter" data-level="7.1.3" data-path="survival-analysis.html"><a href="survival-analysis.html#calculating-survival-times-in-r"><i class="fa fa-check"></i><b>7.1.3</b> Calculating survival times in R</a></li>
+<li class="chapter" data-level="7.1.4" data-path="survival-analysis.html"><a href="survival-analysis.html#r-libraries-and-example-data"><i class="fa fa-check"></i><b>7.1.4</b> R libraries and example data</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="survival-analysis.html"><a href="survival-analysis.html#kaplan-meier"><i class="fa fa-check"></i><b>7.2</b> Kaplan-Meier</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="survival-analysis.html"><a href="survival-analysis.html#median-survival-time"><i class="fa fa-check"></i><b>7.2.1</b> <strong>Median survival time</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="survival-analysis.html"><a href="survival-analysis.html#cox-regression-model"><i class="fa fa-check"></i><b>7.3</b> Cox regression model</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to statistical data analysis in R (2024)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="survival-analysis" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">7</span> Survival Analysis<a href="survival-analysis.html#survival-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In the previous section we have learned how logistic regression can be used to analyse the influence of some factors (i.e. explanatory variables) on an observed event (the response variable). One example was how the number of positive detected anxillary nodes affected the probability of survival of cancer patients. Other studies, in particular clinical studies, are often more concerned with <em>when</em> an event happens and, relatedly, how specific covariates may influence the <em>time-to-event</em>. For example, how does treatment A affect the time to disease clearance compared to treatment B. This type of data requires a different analytic approach and is the subject of <em>survival analysis</em>.</p>
+<p>Note, this part of our workshop was partially adapted from the excellent <a href="https://www.emilyzabor.com/tutorials/survival_analysis_in_r_tutorial.html#Calculating_survival_times">Survival Analysis in R</a> tutorial by Emily C. Zabor, which also covers different methods and advanced topics than those briefly introduced here.</p>
+<div id="terminology-and-notation" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Terminology and notation<a href="survival-analysis.html#terminology-and-notation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before we go into details on how to conduct survival analysis in R, we need to clarify some of the common notations and terminologies.</p>
+<div id="censoring" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Censoring<a href="survival-analysis.html#censoring" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>An important concept in survival analysis is <em>censoring</em>. Survival times are often incompletely determined for some individuals, for example because of withdrawal, loss to follow-up or the study ended before the event occurred. These are examples of <em>right censoring</em>. There are also <strong>left censored</strong> data, for example when an event happened before the study started, and <strong>interval censored</strong> data, for when we know that an event happened within a certain time interval but we are not exactly sure when. Including censored data in our analysis is important as they still provide important information and make our inferences more reliable.</p>
+<p>In this workshop we are only concerned with right censored data, and an example of how this might look like is given here</p>
+<p><img src="_main_files/figure-html/unnamed-chunk-214-1.png" style="display: block; margin: auto;" />
+We could ask the question, what is the proportion of individuals who were event-free by day 6. We know that patients 5 and 7 experienced an event and that patients 2, 3, 4 and 8 did not experience an event by day 6. Patients 1 and 6, on the other hand, may have left the study before day 6. However, we do have some information about them, which is that they did not experience the event for a certain period of time, and we can use this information for our analysis.</p>
+<blockquote>
+<p><strong>Note:</strong> A key assumption about censoring is that it is non-informative about the event. That is, the censoring is caused by something other than the impending event.</p>
+</blockquote>
+</div>
+<div id="survival-and-hazard-functions" class="section level3 hasAnchor" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Survival and hazard functions<a href="survival-analysis.html#survival-and-hazard-functions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>There are two related probabilities are used to describe survival data: the <em>survival probability</em> <span class="math inline">\(S(t)\)</span> and the <em>hazard probability</em> <span class="math inline">\(h(t)\)</span>.</p>
+<div id="survival-function" class="section level4 unnumbered hasAnchor">
+<h4><strong>Survival function</strong><a href="survival-analysis.html#survival-function" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The survival probability, also known as the survival function <span class="math inline">\(S(t)\)</span>, is the probability that an individual will survive beyond any given specified time <span class="math display">\[ S(t) = Pr(T &gt; t) = 1 − F(t) \]</span> with <span class="math inline">\(F(t) = Pr(t \leq T)\)</span> being the cumulative distribution function and seen as the compliment of the survival function.</p>
+<p>The survival function has the following properties:</p>
+<ul>
+<li>it is not increasing</li>
+<li>at time <span class="math inline">\(t=0\)</span>, <span class="math inline">\(S(t)=1\)</span></li>
+<li>at time <span class="math inline">\(t=\infty\)</span>, <span class="math inline">\(S(t)=0\)</span></li>
+</ul>
+<p>Note, as we usually measure time in discrete units, e.g days or years, the survival function is often discrete in practice.</p>
+</div>
+<div id="hazard-function" class="section level4 unnumbered hasAnchor">
+<h4><strong>Hazard function</strong><a href="survival-analysis.html#hazard-function" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The hazard function, <span class="math inline">\(h(t)\)</span>, describes the <em>hazard</em> at time <span class="math inline">\(t\)</span>. It is the probability that an event occurs in the
+neighborhood of time <span class="math inline">\(t\)</span> divided by the probability that the subject is alive at that time. It is a bit more difficult to illustrate because it measures the instantaneous risk of an event. However, we need the hazard function to consider <em>covariates</em> when we compare survival of patient groups at a later section.</p>
+</div>
+</div>
+<div id="calculating-survival-times-in-r" class="section level3 hasAnchor" number="7.1.3">
+<h3><span class="header-section-number">7.1.3</span> Calculating survival times in R<a href="survival-analysis.html#calculating-survival-times-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Datasets often do not readily contain survival times, or time-to-event, but rather have information of the start and end of the study or date of the event. Here, by means of an illustrative example, we briefly show you how to deal with dates in R. Imagine you had the following data, where we deliberately have two different date formats.</p>
+<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="survival-analysis.html#cb322-1" aria-hidden="true" tabindex="-1"></a>trialDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb322-2"><a href="survival-analysis.html#cb322-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">enrolled =</span> <span class="fu">c</span>(<span class="st">&quot;2017-05-02&quot;</span>, <span class="st">&quot;2017-05-03&quot;</span>, <span class="st">&quot;2017-05-17&quot;</span>),  <span class="co"># date patient was enrolled in study</span></span>
+<span id="cb322-3"><a href="survival-analysis.html#cb322-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">last_fup =</span> <span class="fu">c</span>(<span class="st">&quot;15/4/18&quot;</span>, <span class="st">&quot;4/7/18&quot;</span>, <span class="st">&quot;31/10/18&quot;</span>))   <span class="co"># date of last follow-up</span></span>
+<span id="cb322-4"><a href="survival-analysis.html#cb322-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb322-5"><a href="survival-analysis.html#cb322-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(trialDF)</span></code></pre></div>
+<pre><code>##     enrolled last_fup
+## 1 2017-05-02  15/4/18
+## 2 2017-05-03   4/7/18
+## 3 2017-05-17 31/10/18</code></pre>
+<p>You can see that the dates are currently in character format. The next step it to transform them into a date format, which we need to calculate the survival times.</p>
+<div class="sourceCode" id="cb324"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb324-1"><a href="survival-analysis.html#cb324-1" aria-hidden="true" tabindex="-1"></a>trialDF <span class="ot">&lt;-</span> trialDF <span class="sc">%&gt;%</span> </span>
+<span id="cb324-2"><a href="survival-analysis.html#cb324-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">enrolled =</span> <span class="fu">as.Date</span>(enrolled, <span class="at">format =</span> <span class="st">&quot;%Y-%m-%d&quot;</span>),</span>
+<span id="cb324-3"><a href="survival-analysis.html#cb324-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">last_fup =</span> <span class="fu">as.Date</span>(last_fup, <span class="at">format =</span> <span class="st">&quot;%d/%m/%y&quot;</span>))</span>
+<span id="cb324-4"><a href="survival-analysis.html#cb324-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb324-5"><a href="survival-analysis.html#cb324-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(trialDF)</span></code></pre></div>
+<pre><code>##     enrolled   last_fup
+## 1 2017-05-02 2018-04-15
+## 2 2017-05-03 2018-07-04
+## 3 2017-05-17 2018-10-31</code></pre>
+<p>Now that we have the dates in the right format we can calculate the survival time simply by subtracting the enrollment date from the last follow-up date</p>
+<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb326-1"><a href="survival-analysis.html#cb326-1" aria-hidden="true" tabindex="-1"></a>trialDF<span class="sc">$</span>Surv_time <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(trialDF<span class="sc">$</span>last_fup <span class="sc">-</span> trialDF<span class="sc">$</span>enrolled)</span>
+<span id="cb326-2"><a href="survival-analysis.html#cb326-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb326-3"><a href="survival-analysis.html#cb326-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(trialDF)</span></code></pre></div>
+<pre><code>##     enrolled   last_fup Surv_time
+## 1 2017-05-02 2018-04-15       348
+## 2 2017-05-03 2018-07-04       427
+## 3 2017-05-17 2018-10-31       532</code></pre>
+</div>
+<div id="r-libraries-and-example-data" class="section level3 hasAnchor" number="7.1.4">
+<h3><span class="header-section-number">7.1.4</span> R libraries and example data<a href="survival-analysis.html#r-libraries-and-example-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To implement survival analysis in R, we will make use of the <code>survival</code> and <code>survminer</code> packages, which provide all the necessary functionalities for our purposes. Also, we will use the <code>ovarian</code> dataset, that comes with the <code>survival</code> package and contains data on survival of 26 patients in a randomised trial comparing two treatments for ovarian cancer. It contains the following 6 variables:</p>
+<ul>
+<li><code>futime</code>: survival or censoring time</li>
+<li><code>fustat</code>: censoring status</li>
+<li><code>age</code>: in years</li>
+<li><code>resid.ds</code>: residual disease present (1=no, 2=yes)</li>
+<li><code>rx</code>: treatment group</li>
+<li><code>ecog.ps</code>: ECOG performance status (1 is better)</li>
+</ul>
+<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="survival-analysis.html#cb328-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb328-2"><a href="survival-analysis.html#cb328-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span>
+<span id="cb328-3"><a href="survival-analysis.html#cb328-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb328-4"><a href="survival-analysis.html#cb328-4" aria-hidden="true" tabindex="-1"></a>ovarianDF <span class="ot">&lt;-</span> ovarian</span>
+<span id="cb328-5"><a href="survival-analysis.html#cb328-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ovarianDF)</span></code></pre></div>
+<pre><code>##   futime fustat     age resid.ds rx ecog.ps
+## 1     59      1 72.3315        2  1       1
+## 2    115      1 74.4932        2  1       1
+## 3    156      1 66.4658        2  1       2
+## 4    421      0 53.3644        2  2       1
+## 5    431      1 50.3397        2  1       1
+## 6    448      0 56.4301        1  1       2</code></pre>
+<p>For downstream analysis we need to transform a few of these variables to the right format, i.e. from numeric to categorical</p>
+<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="survival-analysis.html#cb330-1" aria-hidden="true" tabindex="-1"></a>ovarianDF <span class="ot">&lt;-</span> ovarianDF <span class="sc">%&gt;%</span></span>
+<span id="cb330-2"><a href="survival-analysis.html#cb330-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">resid.ds =</span> <span class="fu">factor</span>(resid.ds, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;no&#39;</span>, <span class="st">&#39;yes&#39;</span>)),</span>
+<span id="cb330-3"><a href="survival-analysis.html#cb330-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">rx =</span> <span class="fu">factor</span>(rx, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;treatment A&#39;</span>, <span class="st">&#39;treatment B&#39;</span>)),</span>
+<span id="cb330-4"><a href="survival-analysis.html#cb330-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">ecog.ps =</span> <span class="fu">factor</span>(ecog.ps))</span></code></pre></div>
+</div>
+</div>
+<div id="kaplan-meier" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Kaplan-Meier<a href="survival-analysis.html#kaplan-meier" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The (non-parametric) Kaplan-Meier method is the most common way to estimate survival probabilities from observed survival times. Using discrete times <span class="math inline">\(t_i\)</span>, the survival probability at <span class="math inline">\(t_i\)</span>, <span class="math inline">\(S(t_i)\)</span> can be calculated as
+<span class="math display">\[ S(t_i) = S(t_{i-1})\left(1 - \frac{d_i}{n_i}\right) \]</span>
+with</p>
+<ul>
+<li><span class="math inline">\(S(t_{i-1})\)</span> : the probability of being alive (or not having experienced the event) at time <span class="math inline">\(t_{i-1}\)</span></li>
+<li><span class="math inline">\(n_i\)</span>: number of individuals alive just before <span class="math inline">\(t_i\)</span></li>
+<li><span class="math inline">\(d_i\)</span>: number of events at <span class="math inline">\(t_i\)</span></li>
+<li><span class="math inline">\(t_0=0, \, S(t_0)=1\)</span></li>
+</ul>
+<p>and results in a step function, where there is a step down each time an event occurs.</p>
+<p>To implement this in R we first have to create a <em>survival object</em>, which is done by the <code>Surv()</code> function of the <code>survival</code> package.</p>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="survival-analysis.html#cb331-1" aria-hidden="true" tabindex="-1"></a>survObj <span class="ot">&lt;-</span> <span class="fu">Surv</span>(<span class="at">time =</span> ovarianDF<span class="sc">$</span>futime, <span class="at">event =</span> ovarianDF<span class="sc">$</span>fustat)</span>
+<span id="cb331-2"><a href="survival-analysis.html#cb331-2" aria-hidden="true" tabindex="-1"></a>survObj</span></code></pre></div>
+<pre><code>##  [1]   59   115   156   421+  431   448+  464   475   477+  563   638   744+
+## [13]  769+  770+  803+  855+ 1040+ 1106+ 1129+ 1206+ 1227+  268   329   353 
+## [25]  365   377+</code></pre>
+<p>As you can see, some survival times are followed by a ‘+’, which indicates that these individuals were censored. The next step is to fit the Kaplan-Meier curves, which is done by passing the <code>survObj</code> to the <code>survfit()</code> function and can be done in a stratified way, for example by treatment group (<code>rx</code>)</p>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="survival-analysis.html#cb333-1" aria-hidden="true" tabindex="-1"></a>sfit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(survObj <span class="sc">~</span> rx, <span class="at">data =</span> ovarianDF)</span>
+<span id="cb333-2"><a href="survival-analysis.html#cb333-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sfit)</span></code></pre></div>
+<pre><code>## Call: survfit(formula = survObj ~ rx, data = ovarianDF)
+## 
+##                 rx=treatment A 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##    59     13       1    0.923  0.0739        0.789        1.000
+##   115     12       1    0.846  0.1001        0.671        1.000
+##   156     11       1    0.769  0.1169        0.571        1.000
+##   268     10       1    0.692  0.1280        0.482        0.995
+##   329      9       1    0.615  0.1349        0.400        0.946
+##   431      8       1    0.538  0.1383        0.326        0.891
+##   638      5       1    0.431  0.1467        0.221        0.840
+## 
+##                 rx=treatment B 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##   353     13       1    0.923  0.0739        0.789        1.000
+##   365     12       1    0.846  0.1001        0.671        1.000
+##   464      9       1    0.752  0.1256        0.542        1.000
+##   475      8       1    0.658  0.1407        0.433        1.000
+##   563      7       1    0.564  0.1488        0.336        0.946</code></pre>
+<p>From the summary we can see, amongst other things, survival times, the number of patients at risk, the proportion of surviving patients at every time point and the associated confidence intervals.</p>
+<p>Plotting survival curves is equally easy and done by passing the fitted Kaplan-Meier curves to <code>ggsurvplot()</code></p>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="survival-analysis.html#cb335-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(sfit, <span class="at">data =</span> ovarianDF, <span class="at">pval =</span> T) </span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-222-1.png" style="display: block; margin: auto;" /></p>
+<p>The vertical lines indicate the time when censoring occurred and the <span class="math inline">\(P\)</span> value corresponds to a log-rank test, which here indicates that there is non-significant difference between the survival curves for the two different treatment arms, even though patients receiving treatment B appear to be doing better in the first few months of follow-up.</p>
+<p>Note, the log-rank test is a widely used method for comparing survival curves. It is a non-parametric test (i.e. it makes no assumptions about the survival distributions) and compares the observed number of events in each group to the expectation that the null hypothesis (the survival curves are identical) is true. We can get the statistic using the <code>survdiff()</code> function as follow:</p>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="survival-analysis.html#cb336-1" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(survObj <span class="sc">~</span> rx, <span class="at">data =</span> ovarianDF)</span></code></pre></div>
+<pre><code>## Call:
+## survdiff(formula = survObj ~ rx, data = ovarianDF)
+## 
+##                 N Observed Expected (O-E)^2/E (O-E)^2/V
+## rx=treatment A 13        7     5.23     0.596      1.06
+## rx=treatment B 13        5     6.77     0.461      1.06
+## 
+##  Chisq= 1.1  on 1 degrees of freedom, p= 0.3</code></pre>
+<p>which is exactly what has been added to the graph above.</p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+Redo the analysis but this time stratified by residual disease status (<code>resid.ds</code>).
+</div>
+</div>
+<button id="displayTextunnamed-chunk-225" onclick="javascript:toggle(&#39;unnamed-chunk-225&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-225" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="survival-analysis.html#cb338-1" aria-hidden="true" tabindex="-1"></a>sfit2 <span class="ot">&lt;-</span> <span class="fu">survfit</span>(survObj <span class="sc">~</span> resid.ds, <span class="at">data =</span> ovarianDF)</span>
+<span id="cb338-2"><a href="survival-analysis.html#cb338-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(sfit2, <span class="at">data =</span> ovarianDF, <span class="at">pval =</span> T) </span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-585-1.png" style="display: block; margin: auto;" /></p>
+Although the <span class="math inline">\(P\)</span> value does not suggest significance at the 0.05 level, the curves clearly diverge early. One could therefore argue that a follow-up study with an increased sample size could validate that patients with negative residual disease status have a better prognosis compared to patients with residual disease.
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Note, the <code>ggsurvplot()</code> function provides a lot more tools to produce highly customised and informative outputs, as shown in the two examples below. As always, please refer to the help function (<code>?ggsurvplot()</code>) or the <a href="https://www.rdocumentation.org/packages/survminer/versions/0.4.9/topics/ggsurvplot">online version</a> for full details.</p>
+<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="survival-analysis.html#cb339-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(sfit,</span>
+<span id="cb339-2"><a href="survival-analysis.html#cb339-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">pval =</span> <span class="cn">TRUE</span>,  <span class="co"># Add P value (log-rank test)</span></span>
+<span id="cb339-3"><a href="survival-analysis.html#cb339-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">pval.size =</span> <span class="dv">4</span>, <span class="co"># Size of P value</span></span>
+<span id="cb339-4"><a href="survival-analysis.html#cb339-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">conf.int =</span> <span class="cn">TRUE</span>,  <span class="co"># Plot confidence intervals</span></span>
+<span id="cb339-5"><a href="survival-analysis.html#cb339-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">risk.table =</span> <span class="cn">TRUE</span>, <span class="co"># Add risk table</span></span>
+<span id="cb339-6"><a href="survival-analysis.html#cb339-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">risk.table.col =</span> <span class="st">&quot;strata&quot;</span>, <span class="co"># Change risk table color by groups</span></span>
+<span id="cb339-7"><a href="survival-analysis.html#cb339-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">linetype =</span> <span class="st">&quot;strata&quot;</span>, <span class="co"># Change line type by groups</span></span>
+<span id="cb339-8"><a href="survival-analysis.html#cb339-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">ggtheme =</span> <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>), <span class="co"># Change ggplot2 theme</span></span>
+<span id="cb339-9"><a href="survival-analysis.html#cb339-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;orange&quot;</span>), <span class="co"># Change colour of strata</span></span>
+<span id="cb339-10"><a href="survival-analysis.html#cb339-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab =</span> <span class="st">&#39;Time (days)&#39;</span>,  <span class="co"># Change label of x-axis</span></span>
+<span id="cb339-11"><a href="survival-analysis.html#cb339-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">legend.title =</span> <span class="st">&#39;Treatment&#39;</span>, <span class="co"># Change title of the legend</span></span>
+<span id="cb339-12"><a href="survival-analysis.html#cb339-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">legend.labs =</span> <span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>))  <span class="co"># Change the name of the legend labels</span></span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-226-1.png" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="survival-analysis.html#cb340-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(sfit,</span>
+<span id="cb340-2"><a href="survival-analysis.html#cb340-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">fun =</span> <span class="st">&quot;event&quot;</span>, <span class="co"># Plot cumulative events</span></span>
+<span id="cb340-3"><a href="survival-analysis.html#cb340-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">conf.int =</span> <span class="cn">TRUE</span>,  <span class="co"># Plot confidence intervals</span></span>
+<span id="cb340-4"><a href="survival-analysis.html#cb340-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">ncensor.plot =</span> <span class="cn">TRUE</span>, <span class="co"># Plot the number of censored subjects at time t</span></span>
+<span id="cb340-5"><a href="survival-analysis.html#cb340-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">linetype =</span> <span class="st">&quot;strata&quot;</span>, <span class="co"># Change line type by groups</span></span>
+<span id="cb340-6"><a href="survival-analysis.html#cb340-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">ggtheme =</span> <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">12</span>), <span class="co"># Change ggplot2 theme</span></span>
+<span id="cb340-7"><a href="survival-analysis.html#cb340-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;orange&quot;</span>), <span class="co"># Change colour of strata</span></span>
+<span id="cb340-8"><a href="survival-analysis.html#cb340-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab =</span> <span class="st">&#39;Time (days)&#39;</span>,  <span class="co"># Change label of x-axis</span></span>
+<span id="cb340-9"><a href="survival-analysis.html#cb340-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">legend.title =</span> <span class="st">&#39;Treatment&#39;</span>, <span class="co"># Change title of the legend</span></span>
+<span id="cb340-10"><a href="survival-analysis.html#cb340-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">legend.labs =</span> <span class="fu">c</span>(<span class="st">&#39;A&#39;</span>, <span class="st">&#39;B&#39;</span>))  <span class="co"># Change the name of the legend labels</span></span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-227-1.png" style="display: block; margin: auto;" /></p>
+<div id="median-survival-time" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> <strong>Median survival time</strong><a href="survival-analysis.html#median-survival-time" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We can calculate the median survival time, which corresponds to a survival probability of 0.5, directly from the <code>survfit</code> object. This is shown here for unstratified data, i.e. we ignore the two different treatment regimes (note the change in formula)</p>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="survival-analysis.html#cb341-1" aria-hidden="true" tabindex="-1"></a><span class="fu">survfit</span>(survObj <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> ovarianDF)</span></code></pre></div>
+<pre><code>## Call: survfit(formula = survObj ~ 1, data = ovarianDF)
+## 
+##       n events median 0.95LCL 0.95UCL
+## [1,] 26     12    638     464      NA</code></pre>
+<p>which we can also indicate on the graph</p>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="survival-analysis.html#cb343-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsurvplot</span>(<span class="fu">survfit</span>(survObj <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> ovarianDF),</span>
+<span id="cb343-2"><a href="survival-analysis.html#cb343-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">conf.int =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb343-3"><a href="survival-analysis.html#cb343-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">risk.table =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb343-4"><a href="survival-analysis.html#cb343-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">surv.median.line =</span> <span class="st">&quot;hv&quot;</span>, <span class="co"># specify horizontal and vertical line</span></span>
+<span id="cb343-5"><a href="survival-analysis.html#cb343-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab =</span> <span class="st">&#39;Time (days)&#39;</span>,</span>
+<span id="cb343-6"><a href="survival-analysis.html#cb343-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">legend =</span> <span class="st">&#39;none&#39;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-229-1.png" style="display: block; margin: auto;" /></p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+Calculate the median survival times stratfied by residual disease status, what do you notice?
+</div>
+</div>
+<button id="displayTextunnamed-chunk-231" onclick="javascript:toggle(&#39;unnamed-chunk-231&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-231" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="survival-analysis.html#cb344-1" aria-hidden="true" tabindex="-1"></a><span class="fu">survfit</span>(survObj <span class="sc">~</span> resid.ds, <span class="at">data =</span> ovarianDF)</span></code></pre></div>
+<pre><code>## Call: survfit(formula = survObj ~ resid.ds, data = ovarianDF)
+## 
+##               n events median 0.95LCL 0.95UCL
+## resid.ds=no  11      3     NA     638      NA
+## resid.ds=yes 15      9    464     329      NA</code></pre>
+The <code>NA</code> indicates that we do not have enough data to robustly infer median survival times. A larger study would help remedy this problem.
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+</div>
+</div>
+<div id="cox-regression-model" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Cox regression model<a href="survival-analysis.html#cox-regression-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As we have seen, the Kaplan-Meier method is an easy way to compare survival data for different strata (e.g. treatment arms). However, this is restricted to categorical covariates. What we might want instead is a way to infer the effect of one or more different covariates, or explanatory variables. This is where Cox regression, or Cox proportional hazard analysis comes into play.</p>
+<p>The Cox regression model is a (semi-parametric) model that allows us to fit uni- and multi-variable regression models that have survival outcomes. They are defined as
+<span class="math display">\[ h(t|X_i) = h_0(t) e^{\beta_1 X_{i1}+ ... + \beta_p X_{ip}} \]</span>
+with <span class="math inline">\(h(t)\)</span> being the <em>hazard</em>, or the instantaneous rate at which an events occur, and <span class="math inline">\(h_0(t)\)</span> being the underlying baseline hazard.</p>
+<p>Without going deeper into the mathematical details, here we show how to fit Cox proportional hazard models to survival data using the <code>coxph()</code> function, which takes a survival object as the response variable and otherwise follows common syntax for regression models as we have used before. Here we are interested in the effect of all four covariates: <code>age</code>, <code>rx</code>, <code>resid.ds</code> and <code>ecog.ps</code></p>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="survival-analysis.html#cb346-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit cox proportional hazard ratio</span></span>
+<span id="cb346-2"><a href="survival-analysis.html#cb346-2" aria-hidden="true" tabindex="-1"></a>cph <span class="ot">&lt;-</span> <span class="fu">coxph</span>(survObj <span class="sc">~</span> age <span class="sc">+</span> rx <span class="sc">+</span> resid.ds <span class="sc">+</span> ecog.ps, <span class="at">data =</span> ovarianDF)</span>
+<span id="cb346-3"><a href="survival-analysis.html#cb346-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb346-4"><a href="survival-analysis.html#cb346-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get model summary</span></span>
+<span id="cb346-5"><a href="survival-analysis.html#cb346-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cph)</span></code></pre></div>
+<pre><code>## Call:
+## coxph(formula = survObj ~ age + rx + resid.ds + ecog.ps, data = ovarianDF)
+## 
+##   n= 26, number of events= 12 
+## 
+##                   coef exp(coef) se(coef)      z Pr(&gt;|z|)   
+## age            0.12481   1.13294  0.04689  2.662  0.00777 **
+## rxtreatment B -0.91450   0.40072  0.65332 -1.400  0.16158   
+## resid.dsyes    0.82619   2.28459  0.78961  1.046  0.29541   
+## ecog.ps2       0.33621   1.39964  0.64392  0.522  0.60158   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##               exp(coef) exp(-coef) lower .95 upper .95
+## age              1.1329     0.8827    1.0335     1.242
+## rxtreatment B    0.4007     2.4955    0.1114     1.442
+## resid.dsyes      2.2846     0.4377    0.4861    10.738
+## ecog.ps2         1.3996     0.7145    0.3962     4.945
+## 
+## Concordance= 0.807  (se = 0.068 )
+## Likelihood ratio test= 17.04  on 4 df,   p=0.002
+## Wald test            = 14.25  on 4 df,   p=0.007
+## Score (logrank) test = 20.81  on 4 df,   p=3e-04</code></pre>
+<p>The model summary looks slightly different to the ones we have come across before. Of interest here are the regression coefficients <code>coef</code> and <code>exp(coef)</code> and their associated <span class="math inline">\(P\)</span> values. From the output above we can conclude that</p>
+<ul>
+<li>age has statistically significant effect on survival probability, whereas the effects of treatment, residual disease status or ECOG performance status are not significant</li>
+<li>age, residual disease and ECOG performance have <em>positive</em> (beta) coefficients, indicating that they are associated with <em>poorer</em> survival</li>
+<li>treatment B has a <em>negative</em> (beta) coefficient, indicating that it is associated with <em>better</em> survival</li>
+</ul>
+<p>Note, the quantity <code>exp(coef)</code> is known as the <strong>hazard ratio (HR)</strong>. It is best explained for categorical predictors, where it represents the ratio hazard between two groups at any point in time. A hazard ratio of HR&gt;1 indicates increased hazard of an event, whereas HR&lt;1 indicates a lower hazard. From the example above, the HR for treatment B was 0.4, which means that individuals in treatment group B had a 0.4 times lower rate of dying at any given time.</p>
+<p>We can extract the regression results and put them into a nice table format using the <code>tbl_regression()</code> function from the <code>gtsummary</code> library</p>
+<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="survival-analysis.html#cb348-1" aria-hidden="true" tabindex="-1"></a>gtsummary<span class="sc">::</span><span class="fu">tbl_regression</span>(cph, <span class="at">exp=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<div id="fmanrdmbpk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fmanrdmbpk table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#fmanrdmbpk thead, #fmanrdmbpk tbody, #fmanrdmbpk tfoot, #fmanrdmbpk tr, #fmanrdmbpk td, #fmanrdmbpk th {
+  border-style: none;
+}
+
+#fmanrdmbpk p {
+  margin: 0;
+  padding: 0;
+}
+
+#fmanrdmbpk .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#fmanrdmbpk .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#fmanrdmbpk .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#fmanrdmbpk .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#fmanrdmbpk .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#fmanrdmbpk .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#fmanrdmbpk .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#fmanrdmbpk .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#fmanrdmbpk .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#fmanrdmbpk .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#fmanrdmbpk .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#fmanrdmbpk .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#fmanrdmbpk .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#fmanrdmbpk .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#fmanrdmbpk .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fmanrdmbpk .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#fmanrdmbpk .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#fmanrdmbpk .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#fmanrdmbpk .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fmanrdmbpk .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#fmanrdmbpk .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fmanrdmbpk .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#fmanrdmbpk .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fmanrdmbpk .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fmanrdmbpk .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fmanrdmbpk .gt_left {
+  text-align: left;
+}
+
+#fmanrdmbpk .gt_center {
+  text-align: center;
+}
+
+#fmanrdmbpk .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#fmanrdmbpk .gt_font_normal {
+  font-weight: normal;
+}
+
+#fmanrdmbpk .gt_font_bold {
+  font-weight: bold;
+}
+
+#fmanrdmbpk .gt_font_italic {
+  font-style: italic;
+}
+
+#fmanrdmbpk .gt_super {
+  font-size: 65%;
+}
+
+#fmanrdmbpk .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#fmanrdmbpk .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#fmanrdmbpk .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#fmanrdmbpk .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#fmanrdmbpk .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#fmanrdmbpk .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#fmanrdmbpk .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;HR&lt;/strong&gt;&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>HR</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;95% CI&lt;/strong&gt;&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;p-value&lt;/strong&gt;"><strong>p-value</strong></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">age</td>
+<td headers="estimate" class="gt_row gt_center">1.13</td>
+<td headers="ci" class="gt_row gt_center">1.03, 1.24</td>
+<td headers="p.value" class="gt_row gt_center">0.008</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">rx</td>
+<td headers="estimate" class="gt_row gt_center"><br /></td>
+<td headers="ci" class="gt_row gt_center"><br /></td>
+<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    treatment A</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    treatment B</td>
+<td headers="estimate" class="gt_row gt_center">0.40</td>
+<td headers="ci" class="gt_row gt_center">0.11, 1.44</td>
+<td headers="p.value" class="gt_row gt_center">0.2</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">resid.ds</td>
+<td headers="estimate" class="gt_row gt_center"><br /></td>
+<td headers="ci" class="gt_row gt_center"><br /></td>
+<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    no</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    yes</td>
+<td headers="estimate" class="gt_row gt_center">2.28</td>
+<td headers="ci" class="gt_row gt_center">0.49, 10.7</td>
+<td headers="p.value" class="gt_row gt_center">0.3</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">ecog.ps</td>
+<td headers="estimate" class="gt_row gt_center"><br /></td>
+<td headers="ci" class="gt_row gt_center"><br /></td>
+<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    1</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    2</td>
+<td headers="estimate" class="gt_row gt_center">1.40</td>
+<td headers="ci" class="gt_row gt_center">0.40, 4.94</td>
+<td headers="p.value" class="gt_row gt_center">0.6</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> HR = Hazard Ratio, CI = Confidence Interval</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<p>A nicer way to display the results from a Cox regression model is by using the <code>ggforest()</code> function, which creates a <em>forest plot</em> that plots the hazard ratios, together with their associated confidence intervals and <span class="math inline">\(P\)</span> values for all model covariates and stratified for those that are categorical (indicating the level used as reference).</p>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="survival-analysis.html#cb349-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggforest</span>(cph, <span class="at">data =</span> ovarianDF)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-234-1.png" style="display: block; margin: auto;" /></p>
+<p>As a final step we show you how to get prediction based on our Cox proportional hazard model. As before we can use the <code>predict()</code> function but unfortunately this is slightly more complicated before as it does not work on vectors but rather individual parameter values, which need to be provided as a <code>list</code>. For example, to predict the survival probability of a 72 year old at time <span class="math inline">\(t=300\)</span></p>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="survival-analysis.html#cb350-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit cox proportional hazard ratio based on age only</span></span>
+<span id="cb350-2"><a href="survival-analysis.html#cb350-2" aria-hidden="true" tabindex="-1"></a>cph <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(futime, fustat) <span class="sc">~</span> age, <span class="at">data =</span> ovarianDF)</span>
+<span id="cb350-3"><a href="survival-analysis.html#cb350-3" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(cph, <span class="at">newdata =</span> <span class="fu">list</span>(<span class="at">age =</span> <span class="dv">80</span>, <span class="at">futime =</span> <span class="dv">300</span>, <span class="at">fustat =</span> <span class="dv">0</span>), <span class="at">type=</span><span class="st">&#39;survival&#39;</span>)</span></code></pre></div>
+<pre><code>## [1] 0.03909436</code></pre>
+<p>And to get survival curves for all ages between 50 and 80 years</p>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="survival-analysis.html#cb352-1" aria-hidden="true" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="dv">50</span><span class="sc">:</span><span class="dv">80</span>, <span class="at">ncol=</span><span class="dv">1</span>)</span>
+<span id="cb352-2"><a href="survival-analysis.html#cb352-2" aria-hidden="true" tabindex="-1"></a>pred_surv <span class="ot">&lt;-</span> <span class="fu">apply</span>(age, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="fu">predict</span>(cph, <span class="at">newdata =</span> <span class="fu">list</span>(<span class="at">age =</span> x, <span class="at">futime =</span> <span class="dv">300</span>, <span class="at">fustat =</span> <span class="dv">0</span>), <span class="at">type=</span><span class="st">&#39;survival&#39;</span>))</span>
+<span id="cb352-3"><a href="survival-analysis.html#cb352-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb352-4"><a href="survival-analysis.html#cb352-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Age =</span> age,</span>
+<span id="cb352-5"><a href="survival-analysis.html#cb352-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">Survival =</span> pred_surv) <span class="sc">%&gt;%</span></span>
+<span id="cb352-6"><a href="survival-analysis.html#cb352-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Age, <span class="at">y =</span> Survival)) <span class="sc">+</span></span>
+<span id="cb352-7"><a href="survival-analysis.html#cb352-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb352-8"><a href="survival-analysis.html#cb352-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&#39;Survival probability at t=300&#39;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-236-1.png" style="display: block; margin: auto;" /></p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Practical
+</div>
+<div class="panel-body">
+
+<ol style="list-style-type: decimal">
+<li>Modify the aboce code to plot survival probabilities of a 70 year old against time</li>
+<li>Perform an indepth survival analysis of the <code>colon</code> dataset (provided by the <code>survival</code> package), which contains data from one of the first successful trials of adjuvant chemotherapy for colon cancer. You can get more information on the data and the various variables using <code>?colon</code>.
+</div>
+</div></li>
+</ol>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="generalised-linear-models-glm.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

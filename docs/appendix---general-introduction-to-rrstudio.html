@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>APPENDIX - General introduction to R/RStudio | Introduction to statistical data analysis in R</title>
+  <meta name="description" content="Intro to Stats with R" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="APPENDIX - General introduction to R/RStudio | Introduction to statistical data analysis in R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Intro to Stats with R" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="APPENDIX - General introduction to R/RStudio | Introduction to statistical data analysis in R" />
+  
+  <meta name="twitter:description" content="Intro to Stats with R" />
+  
+
+<meta name="author" content="Mario Recker" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="survival-analysis.html"/>
+<link rel="next" href="appendix---data-wrangling-and-visualisation.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script language="javascript"> 
+    function toggle(id) {
+        var ele = document.getElementById("toggleText" + id);
+        var text = document.getElementById("displayText" + id);
+        var buttonText = text.innerHTML.replace("Show: ", "");
+        buttonText = buttonText.replace("Hide: ", "");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "Show: " + buttonText;
+        } else {
+            ele.style.display = "block";
+            text.innerHTML = "Hide: " + buttonText;
+        }
+    } 
+</script>
+
+<script language="javascript">
+    function openCode(evt, codeName, id) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent" + id);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks" + id);
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(codeName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<script language="javascript">
+    function hide(id){
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-structure"><i class="fa fa-check"></i>Workshop structure</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html"><i class="fa fa-check"></i><b>1</b> Data handling and visualisation</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#introduction"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#loading-and-saving-data"><i class="fa fa-check"></i>Loading and saving data</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#save-load-data-as-an-r-object"><i class="fa fa-check"></i>Save / load data as an R object</a></li>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#save-load-as-a-csv-file"><i class="fa fa-check"></i>Save / load as a CSV file</a></li>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#handling-excel-files"><i class="fa fa-check"></i>Handling Excel files</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html"><i class="fa fa-check"></i><b>2</b> Introduction to statistical modelling in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#what-is-a-statistical-model"><i class="fa fa-check"></i>What is a statistical model?</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#descriptive-vs.-inferential-statistics"><i class="fa fa-check"></i>Descriptive vs. inferential statistics</a></li>
+<li class="chapter" data-level="2.1" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#univariate-analysis"><i class="fa fa-check"></i><b>2.1</b> Univariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#mean-vs.-median"><i class="fa fa-check"></i><strong>Mean vs. median</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#interquartile-range"><i class="fa fa-check"></i><strong>Interquartile range</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#skewness"><i class="fa fa-check"></i><strong>Skewness</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#kurtosis"><i class="fa fa-check"></i><strong>Kurtosis</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#multivariate-analysis"><i class="fa fa-check"></i><b>2.2</b> Multivariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#contingency-tables"><i class="fa fa-check"></i><strong>Contingency tables</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#pearson-correlation"><i class="fa fa-check"></i><strong>Pearson correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#spearmans-rank-correlation"><i class="fa fa-check"></i><strong>Spearman’s rank correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#correlation-vs.-causation"><i class="fa fa-check"></i><strong>Correlation vs. causation</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="linear-models-lm.html"><a href="linear-models-lm.html"><i class="fa fa-check"></i><b>3</b> Linear Models (LM)</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple linear regression</a></li>
+<li class="chapter" data-level="3.2" data-path="linear-models-lm.html"><a href="linear-models-lm.html#linear-regression-in-r"><i class="fa fa-check"></i><b>3.2</b> Linear regression in R</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#using-the-summary-function"><i class="fa fa-check"></i><b>3.2.1</b> <strong>Using the <code>summary()</code> function</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="linear-models-lm.html"><a href="linear-models-lm.html#model-checking"><i class="fa fa-check"></i><b>3.3</b> Model checking</a>
+<ul>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-fitted"><i class="fa fa-check"></i><strong>Residuals vs Fitted</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#normal-q-q"><i class="fa fa-check"></i><strong>Normal Q-Q</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#scale-location"><i class="fa fa-check"></i><strong>Scale-Location</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-leverage"><i class="fa fa-check"></i><strong>Residuals vs Leverage</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="linear-models-lm.html"><a href="linear-models-lm.html#prediction"><i class="fa fa-check"></i><b>3.4</b> Prediction</a></li>
+<li class="chapter" data-level="3.5" data-path="linear-models-lm.html"><a href="linear-models-lm.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.5</b> Multiple linear regression</a></li>
+<li class="chapter" data-level="3.6" data-path="linear-models-lm.html"><a href="linear-models-lm.html#categorical-explanatory-variables"><i class="fa fa-check"></i><b>3.6</b> Categorical explanatory variables</a></li>
+<li class="chapter" data-level="3.7" data-path="linear-models-lm.html"><a href="linear-models-lm.html#interactions"><i class="fa fa-check"></i><b>3.7</b> Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html"><i class="fa fa-check"></i><b>4</b> Mixed Effect Models (MEM)</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#model-checking-1"><i class="fa fa-check"></i><b>4.1</b> Model checking</a></li>
+<li class="chapter" data-level="4.2" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#further-reading"><i class="fa fa-check"></i><b>4.2</b> Further reading</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html"><i class="fa fa-check"></i><b>5</b> Generalised Linear Models (GLM)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#link-functions"><i class="fa fa-check"></i><b>5.1</b> Link functions</a></li>
+<li class="chapter" data-level="5.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-for-count-data"><i class="fa fa-check"></i><b>5.2</b> Poisson regression (for count data)</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background"><i class="fa fa-check"></i><b>5.2.1</b> Background</a></li>
+<li class="chapter" data-level="5.2.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-in-r"><i class="fa fa-check"></i><b>5.2.2</b> Poisson regression in R</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-for-binary-data"><i class="fa fa-check"></i><b>5.3</b> Logistic regression (for binary data)</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background-1"><i class="fa fa-check"></i><b>5.3.1</b> Background</a></li>
+<li class="chapter" data-level="5.3.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-in-r"><i class="fa fa-check"></i><b>5.3.2</b> Logistic regression in R</a></li>
+<li class="chapter" data-level="" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#odds-ratios"><i class="fa fa-check"></i>Odds ratios</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="survival-analysis.html"><a href="survival-analysis.html"><i class="fa fa-check"></i><b>6</b> Survival Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="survival-analysis.html"><a href="survival-analysis.html#terminology-and-notation"><i class="fa fa-check"></i><b>6.1</b> Terminology and notation</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="survival-analysis.html"><a href="survival-analysis.html#censoring"><i class="fa fa-check"></i><b>6.1.1</b> Censoring</a></li>
+<li class="chapter" data-level="6.1.2" data-path="survival-analysis.html"><a href="survival-analysis.html#survival-and-hazard-functions"><i class="fa fa-check"></i><b>6.1.2</b> Survival and hazard functions</a></li>
+<li class="chapter" data-level="6.1.3" data-path="survival-analysis.html"><a href="survival-analysis.html#calculating-survival-times-in-r"><i class="fa fa-check"></i><b>6.1.3</b> Calculating survival times in R</a></li>
+<li class="chapter" data-level="6.1.4" data-path="survival-analysis.html"><a href="survival-analysis.html#r-libraries-and-example-data"><i class="fa fa-check"></i><b>6.1.4</b> R libraries and example data</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="survival-analysis.html"><a href="survival-analysis.html#kaplan-meier"><i class="fa fa-check"></i><b>6.2</b> Kaplan-Meier</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="survival-analysis.html"><a href="survival-analysis.html#median-survival-time"><i class="fa fa-check"></i><b>6.2.1</b> <strong>Median survival time</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="survival-analysis.html"><a href="survival-analysis.html#cox-regression-model"><i class="fa fa-check"></i><b>6.3</b> Cox regression model</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html"><i class="fa fa-check"></i>APPENDIX - General introduction to R/RStudio</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#setting-up-an-r-session"><i class="fa fa-check"></i>Setting up an R session</a></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#r-packages"><i class="fa fa-check"></i>R packages</a></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#variables-vectors-and-data-frames-in-r"><i class="fa fa-check"></i>Variables, vectors and data frames in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#data-frames"><i class="fa fa-check"></i>Data frames</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#functions-in-r"><i class="fa fa-check"></i>Functions in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#useful-inbuilt-functions"><i class="fa fa-check"></i>Useful inbuilt functions</a></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#custom-functions"><i class="fa fa-check"></i>Custom functions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#basic-plotting-in-r"><i class="fa fa-check"></i>Basic plotting in R</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#scatter-plot"><i class="fa fa-check"></i><b>6.3.1</b> Scatter plot</a></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#line-graph"><i class="fa fa-check"></i>Line graph</a></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#combined-graph"><i class="fa fa-check"></i>Combined graph</a></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#barplot"><i class="fa fa-check"></i>Barplot</a></li>
+<li class="chapter" data-level="" data-path="appendix---general-introduction-to-rrstudio.html"><a href="appendix---general-introduction-to-rrstudio.html#boxplots"><i class="fa fa-check"></i>Boxplots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html"><i class="fa fa-check"></i>APPENDIX - Data wrangling and visualisation</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#introduction-1"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#loading-and-saving-data-1"><i class="fa fa-check"></i>Loading and saving data</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#save-load-data-as-an-r-object-1"><i class="fa fa-check"></i>Save / load data as an R object</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#save-load-as-a-csv-file-1"><i class="fa fa-check"></i>Save / load as a CSV file</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#handling-excel-files-1"><i class="fa fa-check"></i>Handling Excel files</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#cheatsheet"><i class="fa fa-check"></i>Cheatsheet</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#visualisation-using-ggplot"><i class="fa fa-check"></i>Visualisation using <code>ggplot</code></a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#aesthetics"><i class="fa fa-check"></i>Aesthetics</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#geoms"><i class="fa fa-check"></i>Geoms</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#labels"><i class="fa fa-check"></i>Labels</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#faceting"><i class="fa fa-check"></i>Faceting</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#statistical-transformation"><i class="fa fa-check"></i>Statistical transformation</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#scales"><i class="fa fa-check"></i>Scales</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#assigning-plots-to-objects"><i class="fa fa-check"></i>Assigning plots to objects</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#putting-it-all-together"><i class="fa fa-check"></i>Putting it all together</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#data-wrangling"><i class="fa fa-check"></i>Data wrangling</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#tidy-data"><i class="fa fa-check"></i>Tidy data</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#filter-rows"><i class="fa fa-check"></i>Filter rows</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#sort-rows"><i class="fa fa-check"></i>Sort rows</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#select-columns"><i class="fa fa-check"></i>Select columns</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#grouping-and-summarising"><i class="fa fa-check"></i>Grouping and summarising</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#reshaping-datasets"><i class="fa fa-check"></i>Reshaping datasets</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#mutate"><i class="fa fa-check"></i>Mutate</a></li>
+<li class="chapter" data-level="" data-path="appendix---data-wrangling-and-visualisation.html"><a href="appendix---data-wrangling-and-visualisation.html#dealing-with-missing-data"><i class="fa fa-check"></i>Dealing with missing data</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to statistical data analysis in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="appendix---general-introduction-to-rrstudio" class="section level1 unnumbered hasAnchor">
+<h1>APPENDIX - General introduction to R/RStudio<a href="appendix---general-introduction-to-rrstudio.html#appendix---general-introduction-to-rrstudio" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>R is an <em>object-orientated</em> programming language. This means that you create objects, and give them names. You can then do things to those objects: you can perform calculations, statistical tests, make tables or draw plots. Objects can be single numbers, characters, vectors of numbers, matrices, multi-dimensional arrays, lists containing different objects and so on.</p>
+<p>Whilst R provides its own development environment, we will use a fantastic IDE (integrated desktop environment) provided by RStudio. This is free to download, provides some neat features, and crucially, looks the same on all operating systems!</p>
+<p>The helpful folks at RStudio also produce a series of excellent <a href="https://www.rstudio.com/resources/cheatsheets/">Cheat Sheets</a>. Please note, these are updated semi-regularly as new packages are added or existing packages updated. Note also that these cheat sheets focus on the use of RStudio, and a small number of subset of packages that are developed by RStudio (e.g. <code>tidyverse</code>, <code>shiny</code> and <code>rmarkdown</code>). For example, a nice Cheat Sheet for RStudio itself can be found <a href="https://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf">here</a>.</p>
+<p><span class="math inline">\(~\)</span></p>
+<div id="setting-up-an-r-session" class="section level2 unnumbered hasAnchor">
+<h2>Setting up an R session<a href="appendix---general-introduction-to-rrstudio.html#setting-up-an-r-session" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>It is worthwhile getting into a workflow when using R. General guidelines I would suggest are:</p>
+<ul>
+<li>Use a different folder for each new project / assignment. This helps to keep all data / script / output files in one self-contained place.</li>
+<li>Set the Working Directory for R at the outset of each session to be the folder you’ve specified for the particular assignment you’re working on. This can be done in RStudio by going to <em>Session &gt; Set Working Directory &gt; Choose Directory</em>. This sets the default search path to this folder.</li>
+<li>Always use <strong>script files</strong> to keep a record of your work, so that it can be reproduced at a later date. Put simply, R scripts are just text files that contain commands to run in R.</li>
+</ul>
+</div>
+<div id="r-packages" class="section level2 unnumbered hasAnchor">
+<h2>R packages<a href="appendix---general-introduction-to-rrstudio.html#r-packages" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>R has hundreds of add-on packages that provide functionality for a wide range of techniques. We will be using a number of packages that are not automatically installed when you first installed R, and a key part of becoming proficient with R is learning how to install and load packages.</p>
+<p>To install an the <code>tidyverse</code> R package, for example, simply run</p>
+<pre><code>install.packages(&#39;tidyverse&#39;)</code></pre>
+<p>If it installs without any errors, you can load the library using</p>
+<pre><code>library(tidyverse) </code></pre>
+<blockquote>
+<p><strong>Note:</strong> sometimes packages / libraries have <em>dependencies</em>, meaning that the require other libraries to be installed first before a package can be installed. This is usually communicated via error messages during the installation process.</p>
+</blockquote>
+<p><span class="math inline">\(~\)</span></p>
+</div>
+<div id="variables-vectors-and-data-frames-in-r" class="section level2 unnumbered hasAnchor">
+<h2>Variables, vectors and data frames in R<a href="appendix---general-introduction-to-rrstudio.html#variables-vectors-and-data-frames-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>R makes use of symbolic variables, i.e. words or letters that can be used to represent or store other values or objects. We will use the assignment operator <code>&lt;-</code> to ‘assign’ a value (or object) to a given word (or letter). Run the following commands to see how this works (don’t worry about the comments, these are for your understanding):</p>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="appendix---general-introduction-to-rrstudio.html#cb191-1" tabindex="-1"></a><span class="do">## assign to x the value 5</span></span>
+<span id="cb191-2"><a href="appendix---general-introduction-to-rrstudio.html#cb191-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span> </span>
+<span id="cb191-3"><a href="appendix---general-introduction-to-rrstudio.html#cb191-3" tabindex="-1"></a></span>
+<span id="cb191-4"><a href="appendix---general-introduction-to-rrstudio.html#cb191-4" tabindex="-1"></a><span class="do">## print the value assigned to the </span></span>
+<span id="cb191-5"><a href="appendix---general-introduction-to-rrstudio.html#cb191-5" tabindex="-1"></a><span class="do">## variable x to the screen</span></span>
+<span id="cb191-6"><a href="appendix---general-introduction-to-rrstudio.html#cb191-6" tabindex="-1"></a>x </span></code></pre></div>
+<pre><code>## [1] 5</code></pre>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="appendix---general-introduction-to-rrstudio.html#cb193-1" tabindex="-1"></a><span class="do">## we can also assign text to a variable</span></span>
+<span id="cb193-2"><a href="appendix---general-introduction-to-rrstudio.html#cb193-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="st">&quot;Hello There&quot;</span> </span>
+<span id="cb193-3"><a href="appendix---general-introduction-to-rrstudio.html#cb193-3" tabindex="-1"></a></span>
+<span id="cb193-4"><a href="appendix---general-introduction-to-rrstudio.html#cb193-4" tabindex="-1"></a><span class="do">## print y</span></span>
+<span id="cb193-5"><a href="appendix---general-introduction-to-rrstudio.html#cb193-5" tabindex="-1"></a>y</span></code></pre></div>
+<pre><code>## [1] &quot;Hello There&quot;</code></pre>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="appendix---general-introduction-to-rrstudio.html#cb195-1" tabindex="-1"></a><span class="do">## we can re-assign variables</span></span>
+<span id="cb195-2"><a href="appendix---general-introduction-to-rrstudio.html#cb195-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">10</span>)</span>
+<span id="cb195-3"><a href="appendix---general-introduction-to-rrstudio.html#cb195-3" tabindex="-1"></a></span>
+<span id="cb195-4"><a href="appendix---general-introduction-to-rrstudio.html#cb195-4" tabindex="-1"></a><span class="do">## or assign a variable in terms </span></span>
+<span id="cb195-5"><a href="appendix---general-introduction-to-rrstudio.html#cb195-5" tabindex="-1"></a><span class="do">## of other variables</span></span>
+<span id="cb195-6"><a href="appendix---general-introduction-to-rrstudio.html#cb195-6" tabindex="-1"></a>ziggy <span class="ot">&lt;-</span> x <span class="sc">+</span> y</span>
+<span id="cb195-7"><a href="appendix---general-introduction-to-rrstudio.html#cb195-7" tabindex="-1"></a></span>
+<span id="cb195-8"><a href="appendix---general-introduction-to-rrstudio.html#cb195-8" tabindex="-1"></a><span class="do">## print variable &quot;ziggy&quot;</span></span>
+<span id="cb195-9"><a href="appendix---general-introduction-to-rrstudio.html#cb195-9" tabindex="-1"></a>ziggy</span></code></pre></div>
+<pre><code>## [1] 8.162278</code></pre>
+<p>You will notice that as we create each of these variables, they begin to appear in the environment pane in the top right-hand side of the RStudio window. This shows the current R workspace, which is a collection of objects that R stores in memory. We can remove objects from the workspace using the <code>rm()</code> function e.g.</p>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="appendix---general-introduction-to-rrstudio.html#cb197-1" tabindex="-1"></a><span class="do">## remove the variables x and y</span></span>
+<span id="cb197-2"><a href="appendix---general-introduction-to-rrstudio.html#cb197-2" tabindex="-1"></a><span class="fu">rm</span>(x, y)</span></code></pre></div>
+<p>Notice that <code>x</code> and <code>y</code> have now disappeared from the workspace. The variable <code>ziggy</code> still contains the correct answer though (these are not relative objects, such as the macros assigned in a program like Excel).</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="appendix---general-introduction-to-rrstudio.html#cb198-1" tabindex="-1"></a>ziggy</span></code></pre></div>
+<pre><code>## [1] 8.162278</code></pre>
+<p>Objects in R are not restricted to single values. Objects containing multiple values are commonly referred to as vectors, which are generally defined using the <code>c()</code> notation, e.g.</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="appendix---general-introduction-to-rrstudio.html#cb200-1" tabindex="-1"></a><span class="co"># create a vector with 4 numbers</span></span>
+<span id="cb200-2"><a href="appendix---general-introduction-to-rrstudio.html#cb200-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
+<span id="cb200-3"><a href="appendix---general-introduction-to-rrstudio.html#cb200-3" tabindex="-1"></a>x</span></code></pre></div>
+<pre><code>## [1] 2 1 3 5</code></pre>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="appendix---general-introduction-to-rrstudio.html#cb202-1" tabindex="-1"></a><span class="co"># or a vector containing 4 strings</span></span>
+<span id="cb202-2"><a href="appendix---general-introduction-to-rrstudio.html#cb202-2" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Neil&quot;</span>, <span class="st">&quot;Ella&quot;</span>, <span class="st">&quot;John&quot;</span>, <span class="st">&quot;Grace&quot;</span>)</span>
+<span id="cb202-3"><a href="appendix---general-introduction-to-rrstudio.html#cb202-3" tabindex="-1"></a>names</span></code></pre></div>
+<pre><code>## [1] &quot;Neil&quot;  &quot;Ella&quot;  &quot;John&quot;  &quot;Grace&quot;</code></pre>
+<p>One of the most important aspects about vectors is that we can directly access individual elements, or certain <em>slices</em> of a vector</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="appendix---general-introduction-to-rrstudio.html#cb204-1" tabindex="-1"></a><span class="co"># get the second element of x</span></span>
+<span id="cb204-2"><a href="appendix---general-introduction-to-rrstudio.html#cb204-2" tabindex="-1"></a>x[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="appendix---general-introduction-to-rrstudio.html#cb206-1" tabindex="-1"></a><span class="co"># get the first 3 elements of names</span></span>
+<span id="cb206-2"><a href="appendix---general-introduction-to-rrstudio.html#cb206-2" tabindex="-1"></a>names[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span></code></pre></div>
+<pre><code>## [1] &quot;Neil&quot; &quot;Ella&quot; &quot;John&quot;</code></pre>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="appendix---general-introduction-to-rrstudio.html#cb208-1" tabindex="-1"></a><span class="co"># get last two elements of x</span></span>
+<span id="cb208-2"><a href="appendix---general-introduction-to-rrstudio.html#cb208-2" tabindex="-1"></a><span class="fu">tail</span>(x,<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 3 5</code></pre>
+<blockquote>
+<p><strong>Note:</strong> vectors are not restricted to contain single data types, i.e. you can mix numbers with characters, strings, booleans etc.</p>
+</blockquote>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+<p>Being able to work with (vector or matrix) indices is crucial for effective data handling - please make sure that the notations are fully understood. The following exercises will help you practice:</p>
+<pre><code>1. create a vector with 7 numbers and assign it to an object `myvec`
+2. add the 1st and 2nd elements of `myvec`
+3. multiply the 1st, 3rd and 5th element of `myvec`
+4. assing the first four elents of `myvec` to a new vector call `myvec_new`
+5. using the above defined vectors `x` and `names`, assign a name with the corresponding age (matched by index, i.e. 1. name to the 1. number), such that a message &quot;Neil is 2 years old&quot; is printed out.   &lt;/div&gt;&lt;/div&gt;</code></pre>
+<button id="displayTextunnamed-chunk-139" onclick="javascript:toggle(&#39;unnamed-chunk-139&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-139" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="appendix---general-introduction-to-rrstudio.html#cb211-1" tabindex="-1"></a><span class="do">## 1.</span></span>
+<span id="cb211-2"><a href="appendix---general-introduction-to-rrstudio.html#cb211-2" tabindex="-1"></a>myvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">3.1</span>, <span class="fl">2.7</span>, <span class="dv">1</span>, <span class="dv">99</span>, <span class="dv">231</span>, <span class="sc">-</span><span class="dv">176</span>, <span class="dv">55</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="appendix---general-introduction-to-rrstudio.html#cb212-1" tabindex="-1"></a><span class="do">## 2.</span></span>
+<span id="cb212-2"><a href="appendix---general-introduction-to-rrstudio.html#cb212-2" tabindex="-1"></a>myvec[<span class="dv">1</span>] <span class="sc">+</span> myvec[<span class="dv">2</span>]  </span></code></pre></div>
+<pre><code>## [1] 5.8</code></pre>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="appendix---general-introduction-to-rrstudio.html#cb214-1" tabindex="-1"></a><span class="co"># equivalent to sum(myvec[1:2])</span></span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="appendix---general-introduction-to-rrstudio.html#cb215-1" tabindex="-1"></a><span class="do">## 3.</span></span>
+<span id="cb215-2"><a href="appendix---general-introduction-to-rrstudio.html#cb215-2" tabindex="-1"></a>myvec[<span class="dv">1</span>] <span class="sc">*</span> myvec[<span class="dv">3</span>] <span class="sc">*</span> myvec[<span class="dv">5</span>] </span></code></pre></div>
+<pre><code>## [1] 716.1</code></pre>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="appendix---general-introduction-to-rrstudio.html#cb217-1" tabindex="-1"></a><span class="co"># equivalent to prod(myvec[1],myvec[3],myvec[5]) or prod(myvec[c(1,3,5)])</span></span></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="appendix---general-introduction-to-rrstudio.html#cb218-1" tabindex="-1"></a><span class="do">## 4. </span></span>
+<span id="cb218-2"><a href="appendix---general-introduction-to-rrstudio.html#cb218-2" tabindex="-1"></a>myvec_new <span class="ot">&lt;-</span> myvec[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb218-3"><a href="appendix---general-introduction-to-rrstudio.html#cb218-3" tabindex="-1"></a><span class="co"># equivalent to myvec_new &lt;- head(myvec,4)</span></span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="appendix---general-introduction-to-rrstudio.html#cb219-1" tabindex="-1"></a><span class="do">## 5. </span></span>
+<span id="cb219-2"><a href="appendix---general-introduction-to-rrstudio.html#cb219-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(names[<span class="dv">3</span>],<span class="st">&quot;is&quot;</span>,x[<span class="dv">3</span>],<span class="st">&quot;years old&quot;</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;John is 3 years old&quot;</code></pre>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="appendix---general-introduction-to-rrstudio.html#cb221-1" tabindex="-1"></a><span class="do">## (5. Advanced)</span></span>
+<span id="cb221-2"><a href="appendix---general-introduction-to-rrstudio.html#cb221-2" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>){</span>
+<span id="cb221-3"><a href="appendix---general-introduction-to-rrstudio.html#cb221-3" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">paste</span>(names[i],<span class="st">&quot;is&quot;</span>,x[i],<span class="st">&quot;years old&quot;</span>))</span>
+<span id="cb221-4"><a href="appendix---general-introduction-to-rrstudio.html#cb221-4" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;Neil is 2 years old&quot;
+## [1] &quot;Ella is 1 years old&quot;
+## [1] &quot;John is 3 years old&quot;
+## [1] &quot;Grace is 5 years old&quot;</code></pre>
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+<div id="data-frames" class="section level3 unnumbered hasAnchor">
+<h3>Data frames<a href="appendix---general-introduction-to-rrstudio.html#data-frames" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A data frame in R is a particular structure for storing datasets. You can think of them as lists of vectors or, more intuitively, similar to a spreadsheet in Excel. Although all vectors need to be of equal length, they can contain different types of data. Here is an example of a data frame</p>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="appendix---general-introduction-to-rrstudio.html#cb223-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ParticipantID =</span> <span class="fu">c</span>(<span class="st">&#39;ID001&#39;</span>, <span class="st">&#39;ID002&#39;</span>, <span class="st">&#39;ID003&#39;</span>, <span class="st">&#39;ID007&#39;</span>, <span class="st">&#39;ID009&#39;</span>),</span>
+<span id="cb223-2"><a href="appendix---general-introduction-to-rrstudio.html#cb223-2" tabindex="-1"></a>                 <span class="at">Age =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">7</span>, <span class="dv">11</span>),</span>
+<span id="cb223-3"><a href="appendix---general-introduction-to-rrstudio.html#cb223-3" tabindex="-1"></a>                 <span class="at">Episode =</span> <span class="fu">c</span>(<span class="st">&#39;y&#39;</span>, <span class="st">&#39;n&#39;</span>, <span class="st">&#39;n&#39;</span>, <span class="st">&#39;y&#39;</span>, <span class="st">&#39;y&#39;</span>))</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ParticipantID</th>
+<th align="center">Age</th>
+<th align="center">Episode</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ID001</td>
+<td align="center">12</td>
+<td align="center">y</td>
+</tr>
+<tr class="even">
+<td align="left">ID002</td>
+<td align="center">8</td>
+<td align="center">n</td>
+</tr>
+<tr class="odd">
+<td align="left">ID003</td>
+<td align="center">9</td>
+<td align="center">n</td>
+</tr>
+<tr class="even">
+<td align="left">ID007</td>
+<td align="center">7</td>
+<td align="center">y</td>
+</tr>
+<tr class="odd">
+<td align="left">ID009</td>
+<td align="center">11</td>
+<td align="center">y</td>
+</tr>
+</tbody>
+</table>
+<p>Accessing individual columns of a data frame can be done by name and using the <code>$</code> operator, e.g.</p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="appendix---general-introduction-to-rrstudio.html#cb224-1" tabindex="-1"></a>df<span class="sc">$</span>Age</span></code></pre></div>
+<pre><code>## [1] 12  8  9  7 11</code></pre>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="appendix---general-introduction-to-rrstudio.html#cb226-1" tabindex="-1"></a><span class="co"># equivalent to</span></span>
+<span id="cb226-2"><a href="appendix---general-introduction-to-rrstudio.html#cb226-2" tabindex="-1"></a><span class="co"># df[&#39;Age&#39;]</span></span></code></pre></div>
+<p>whereas indexing works in a similar fashion as for vectors</p>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="appendix---general-introduction-to-rrstudio.html#cb227-1" tabindex="-1"></a><span class="co"># get the ID of the second participant</span></span>
+<span id="cb227-2"><a href="appendix---general-introduction-to-rrstudio.html#cb227-2" tabindex="-1"></a>df<span class="sc">$</span>ParticipantID[<span class="dv">2</span>]</span></code></pre></div>
+<pre><code>## [1] &quot;ID002&quot;</code></pre>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="appendix---general-introduction-to-rrstudio.html#cb229-1" tabindex="-1"></a><span class="co"># equivalent to </span></span>
+<span id="cb229-2"><a href="appendix---general-introduction-to-rrstudio.html#cb229-2" tabindex="-1"></a><span class="co"># df[2,&#39;ParticipantID&#39;]</span></span></code></pre></div>
+<p><strong>Note:</strong> using the double indexing follows the general <code>[row, column]</code> notation.</p>
+<p>Adding or making changes to an existing columns is equally straightforward</p>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="appendix---general-introduction-to-rrstudio.html#cb230-1" tabindex="-1"></a><span class="co"># changing the data type of the &#39;Episode&#39; column to a factor</span></span>
+<span id="cb230-2"><a href="appendix---general-introduction-to-rrstudio.html#cb230-2" tabindex="-1"></a>df<span class="sc">$</span>Episode <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Episode, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;no&#39;</span>, <span class="st">&#39;yes&#39;</span>))</span>
+<span id="cb230-3"><a href="appendix---general-introduction-to-rrstudio.html#cb230-3" tabindex="-1"></a></span>
+<span id="cb230-4"><a href="appendix---general-introduction-to-rrstudio.html#cb230-4" tabindex="-1"></a><span class="co"># adding a new column</span></span>
+<span id="cb230-5"><a href="appendix---general-introduction-to-rrstudio.html#cb230-5" tabindex="-1"></a>df[<span class="st">&#39;Temperature&#39;</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">39.1</span>, <span class="fl">37.0</span>, <span class="fl">35.3</span>, <span class="fl">38.8</span>, <span class="fl">37.9</span>)</span>
+<span id="cb230-6"><a href="appendix---general-introduction-to-rrstudio.html#cb230-6" tabindex="-1"></a></span>
+<span id="cb230-7"><a href="appendix---general-introduction-to-rrstudio.html#cb230-7" tabindex="-1"></a><span class="co"># equivalent to </span></span>
+<span id="cb230-8"><a href="appendix---general-introduction-to-rrstudio.html#cb230-8" tabindex="-1"></a><span class="co"># df$Temperature &lt;- c(39.1, 37.0, 35.3, 38.8, 37.9)</span></span>
+<span id="cb230-9"><a href="appendix---general-introduction-to-rrstudio.html#cb230-9" tabindex="-1"></a></span>
+<span id="cb230-10"><a href="appendix---general-introduction-to-rrstudio.html#cb230-10" tabindex="-1"></a><span class="co"># display the first 3 rows of df</span></span>
+<span id="cb230-11"><a href="appendix---general-introduction-to-rrstudio.html#cb230-11" tabindex="-1"></a><span class="fu">head</span>(df, <span class="at">n =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##   ParticipantID Age Episode Temperature
+## 1         ID001  12     yes        39.1
+## 2         ID002   8      no        37.0
+## 3         ID003   9      no        35.3</code></pre>
+<div class="panel panel-default">
+<div class="panel-heading">
+Question
+</div>
+<div class="panel-body">
+We just changed the data type of the column <code>Episode</code> to a factor. What is a factor in R and what kind of data would we use it for?
+</div>
+</div>
+<button id="displayTextunnamed-chunk-146" onclick="javascript:toggle(&#39;unnamed-chunk-146&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-146" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+A factor is a data structure used for fields that takes only predefined, finite number of values. Factors are typically used for categorical data.
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+</div>
+</div>
+<div id="functions-in-r" class="section level2 unnumbered hasAnchor">
+<h2>Functions in R<a href="appendix---general-introduction-to-rrstudio.html#functions-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>R has a many predefined and commonly used in-built functions, such as <code>mean()</code> or<code>sd()</code> to calculate the mean and standard deviation of of a vector:</p>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="appendix---general-introduction-to-rrstudio.html#cb232-1" tabindex="-1"></a><span class="co"># define a vector with numbers from 1 to 10</span></span>
+<span id="cb232-2"><a href="appendix---general-introduction-to-rrstudio.html#cb232-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb232-3"><a href="appendix---general-introduction-to-rrstudio.html#cb232-3" tabindex="-1"></a></span>
+<span id="cb232-4"><a href="appendix---general-introduction-to-rrstudio.html#cb232-4" tabindex="-1"></a><span class="co"># note: this is short-hand for</span></span>
+<span id="cb232-5"><a href="appendix---general-introduction-to-rrstudio.html#cb232-5" tabindex="-1"></a><span class="co"># x &lt;- seq(1, 10, by = 10)</span></span>
+<span id="cb232-6"><a href="appendix---general-introduction-to-rrstudio.html#cb232-6" tabindex="-1"></a></span>
+<span id="cb232-7"><a href="appendix---general-introduction-to-rrstudio.html#cb232-7" tabindex="-1"></a><span class="co"># calculate the mean and sd of x</span></span>
+<span id="cb232-8"><a href="appendix---general-introduction-to-rrstudio.html#cb232-8" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb232-9"><a href="appendix---general-introduction-to-rrstudio.html#cb232-9" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(x)</span>
+<span id="cb232-10"><a href="appendix---general-introduction-to-rrstudio.html#cb232-10" tabindex="-1"></a></span>
+<span id="cb232-11"><a href="appendix---general-introduction-to-rrstudio.html#cb232-11" tabindex="-1"></a><span class="co"># let&#39;s have a look</span></span>
+<span id="cb232-12"><a href="appendix---general-introduction-to-rrstudio.html#cb232-12" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;The mean (sd) of x is &quot;</span>,mu,<span class="st">&quot; (&quot;</span>,<span class="fu">round</span>(sigma,<span class="dv">3</span>),<span class="st">&quot;)&quot;</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;The mean (sd) of x is 5.5 (3.028)&quot;</code></pre>
+<div class="panel panel-default">
+<div class="panel-heading">
+Question
+</div>
+<div class="panel-body">
+What do the functions <code>print()</code>, <code>paste0()</code> and <code>round()</code> do?
+</div>
+</div>
+<button id="displayTextunnamed-chunk-149" onclick="javascript:toggle(&#39;unnamed-chunk-149&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-149" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<ul>
+<li><code>print(x)</code> prints out the <em>value</em> of a variable <code>x</code>, which could be numeric or, as in this case, a <em>string</em></li>
+<li><code>paste0()</code> creates strings and allows you to combine text and variables</li>
+<li><code>round(x, y)</code> rounds up a number (here stored in <code>x</code>) to <code>y</code> significant digits</li>
+</ul>
+If you are not sure what a particular function does, simply ask R for help, for example by using <code>?round()</code>, or <em>google it</em>
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+<p>The inbuilt function <code>seq(from, to, by = )</code> creates a sequence of numbers starting from <code>from</code> up to <code>to</code> in steps of <code>by</code>, whereas <code>seq(from, to, length.out = )</code> will create a sequence of <code>length.out</code> numbers that are evenly spaced between <code>from</code> and <code>to</code>.</p>
+<p>Use this function to create the following sequences:</p>
+<ol style="list-style-type: decimal">
+<li>2, 4, 6, …, 30.</li>
+<li>A sequence of 14 numbers starting at -2.5 and ending at 15.34.</li>
+<li>A sequence of 7 numbers starting at 0, increasing in increments of 0.04.</li>
+<li>A sequence starting at 101, ending at -20, in decrements of 11.
+</div>
+</div></li>
+</ol>
+<button id="displayTextunnamed-chunk-151" onclick="javascript:toggle(&#39;unnamed-chunk-151&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-151" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+myseq &lt;- seq(2, -2, by = 0.1)
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+<div id="useful-inbuilt-functions" class="section level3 unnumbered hasAnchor">
+<h3>Useful inbuilt functions<a href="appendix---general-introduction-to-rrstudio.html#useful-inbuilt-functions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Here is a list of common, inbuilt functions that you will probably come across when working with data.</p>
+<table>
+<colgroup>
+<col width="8%" />
+<col width="91%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Function</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>length(x)</code></td>
+<td align="left">returns the length of vector x (i.e. the number of elements in <code>x</code>)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>names(x)</code></td>
+<td align="left">get or set names of x (i.e. we can give names to the individual elements of <code>x</code> as well as just having them numbered)</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>min(x)</code></td>
+<td align="left">returns the smallest value in <code>x</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>max(x)</code></td>
+<td align="left">returns the largest value in <code>x</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>median(x)</code></td>
+<td align="left">returns the median of <code>x</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>range(x)</code></td>
+<td align="left">returns a vector with the smallest and largest values in <code>x</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>sum(x)</code></td>
+<td align="left">returns the sum of values in <code>x</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>mean(x)</code></td>
+<td align="left">returns the mean of values in <code>x</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>sd(x)</code></td>
+<td align="left">returns the standard deviation of <code>x</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>var(x)</code></td>
+<td align="left">returns the variance of <code>x</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>diff(x)</code></td>
+<td align="left">returns a vector with all of the differences between subsequent values of <code>x</code>. This vector is of length 1 less than the length of <code>x</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>summary(x)</code></td>
+<td align="left">returns different types of summary output depending on the type of variable stored in <code>x</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="custom-functions" class="section level3 unnumbered hasAnchor">
+<h3>Custom functions<a href="appendix---general-introduction-to-rrstudio.html#custom-functions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>There will be instances when you need a specific function for a particular job which, unfortunately, is not readily provided. In this case you can write your own function and then use them in a similar fashion as inbuilt functions or those that come part of a package.</p>
+<p>There general way to define your own functions is</p>
+<pre><code>my_function &lt;- function(...) {
+    # list of statements 
+    # return an object (optional) 
+    return(...)
+}</code></pre>
+<p>For example, the following function simply prints out a “Hello, world”</p>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="appendix---general-introduction-to-rrstudio.html#cb235-1" tabindex="-1"></a>hello <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb235-2"><a href="appendix---general-introduction-to-rrstudio.html#cb235-2" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;Hello, world&quot;</span>)</span>
+<span id="cb235-3"><a href="appendix---general-introduction-to-rrstudio.html#cb235-3" tabindex="-1"></a>}</span>
+<span id="cb235-4"><a href="appendix---general-introduction-to-rrstudio.html#cb235-4" tabindex="-1"></a></span>
+<span id="cb235-5"><a href="appendix---general-introduction-to-rrstudio.html#cb235-5" tabindex="-1"></a><span class="fu">hello</span>()</span></code></pre></div>
+<pre><code>## [1] &quot;Hello, world&quot;</code></pre>
+<p>And here is a more useful function to calculate the area of a circle with radius <code>r</code></p>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="appendix---general-introduction-to-rrstudio.html#cb237-1" tabindex="-1"></a>circle <span class="ot">&lt;-</span> <span class="cf">function</span>(r) {</span>
+<span id="cb237-2"><a href="appendix---general-introduction-to-rrstudio.html#cb237-2" tabindex="-1"></a>    <span class="co"># calculate the area</span></span>
+<span id="cb237-3"><a href="appendix---general-introduction-to-rrstudio.html#cb237-3" tabindex="-1"></a>    A <span class="ot">&lt;-</span> pi <span class="sc">*</span> r<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb237-4"><a href="appendix---general-introduction-to-rrstudio.html#cb237-4" tabindex="-1"></a>    </span>
+<span id="cb237-5"><a href="appendix---general-introduction-to-rrstudio.html#cb237-5" tabindex="-1"></a>    <span class="co"># return the value of A </span></span>
+<span id="cb237-6"><a href="appendix---general-introduction-to-rrstudio.html#cb237-6" tabindex="-1"></a>    <span class="fu">return</span>(A)</span>
+<span id="cb237-7"><a href="appendix---general-introduction-to-rrstudio.html#cb237-7" tabindex="-1"></a>}</span>
+<span id="cb237-8"><a href="appendix---general-introduction-to-rrstudio.html#cb237-8" tabindex="-1"></a></span>
+<span id="cb237-9"><a href="appendix---general-introduction-to-rrstudio.html#cb237-9" tabindex="-1"></a>radius <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb237-10"><a href="appendix---general-introduction-to-rrstudio.html#cb237-10" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;the area of a circle with radius r = &quot;</span>,radius,<span class="st">&quot; is A = &quot;</span>,<span class="fu">round</span>(<span class="fu">circle</span>(radius),<span class="dv">5</span>)))</span></code></pre></div>
+<pre><code>## [1] &quot;the area of a circle with radius r = 1 is A = 3.14159&quot;</code></pre>
+<p>Important, the number of <em>arguments</em> that a function is not limited to one, and not all of them need to be provided if default values are defined. Here is an example of a function with three input arguments, with a default value set for the last one.</p>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="appendix---general-introduction-to-rrstudio.html#cb239-1" tabindex="-1"></a><span class="co"># define your function to compare means</span></span>
+<span id="cb239-2"><a href="appendix---general-introduction-to-rrstudio.html#cb239-2" tabindex="-1"></a>compareMeans <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, <span class="at">dostats =</span> <span class="cn">FALSE</span>){</span>
+<span id="cb239-3"><a href="appendix---general-introduction-to-rrstudio.html#cb239-3" tabindex="-1"></a>    </span>
+<span id="cb239-4"><a href="appendix---general-introduction-to-rrstudio.html#cb239-4" tabindex="-1"></a>    <span class="co"># compare the means of vectors x and y</span></span>
+<span id="cb239-5"><a href="appendix---general-introduction-to-rrstudio.html#cb239-5" tabindex="-1"></a>    mux <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb239-6"><a href="appendix---general-introduction-to-rrstudio.html#cb239-6" tabindex="-1"></a>    muy <span class="ot">&lt;-</span> <span class="fu">mean</span>(y)</span>
+<span id="cb239-7"><a href="appendix---general-introduction-to-rrstudio.html#cb239-7" tabindex="-1"></a>    <span class="cf">if</span>(mux <span class="sc">&gt;</span> muy){</span>
+<span id="cb239-8"><a href="appendix---general-introduction-to-rrstudio.html#cb239-8" tabindex="-1"></a>        <span class="fu">print</span>(<span class="st">&quot;the mean of x is greater than the mean of y&quot;</span>)</span>
+<span id="cb239-9"><a href="appendix---general-introduction-to-rrstudio.html#cb239-9" tabindex="-1"></a>    }<span class="cf">else</span> <span class="cf">if</span>(muy <span class="sc">&gt;</span> mux){</span>
+<span id="cb239-10"><a href="appendix---general-introduction-to-rrstudio.html#cb239-10" tabindex="-1"></a>        <span class="fu">print</span>(<span class="st">&quot;the mean of y is greater than the mean of x&quot;</span>)</span>
+<span id="cb239-11"><a href="appendix---general-introduction-to-rrstudio.html#cb239-11" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb239-12"><a href="appendix---general-introduction-to-rrstudio.html#cb239-12" tabindex="-1"></a>        <span class="fu">print</span>(<span class="st">&quot;x and y have the same mean&quot;</span>)</span>
+<span id="cb239-13"><a href="appendix---general-introduction-to-rrstudio.html#cb239-13" tabindex="-1"></a>    }</span>
+<span id="cb239-14"><a href="appendix---general-introduction-to-rrstudio.html#cb239-14" tabindex="-1"></a>    </span>
+<span id="cb239-15"><a href="appendix---general-introduction-to-rrstudio.html#cb239-15" tabindex="-1"></a>    <span class="co"># run t-test if required</span></span>
+<span id="cb239-16"><a href="appendix---general-introduction-to-rrstudio.html#cb239-16" tabindex="-1"></a>    <span class="cf">if</span>(dostats <span class="sc">==</span> <span class="cn">TRUE</span>){</span>
+<span id="cb239-17"><a href="appendix---general-introduction-to-rrstudio.html#cb239-17" tabindex="-1"></a>        <span class="fu">print</span>(<span class="st">&quot;Here is the result of a two-sided t-test&quot;</span>)</span>
+<span id="cb239-18"><a href="appendix---general-introduction-to-rrstudio.html#cb239-18" tabindex="-1"></a>        <span class="fu">t.test</span>(x,y)</span>
+<span id="cb239-19"><a href="appendix---general-introduction-to-rrstudio.html#cb239-19" tabindex="-1"></a>    }</span>
+<span id="cb239-20"><a href="appendix---general-introduction-to-rrstudio.html#cb239-20" tabindex="-1"></a>}</span>
+<span id="cb239-21"><a href="appendix---general-introduction-to-rrstudio.html#cb239-21" tabindex="-1"></a></span>
+<span id="cb239-22"><a href="appendix---general-introduction-to-rrstudio.html#cb239-22" tabindex="-1"></a><span class="co"># define two vectors, x and y</span></span>
+<span id="cb239-23"><a href="appendix---general-introduction-to-rrstudio.html#cb239-23" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">2</span>)</span>
+<span id="cb239-24"><a href="appendix---general-introduction-to-rrstudio.html#cb239-24" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb239-25"><a href="appendix---general-introduction-to-rrstudio.html#cb239-25" tabindex="-1"></a></span>
+<span id="cb239-26"><a href="appendix---general-introduction-to-rrstudio.html#cb239-26" tabindex="-1"></a><span class="co"># call function, specify only first two arguments</span></span>
+<span id="cb239-27"><a href="appendix---general-introduction-to-rrstudio.html#cb239-27" tabindex="-1"></a><span class="fu">compareMeans</span>(x,y)</span></code></pre></div>
+<pre><code>## [1] &quot;the mean of y is greater than the mean of x&quot;</code></pre>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="appendix---general-introduction-to-rrstudio.html#cb241-1" tabindex="-1"></a><span class="co"># call function, this time as to perform a t-test </span></span>
+<span id="cb241-2"><a href="appendix---general-introduction-to-rrstudio.html#cb241-2" tabindex="-1"></a><span class="fu">compareMeans</span>(x,y,<span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;the mean of y is greater than the mean of x&quot;
+## [1] &quot;Here is the result of a two-sided t-test&quot;</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  x and y
+## t = -1.3416, df = 17.308, p-value = 0.1971
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -2.5704367  0.5704367
+## sample estimates:
+## mean of x mean of y 
+##         3         4</code></pre>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+Write a function that calculates the 95% confident intervals for the sample mean of a vector <span class="math inline">\(y\)</span>, <span class="math inline">\(\mu\)</span>, which are given as
+<span class="math display">\[
+\begin{align}
+    \mu &amp;= \frac{\sum y_i}{n} \\
+    CI &amp;= \mu \pm 1.96 \sigma / \sqrt(n)
+\end{align}
+\]</span>
+</div>
+</div>
+<button id="displayTextunnamed-chunk-158" onclick="javascript:toggle(&#39;unnamed-chunk-158&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-158" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+myseq &lt;- seq(2, -2, by = 0.1)
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+</div>
+</div>
+<div id="basic-plotting-in-r" class="section level2 unnumbered hasAnchor">
+<h2>Basic plotting in R<a href="appendix---general-introduction-to-rrstudio.html#basic-plotting-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>R provides basic functionalities for most of your plotting needs. There are three types of graphs commonly used for visualising data: scatter / line plots, barplots, boxplots. Rather than going into a detailed explanation of each of them work, here are a couple of examples, which you should try to run, interpret and modify to understand their notation and general use.</p>
+<div id="scatter-plot" class="section level3 hasAnchor" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Scatter plot<a href="appendix---general-introduction-to-rrstudio.html#scatter-plot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="appendix---general-introduction-to-rrstudio.html#cb244-1" tabindex="-1"></a><span class="co"># define two vectors x and y</span></span>
+<span id="cb244-2"><a href="appendix---general-introduction-to-rrstudio.html#cb244-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">40</span>, <span class="at">min =</span> <span class="dv">2</span>, <span class="at">max =</span> <span class="dv">5</span>)  <span class="co"># draw 40 samples from a uniform distribution U(2,5)</span></span>
+<span id="cb244-3"><a href="appendix---general-introduction-to-rrstudio.html#cb244-3" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">40</span>, <span class="at">mean =</span> x, <span class="at">sd =</span> <span class="dv">1</span>) <span class="co"># add Gaussian noise</span></span>
+<span id="cb244-4"><a href="appendix---general-introduction-to-rrstudio.html#cb244-4" tabindex="-1"></a></span>
+<span id="cb244-5"><a href="appendix---general-introduction-to-rrstudio.html#cb244-5" tabindex="-1"></a><span class="co"># plot y against x</span></span>
+<span id="cb244-6"><a href="appendix---general-introduction-to-rrstudio.html#cb244-6" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-159-1.png" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="appendix---general-introduction-to-rrstudio.html#cb245-1" tabindex="-1"></a><span class="co"># change plotting symbol, size and colour, add axes labels and increase axes limits</span></span>
+<span id="cb245-2"><a href="appendix---general-introduction-to-rrstudio.html#cb245-2" tabindex="-1"></a><span class="fu">plot</span>(x, y, </span>
+<span id="cb245-3"><a href="appendix---general-introduction-to-rrstudio.html#cb245-3" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>, <span class="co"># solid circle, also try 15, 17, 20, ...</span></span>
+<span id="cb245-4"><a href="appendix---general-introduction-to-rrstudio.html#cb245-4" tabindex="-1"></a>     <span class="at">cex =</span> <span class="dv">2</span>,  <span class="co"># size scaling factor</span></span>
+<span id="cb245-5"><a href="appendix---general-introduction-to-rrstudio.html#cb245-5" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&#39;red&#39;</span>,  </span>
+<span id="cb245-6"><a href="appendix---general-introduction-to-rrstudio.html#cb245-6" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&#39;X values&#39;</span>, </span>
+<span id="cb245-7"><a href="appendix---general-introduction-to-rrstudio.html#cb245-7" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&#39;Y values&#39;</span>,</span>
+<span id="cb245-8"><a href="appendix---general-introduction-to-rrstudio.html#cb245-8" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">6</span>),</span>
+<span id="cb245-9"><a href="appendix---general-introduction-to-rrstudio.html#cb245-9" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">11</span>))</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-160-1.png" style="display: block; margin: auto;" /></p>
+</div>
+<div id="line-graph" class="section level3 unnumbered hasAnchor">
+<h3>Line graph<a href="appendix---general-introduction-to-rrstudio.html#line-graph" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="appendix---general-introduction-to-rrstudio.html#cb246-1" tabindex="-1"></a><span class="co"># change plotting symbol, size and colour, add axes labels and increase axes limits</span></span>
+<span id="cb246-2"><a href="appendix---general-introduction-to-rrstudio.html#cb246-2" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span></span>
+<span id="cb246-3"><a href="appendix---general-introduction-to-rrstudio.html#cb246-3" tabindex="-1"></a>b <span class="ot">&lt;-</span> a <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">20</span>, a, <span class="fl">2.5</span>)</span>
+<span id="cb246-4"><a href="appendix---general-introduction-to-rrstudio.html#cb246-4" tabindex="-1"></a></span>
+<span id="cb246-5"><a href="appendix---general-introduction-to-rrstudio.html#cb246-5" tabindex="-1"></a><span class="fu">plot</span>(a, b, </span>
+<span id="cb246-6"><a href="appendix---general-introduction-to-rrstudio.html#cb246-6" tabindex="-1"></a>     <span class="at">type =</span> <span class="st">&#39;l&#39;</span>, <span class="co"># change to line graph</span></span>
+<span id="cb246-7"><a href="appendix---general-introduction-to-rrstudio.html#cb246-7" tabindex="-1"></a>     <span class="at">lwd =</span> <span class="fl">2.5</span>,  <span class="co"># line width</span></span>
+<span id="cb246-8"><a href="appendix---general-introduction-to-rrstudio.html#cb246-8" tabindex="-1"></a>     <span class="at">lty =</span> <span class="st">&#39;dotted&#39;</span>,</span>
+<span id="cb246-9"><a href="appendix---general-introduction-to-rrstudio.html#cb246-9" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&#39;blue&#39;</span>,</span>
+<span id="cb246-10"><a href="appendix---general-introduction-to-rrstudio.html#cb246-10" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&#39;X values&#39;</span>,</span>
+<span id="cb246-11"><a href="appendix---general-introduction-to-rrstudio.html#cb246-11" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&#39;Y values&#39;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-161-1.png" style="display: block; margin: auto;" /></p>
+</div>
+<div id="combined-graph" class="section level3 unnumbered hasAnchor">
+<h3>Combined graph<a href="appendix---general-introduction-to-rrstudio.html#combined-graph" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="appendix---general-introduction-to-rrstudio.html#cb247-1" tabindex="-1"></a><span class="co"># crate scatter plot and add line graph</span></span>
+<span id="cb247-2"><a href="appendix---general-introduction-to-rrstudio.html#cb247-2" tabindex="-1"></a><span class="co"># note: these statement have to be run / executed together</span></span>
+<span id="cb247-3"><a href="appendix---general-introduction-to-rrstudio.html#cb247-3" tabindex="-1"></a><span class="fu">plot</span>(x, y, </span>
+<span id="cb247-4"><a href="appendix---general-introduction-to-rrstudio.html#cb247-4" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>, </span>
+<span id="cb247-5"><a href="appendix---general-introduction-to-rrstudio.html#cb247-5" tabindex="-1"></a>     <span class="at">cex =</span> <span class="dv">1</span>,</span>
+<span id="cb247-6"><a href="appendix---general-introduction-to-rrstudio.html#cb247-6" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&#39;X values&#39;</span>,</span>
+<span id="cb247-7"><a href="appendix---general-introduction-to-rrstudio.html#cb247-7" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&#39;Y values&#39;</span>,</span>
+<span id="cb247-8"><a href="appendix---general-introduction-to-rrstudio.html#cb247-8" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">6</span>),</span>
+<span id="cb247-9"><a href="appendix---general-introduction-to-rrstudio.html#cb247-9" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">11</span>))</span>
+<span id="cb247-10"><a href="appendix---general-introduction-to-rrstudio.html#cb247-10" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">y =</span> <span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="at">by=</span><span class="dv">2</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">&#39;red&#39;</span>)</span>
+<span id="cb247-11"><a href="appendix---general-introduction-to-rrstudio.html#cb247-11" tabindex="-1"></a><span class="fu">legend</span>(<span class="at">x =</span> <span class="dv">4</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">legend =</span> <span class="st">&#39;trend line&#39;</span>, <span class="at">col =</span> <span class="st">&#39;red&#39;</span>, <span class="at">lwd =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-162-1.png" style="display: block; margin: auto;" /></p>
+</div>
+<div id="barplot" class="section level3 unnumbered hasAnchor">
+<h3>Barplot<a href="appendix---general-introduction-to-rrstudio.html#barplot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<blockquote>
+<p><strong>Note:</strong> barplots should only be used to represent counts and not for comparing continuous data that can take on any values</p>
+</blockquote>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="appendix---general-introduction-to-rrstudio.html#cb248-1" tabindex="-1"></a><span class="co"># create some count data</span></span>
+<span id="cb248-2"><a href="appendix---general-introduction-to-rrstudio.html#cb248-2" tabindex="-1"></a>Year <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&#39;2002&#39;</span>, <span class="st">&#39;2010&#39;</span>, <span class="st">&#39;2019&#39;</span>, <span class="st">&#39;2020&#39;</span>, <span class="st">&#39;2023&#39;</span>)</span>
+<span id="cb248-3"><a href="appendix---general-introduction-to-rrstudio.html#cb248-3" tabindex="-1"></a>Cases <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">101</span>, <span class="dv">204</span>, <span class="dv">178</span>, <span class="dv">252</span>, <span class="dv">277</span>)</span>
+<span id="cb248-4"><a href="appendix---general-introduction-to-rrstudio.html#cb248-4" tabindex="-1"></a></span>
+<span id="cb248-5"><a href="appendix---general-introduction-to-rrstudio.html#cb248-5" tabindex="-1"></a><span class="fu">barplot</span>(Cases, <span class="at">names.arg =</span> Year, <span class="at">col =</span> <span class="st">&#39;#1b98e0&#39;</span>,</span>
+<span id="cb248-6"><a href="appendix---general-introduction-to-rrstudio.html#cb248-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&#39;Year of sampling&#39;</span>,</span>
+<span id="cb248-7"><a href="appendix---general-introduction-to-rrstudio.html#cb248-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&#39;Number of cases&#39;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-163-1.png" style="display: block; margin: auto;" /></p>
+<p>Grouped, stacked barplots are also possible but we revisit those once we introduce <code>ggplot</code> as this provides a more intuitive way to create complex graphs.</p>
+</div>
+<div id="boxplots" class="section level3 unnumbered hasAnchor">
+<h3>Boxplots<a href="appendix---general-introduction-to-rrstudio.html#boxplots" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Boxplots are commonly used to show the distribution of (stratified) data. Together with the sample medium, they also show interquartile ranges and outliers. Here is a simple example.</p>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="appendix---general-introduction-to-rrstudio.html#cb249-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Temperature =</span> <span class="fu">c</span>(<span class="fl">35.6</span>, <span class="fl">37.1</span>, <span class="fl">38.0</span>, <span class="fl">36.7</span>, <span class="fl">36.5</span>, <span class="fl">35.9</span>, <span class="fl">39.7</span>, <span class="fl">38.3</span>, <span class="fl">36.6</span>),</span>
+<span id="cb249-2"><a href="appendix---general-introduction-to-rrstudio.html#cb249-2" tabindex="-1"></a>                 <span class="at">Episode =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&#39;no&#39;</span>, <span class="st">&#39;no&#39;</span>, <span class="st">&#39;yes&#39;</span>, <span class="st">&#39;yes&#39;</span>, <span class="st">&#39;no&#39;</span>, <span class="st">&#39;no&#39;</span>, <span class="st">&#39;yes&#39;</span>, <span class="st">&#39;no&#39;</span>, <span class="st">&#39;no&#39;</span>)))</span>
+<span id="cb249-3"><a href="appendix---general-introduction-to-rrstudio.html#cb249-3" tabindex="-1"></a></span>
+<span id="cb249-4"><a href="appendix---general-introduction-to-rrstudio.html#cb249-4" tabindex="-1"></a><span class="fu">boxplot</span>(Temperature <span class="sc">~</span> Episode, <span class="at">data =</span> df, </span>
+<span id="cb249-5"><a href="appendix---general-introduction-to-rrstudio.html#cb249-5" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&#39;cyan&#39;</span>, <span class="st">&#39;orange&#39;</span>),</span>
+<span id="cb249-6"><a href="appendix---general-introduction-to-rrstudio.html#cb249-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&#39;Clinical episode&#39;</span>,</span>
+<span id="cb249-7"><a href="appendix---general-introduction-to-rrstudio.html#cb249-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="st">&quot;Temperature [&quot;</span><span class="sc">*</span><span class="er">~</span>degree<span class="sc">*</span>C<span class="sc">*</span><span class="st">&quot;]&quot;</span>))</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-164-1.png" style="display: block; margin: auto;" /></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="survival-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appendix---data-wrangling-and-visualisation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

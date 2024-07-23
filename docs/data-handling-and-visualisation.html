@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1 Data handling and visualisation | Introduction to statistical data analysis in R</title>
+  <meta name="description" content="Intro to Stats with R" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1 Data handling and visualisation | Introduction to statistical data analysis in R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Intro to Stats with R" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1 Data handling and visualisation | Introduction to statistical data analysis in R" />
+  
+  <meta name="twitter:description" content="Intro to Stats with R" />
+  
+
+<meta name="author" content="Mario Recker" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script language="javascript"> 
+    function toggle(id) {
+        var ele = document.getElementById("toggleText" + id);
+        var text = document.getElementById("displayText" + id);
+        var buttonText = text.innerHTML.replace("Show: ", "");
+        buttonText = buttonText.replace("Hide: ", "");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "Show: " + buttonText;
+        } else {
+            ele.style.display = "block";
+            text.innerHTML = "Hide: " + buttonText;
+        }
+    } 
+</script>
+
+<script language="javascript">
+    function openCode(evt, codeName, id) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent" + id);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks" + id);
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(codeName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<script language="javascript">
+    function hide(id){
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-structure"><i class="fa fa-check"></i>Workshop structure</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html"><i class="fa fa-check"></i><b>1</b> Data handling and visualisation</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#importing-data"><i class="fa fa-check"></i>Importing data</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#csv-files"><i class="fa fa-check"></i>CSV files</a></li>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#excel-files"><i class="fa fa-check"></i>Excel files</a></li>
+<li class="chapter" data-level="" data-path="data-handling-and-visualisation.html"><a href="data-handling-and-visualisation.html#r-data-files"><i class="fa fa-check"></i>R data files</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to statistical data analysis in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-handling-and-visualisation" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> Data handling and visualisation<a href="data-handling-and-visualisation.html#data-handling-and-visualisation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="importing-data" class="section level2 unnumbered hasAnchor">
+<h2>Importing data<a href="data-handling-and-visualisation.html#importing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An essential part of data analysis is the ability to read (and store) external datasets. There are a myriad of different ways this can be done in R, partially depending on the file type / software originally used to store the data. Here we focus on three different file formats:</p>
+<ul>
+<li>CSV files (<em>filename</em>.csv)</li>
+<li>Excel files (<em>filename</em>.xls or <em>filename</em>.xlsx)</li>
+<li>R data format (<em>filename</em>.rds or <em>filename</em>.RData)</li>
+</ul>
+<p>The main difference between the approaches is that an <code>Rds</code> file stores data in a (R specific) binary format, meaning that you need R to read it. The same goes for Excel files. CSV files, in comparison, are (human readable) text files that can be opened by a number of different programs. In fact, on most operating systems, these are opened by Excel or a text editor by default. The decision which approach you should use often depends on whether you are the only one working with the data or whether you like the added benefit of viewing (or manipulating) data outside the R environment.</p>
+<blockquote>
+<p><strong>Note:</strong> Excel is known to occasionally cause havoc with data (mostly due to it changing data types by itself), we are urging caution when handling Excel files. Always check the validity of your data before starting with your analysis!</p>
+</blockquote>
+<hr />
+<div id="csv-files" class="section level3 unnumbered hasAnchor">
+<h3>CSV files<a href="data-handling-and-visualisation.html#csv-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>CSV (Comma-Separated Values) is a widely used data format separating values with commas or other delimiters (e.g. semi-colon or tab).</p>
+<p>There are different function pairs for reading CSV files, such as the inbuilt <code>read.table()</code> or <code>read.csv()</code>, and their equivalent functions for writing CSV files. Here we will use the <code>read_csv()</code> function, which is part of the <code>readr</code> package (included in <code>tidyverse</code>). Note: this function is strictly for comma-separated files, <code>read_csv2()</code> reads semicolon-separated and the <code>read_delim()</code> function reads files with any separating character; for full fucntion details, see [here] (<a href="https://www.rdocumentation.org/packages/readr/versions/2.1.5/topics/read_delim" class="uri">https://www.rdocumentation.org/packages/readr/versions/2.1.5/topics/read_delim</a>).</p>
+<p>As an example we will be using the <code>tobacco.csv</code> file that contains a simulated dataset on tobacco use and health of 1000 individuals. Please make sure that the file is contained in your current working directory.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-handling-and-visualisation.html#cb1-1" tabindex="-1"></a>tobacco <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&#39;tobacco.csv&#39;</span>)</span></code></pre></div>
+<p>Check if this worked by printing out the first 5 rows</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="data-handling-and-visualisation.html#cb2-1" tabindex="-1"></a><span class="fu">head</span>(tobacco, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>##   gender age age.gr      BMI smoker cigs.per.day diseased      disease
+## 1      M  75   71 + 29.50225     No            0       No         &lt;NA&gt;
+## 2      F  35  35-50 26.14989     No            0      Yes Neurological
+## 3      F  70  51-70 27.53183     No            0       No         &lt;NA&gt;
+## 4      F  40  35-50 24.05832     No            0       No         &lt;NA&gt;
+## 5      F  75   71 + 22.77486     No            0      Yes      Hearing
+##   samp.wgts
+## 1  1.062500
+## 2  1.044177
+## 3  1.049383
+## 4  1.044177
+## 5  1.062500</code></pre>
+<p>In an equivalent fashion we can save data in CSV format using the <code>write_csv()</code> function.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="data-handling-and-visualisation.html#cb4-1" tabindex="-1"></a><span class="fu">write_csv</span>(tobacco, <span class="st">&quot;myData.csv&quot;</span>)  <span class="co"># make sure you do not overwrite the original data file!!</span></span></code></pre></div>
+</div>
+<div id="excel-files" class="section level3 unnumbered hasAnchor">
+<h3>Excel files<a href="data-handling-and-visualisation.html#excel-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Although we discourage the use of Excel for data handling, it is still one of the most common methods for storing data. We therefore briefly show you one method of how to read Excel files using the <code>read_excel</code> function from the <code>readxl</code> package. NOTE: although <code>readxl</code> will be installed as part of tidyverse, you will still need to load it explicitly, because it is not a core tidyverse package.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="data-handling-and-visualisation.html#cb5-1" tabindex="-1"></a><span class="co"># load library</span></span>
+<span id="cb5-2"><a href="data-handling-and-visualisation.html#cb5-2" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb5-3"><a href="data-handling-and-visualisation.html#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="data-handling-and-visualisation.html#cb5-4" tabindex="-1"></a><span class="co"># read in excel data file</span></span>
+<span id="cb5-5"><a href="data-handling-and-visualisation.html#cb5-5" tabindex="-1"></a>tobaccoXLS <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&#39;tobacco.xlsx&#39;</span>)</span>
+<span id="cb5-6"><a href="data-handling-and-visualisation.html#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="data-handling-and-visualisation.html#cb5-7" tabindex="-1"></a><span class="co"># print first few rows</span></span>
+<span id="cb5-8"><a href="data-handling-and-visualisation.html#cb5-8" tabindex="-1"></a><span class="fu">head</span>(tobaccoXLS, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 9
+##   gender age   age.gr BMI         smoker cigs.per.day diseased disease samp.wgts
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;
+## 1 M      75    71 +   29.5022463… No     0            No       NA           1.06
+## 2 F      35    35-50  26.1498941… No     0            Yes      Neurol…      1.04
+## 3 F      70    51-70  27.5318291… No     0            No       NA           1.05
+## 4 F      40    35-50  24.0583177… No     0            No       NA           1.04
+## 5 F      75    71 +   22.7748622… No     0            Yes      Hearing      1.06</code></pre>
+<p>This functions offers a great deal of flexibility, from specifying which sheet to import (by default it will import the first one), specifying the data range, or <em>repairing</em> column names for easier downstream analysis.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="data-handling-and-visualisation.html#cb7-1" tabindex="-1"></a><span class="co"># specify the name of the sheet and only load the first 100 rows and 7 columns</span></span>
+<span id="cb7-2"><a href="data-handling-and-visualisation.html#cb7-2" tabindex="-1"></a>tobaccoXLS <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&#39;tobacco.xlsx&#39;</span>, <span class="at">sheet =</span> <span class="st">&#39;tobacco_2&#39;</span>, <span class="at">range =</span> <span class="st">&#39;A1:G101&#39;</span>)</span>
+<span id="cb7-3"><a href="data-handling-and-visualisation.html#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="data-handling-and-visualisation.html#cb7-4" tabindex="-1"></a><span class="do">## which is equivalent to</span></span>
+<span id="cb7-5"><a href="data-handling-and-visualisation.html#cb7-5" tabindex="-1"></a><span class="co"># dat &lt;- read_excel(&#39;tobacco.xlsx&#39;, range = &#39;tobacco_2!A1:G101&#39;)</span></span>
+<span id="cb7-6"><a href="data-handling-and-visualisation.html#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="data-handling-and-visualisation.html#cb7-7" tabindex="-1"></a><span class="co"># check the first 5 rows</span></span>
+<span id="cb7-8"><a href="data-handling-and-visualisation.html#cb7-8" tabindex="-1"></a><span class="fu">head</span>(tobaccoXLS, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 7
+##   gender age   `age group`   BMI smoker `cigarettes per day` diseased
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;                &lt;chr&gt;   
+## 1 M      75    71 +         29.5 No     0                    No      
+## 2 F      35    35-50        26.1 No     0                    Yes     
+## 3 F      70    51-70        27.5 No     0                    No      
+## 4 F      40    35-50        24.1 No     0                    No      
+## 5 F      75    71 +         22.8 No     0                    Yes</code></pre>
+<p>We can see that two column names contain spaces, which can make life a bit tricky during subsequent operations. For this, <code>read_excel</code> provides a <code>.name_repair</code> argument, that ensures column names will be syntactic (not containing special characters or reserved words) and work everywhere. (Note: this argument can also be used in the <code>read_csv()</code> function.)</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="data-handling-and-visualisation.html#cb9-1" tabindex="-1"></a>tobaccoXLS <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&#39;tobacco.xlsx&#39;</span>, </span>
+<span id="cb9-2"><a href="data-handling-and-visualisation.html#cb9-2" tabindex="-1"></a>                         <span class="at">sheet =</span> <span class="st">&#39;tobacco_2&#39;</span>, </span>
+<span id="cb9-3"><a href="data-handling-and-visualisation.html#cb9-3" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">&#39;A1:G101&#39;</span>, </span>
+<span id="cb9-4"><a href="data-handling-and-visualisation.html#cb9-4" tabindex="-1"></a>                         <span class="at">.name_repair =</span> <span class="st">&#39;universal&#39;</span>)</span></code></pre></div>
+<pre><code>## New names:
+## • `age group` -&gt; `age.group`
+## • `cigarettes per day` -&gt; `cigarettes.per.day`</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="data-handling-and-visualisation.html#cb11-1" tabindex="-1"></a><span class="fu">head</span>(tobaccoXLS, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 7
+##   gender age   age.group   BMI smoker cigarettes.per.day diseased
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;              &lt;chr&gt;   
+## 1 M      75    71 +       29.5 No     0                  No      
+## 2 F      35    35-50      26.1 No     0                  Yes     
+## 3 F      70    51-70      27.5 No     0                  No      
+## 4 F      40    35-50      24.1 No     0                  No      
+## 5 F      75    71 +       22.8 No     0                  Yes</code></pre>
+<p>A really handy cheatsheet for importing data with the tidyverse can be found <a href="https://github.com/rstudio/cheatsheets/blob/main/data-import.pdf">here</a></p>
+</div>
+<div id="r-data-files" class="section level3 unnumbered hasAnchor">
+<h3>R data files<a href="data-handling-and-visualisation.html#r-data-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To demonstrate the use of R data file format, we go the other way around and start by saving our <code>tobacco</code> dataframe as an R object.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="data-handling-and-visualisation.html#cb13-1" tabindex="-1"></a><span class="fu">saveRDS</span>(tobacco, <span class="at">file =</span> <span class="st">&#39;tobacco.Rds&#39;</span>)</span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> the file will be saved in your current working directory. If you want to save it in a different folder you need to provide the full file path, e.g. <code>saveRDS(df, file = '.../StatsWithR//Data/myData.Rds')</code>.</p>
+</blockquote>
+<p>Loading the data is equally simple:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="data-handling-and-visualisation.html#cb14-1" tabindex="-1"></a><span class="co"># first we remove the tobacco data object to make sure everything works</span></span>
+<span id="cb14-2"><a href="data-handling-and-visualisation.html#cb14-2" tabindex="-1"></a><span class="fu">rm</span>(tobacco)</span>
+<span id="cb14-3"><a href="data-handling-and-visualisation.html#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="data-handling-and-visualisation.html#cb14-4" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb14-5"><a href="data-handling-and-visualisation.html#cb14-5" tabindex="-1"></a><span class="fu">readRDS</span>(<span class="st">&#39;tobacco.Rds&#39;</span>)</span></code></pre></div>
+<pre><code>##      gender age age.gr       BMI smoker cigs.per.day diseased         disease
+## 1         M  75   71 + 29.502246     No            0       No            &lt;NA&gt;
+## 2         F  35  35-50 26.149894     No            0      Yes    Neurological
+## 3         F  70  51-70 27.531829     No            0       No            &lt;NA&gt;
+## 4         F  40  35-50 24.058318     No            0       No            &lt;NA&gt;
+## 5         F  75   71 + 22.774862     No            0      Yes         Hearing
+## 6         M  38  35-50 21.464121     No            0       No            &lt;NA&gt;
+## 7         M  45  35-50 18.948411     No            0       No            &lt;NA&gt;
+## 8      &lt;NA&gt;  59  51-70 30.376773     No            0       No            &lt;NA&gt;
+## 9         F  29  18-34 21.408103    Yes           38       No            &lt;NA&gt;
+...</code></pre>
+<p>At first sight this looks like it has worked. However, you might also have noticed that there is no newly created object in your global environment. This means, although R successfully loaded the data, it was not assigned to an object and essentially lost; this is one of the key differences between <code>saveRDS</code>/<code>readRDS</code> and <code>save</code>/<code>load</code> (see below)). We therefore need to assign the read-in data to an object</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="data-handling-and-visualisation.html#cb16-1" tabindex="-1"></a><span class="co"># read data and assign to an object called tobacco</span></span>
+<span id="cb16-2"><a href="data-handling-and-visualisation.html#cb16-2" tabindex="-1"></a>tobacco <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&#39;tobacco.Rds&#39;</span>)</span>
+<span id="cb16-3"><a href="data-handling-and-visualisation.html#cb16-3" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="data-handling-and-visualisation.html#cb16-4" tabindex="-1"></a><span class="co"># see if it works</span></span>
+<span id="cb16-5"><a href="data-handling-and-visualisation.html#cb16-5" tabindex="-1"></a><span class="fu">head</span>(tobacco)</span></code></pre></div>
+<pre><code>##   gender age age.gr      BMI smoker cigs.per.day diseased      disease
+## 1      M  75   71 + 29.50225     No            0       No         &lt;NA&gt;
+## 2      F  35  35-50 26.14989     No            0      Yes Neurological
+## 3      F  70  51-70 27.53183     No            0       No         &lt;NA&gt;
+## 4      F  40  35-50 24.05832     No            0       No         &lt;NA&gt;
+## 5      F  75   71 + 22.77486     No            0      Yes      Hearing
+## 6      M  38  35-50 21.46412     No            0       No         &lt;NA&gt;
+##   samp.wgts
+## 1  1.062500
+## 2  1.044177
+## 3  1.049383
+## 4  1.044177
+## 5  1.062500
+## 6  1.044177</code></pre>
+<p>An alternative way is the use of the <code>Rdata</code> file format.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="data-handling-and-visualisation.html#cb18-1" tabindex="-1"></a><span class="co"># save our dataframe in Rdata format</span></span>
+<span id="cb18-2"><a href="data-handling-and-visualisation.html#cb18-2" tabindex="-1"></a><span class="fu">save</span>(tobacco, <span class="at">file =</span> <span class="st">&quot;tobacco.Rdata&quot;</span>)  </span>
+<span id="cb18-3"><a href="data-handling-and-visualisation.html#cb18-3" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="data-handling-and-visualisation.html#cb18-4" tabindex="-1"></a><span class="co"># remove from our environment</span></span>
+<span id="cb18-5"><a href="data-handling-and-visualisation.html#cb18-5" tabindex="-1"></a><span class="fu">rm</span>(tobacco)</span>
+<span id="cb18-6"><a href="data-handling-and-visualisation.html#cb18-6" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="data-handling-and-visualisation.html#cb18-7" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb18-8"><a href="data-handling-and-visualisation.html#cb18-8" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;tobacco.Rdata&quot;</span>)</span></code></pre></div>
+<p>As you will have noticed, in this case we do not need to explicitly assign the loaded data to object; instead, the original name of the dataframe will be used. Another advantage of using this format is that we can save multiple objects at once</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="data-handling-and-visualisation.html#cb19-1" tabindex="-1"></a><span class="co"># save both dataframe in one file</span></span>
+<span id="cb19-2"><a href="data-handling-and-visualisation.html#cb19-2" tabindex="-1"></a><span class="fu">save</span>(tobacco, tobaccoXLS, <span class="at">file =</span> <span class="st">&#39;tobacco_datasets.Rda&#39;</span>)</span>
+<span id="cb19-3"><a href="data-handling-and-visualisation.html#cb19-3" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="data-handling-and-visualisation.html#cb19-4" tabindex="-1"></a><span class="co"># remove from environment</span></span>
+<span id="cb19-5"><a href="data-handling-and-visualisation.html#cb19-5" tabindex="-1"></a><span class="fu">rm</span>(tobacco, tobaccoXLS)</span>
+<span id="cb19-6"><a href="data-handling-and-visualisation.html#cb19-6" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="data-handling-and-visualisation.html#cb19-7" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb19-8"><a href="data-handling-and-visualisation.html#cb19-8" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&#39;tobacco_datasets.Rda&#39;</span>)</span></code></pre></div>
+<p>One of the advantages of saving data in an R data format is that it is more space efficient. By default, <code>saveRDS</code> (or <code>save</code>) compresses the data, which can significantly shrink the size of the stored data. On the downside, it can also take a bit longer to load the data subsequently.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

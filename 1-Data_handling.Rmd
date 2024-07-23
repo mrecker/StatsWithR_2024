@@ -1,85 +1,8 @@
---- 
-title: "Introduction to statistical data analysis in R"
-author: "Mario Recker"
-site: bookdown::bookdown_site
-output:
-    bookdown::gitbook:
-        config:
-            sharing: null
-        css: 'style.css'
-        includes:
-            in_header: _toggle.html
-        keep_md: TRUE
-linkcolor: blue
-documentclass: book
-link-citations: yes
-description: "Intro to Stats with R"
----
-
-# About {-}
-
-
-
-
-This workshop is intended to introduce the R/RStudio statistical programming environment and how to use it for efficient data handling, data visualisation and data analysis. It is aimed at individuals with little experience in R/Rstudio and basic statistics. For those who are interested in a general intro to R or a refresher, please have a look at the following site for a great introduction to R/RStudio [Introduction to R](https://exeter-data-analytics.github.io/IntroToR/index.html). Equally, much of the material on statistical data analysis are based on the [Statistical Modelling in R](https://exeter-data-analytics.github.io/StatModelling/) workshop. These workshops had been developed by [TJ McKinley](https://medicine.exeter.ac.uk/people/profile/index.php?web_id=TJ_McKinley) from the University of Exeter and JJ Valletta ($\dagger$).
-
-
-## Workshop structure {-}
-
-This workshop will loosely be structured into the following themes
-
-1. Data handling 
-    - importing data
-    - data types
-    - missing data
-    
-2. Descriptive statistics
-    - summary statistics
-    - contingency tables
-    - graphical representation
-
-3. Inferential statistics 
-    - linear models
-    - mixed effect models
-    - generalised linear models
-    - survivial analysis
-    - Latent Class Analysis
-
-
-$~$
-
-The workshop will consist of a mixture between (theoretical) background and hands-on practicals. Specific tasks, designed for you to test your new skills and understanding, are highlighted as
-
-<div class="panel panel-default"><div class="panel-heading"> Task </div><div class="panel-body"> 
-This task will be explained here </div></div>
-
-The solution can be revealed by clicking 
-
-<button id="displayTextunnamed-chunk-3" onclick="javascript:toggle('unnamed-chunk-3');">Show: Solution</button>
-
-<div id="toggleTextunnamed-chunk-3" style="display: none"><div class="panel panel-default"><div class="panel-heading panel-heading1"> Solution </div><div class="panel-body">
-A solution will appear here.</div></div></div>
-
-However, please make sure you try before clicking on the `Solution` - this is the only way to make sure how fully understood the new concepts.
-
-
-$~$
-
-**Prerequisites**
-
-It is expected that you feel comfortable with basic R / RStudio and, specifically, the use of `data.frame` objects. The Appendix provides extra background material, covering a lot of necessary background. Also, for this workshop we will be relying on the  *tidyverse* package, or rather suite of packages for performing a (growing) number of data science tasks, which include `ggplot2` and `dplyr`. Please have a look in the Appendix for a brief introduction to their uses.
-
-$~$
-
-**Important**
-
-There will be plenty of time to practice your new skills, and please feel to aks if anything is not 100% clear.
-
-<!--chapter:end:index.Rmd-->
-
 # Data handling
 
-
+```{r, echo=F, warning=F, message=F}
+library(tidyverse)
+```
 
 ## Importing data {-}
 
@@ -103,38 +26,21 @@ There are different function pairs for reading CSV files, such as the inbuilt `r
 
 As an example we will be using the `tobacco.csv` file that contains a simulated dataset on tobacco use and health of 1000 individuals. Please make sure that the file is contained in your current working directory.
 
-
-```r
+```{r}
 tobacco <- read.csv('tobacco.csv')
 ```
 
 Check if this worked by printing out the first 5 rows
 
-
-```r
+```{r}
 head(tobacco, n = 5)
-```
-
-```
-##   gender age age.gr      BMI smoker cigs.per.day diseased      disease
-## 1      M  75   71 + 29.50225     No            0       No         <NA>
-## 2      F  35  35-50 26.14989     No            0      Yes Neurological
-## 3      F  70  51-70 27.53183     No            0       No         <NA>
-## 4      F  40  35-50 24.05832     No            0       No         <NA>
-## 5      F  75   71 + 22.77486     No            0      Yes      Hearing
-##   samp.wgts
-## 1  1.062500
-## 2  1.044177
-## 3  1.049383
-## 4  1.044177
-## 5  1.062500
 ```
 
 In an equivalent fashion we can save data in CSV format using the `write_csv()` function.
 
-
-```r
-write_csv(tobacco, "myData.csv")  # make sure you do not overwrite the original data file!!
+```{r}
+# make sure you do not overwrite the original data file!!
+write_csv(tobacco, "myData.csv")  
 ```
 
 --- 
@@ -143,8 +49,7 @@ write_csv(tobacco, "myData.csv")  # make sure you do not overwrite the original 
 
 Although we discourage the use of Excel for data handling, it is still one of the most common methods for storing data. We therefore briefly show you one method of how to read Excel files using the `read_excel` function from the `readxl` package. NOTE: although `readxl` will be installed as part of tidyverse, you will still need to load it explicitly, because it is not a core tidyverse package.
 
-
-```r
+```{r}
 # load library
 library(readxl)
 
@@ -155,21 +60,9 @@ tobaccoXLS <- read_excel('tobacco.xlsx')
 head(tobaccoXLS, n = 5)
 ```
 
-```
-## # A tibble: 5 × 9
-##   gender age   age.gr BMI         smoker cigs.per.day diseased disease samp.wgts
-##   <chr>  <chr> <chr>  <chr>       <chr>  <chr>        <chr>    <chr>       <dbl>
-## 1 M      75    71 +   29.5022463… No     0            No       NA           1.06
-## 2 F      35    35-50  26.1498941… No     0            Yes      Neurol…      1.04
-## 3 F      70    51-70  27.5318291… No     0            No       NA           1.05
-## 4 F      40    35-50  24.0583177… No     0            No       NA           1.04
-## 5 F      75    71 +   22.7748622… No     0            Yes      Hearing      1.06
-```
-
 This functions offers a great deal of flexibility, from specifying which sheet to import (by default it will import the first one), specifying the data range, or *repairing* column names for easier downstream analysis.
 
-
-```r
+```{r}
 # specify the name of the sheet and only load the first 100 rows and 7 columns
 tobaccoXLS <- read_excel('tobacco.xlsx', sheet = 'tobacco_2', range = 'A1:G101')
 
@@ -180,46 +73,15 @@ tobaccoXLS <- read_excel('tobacco.xlsx', sheet = 'tobacco_2', range = 'A1:G101')
 head(tobaccoXLS, n = 5)
 ```
 
-```
-## # A tibble: 5 × 7
-##   gender age   `age group`   BMI smoker `cigarettes per day` diseased
-##   <chr>  <chr> <chr>       <dbl> <chr>  <chr>                <chr>   
-## 1 M      75    71 +         29.5 No     0                    No      
-## 2 F      35    35-50        26.1 No     0                    Yes     
-## 3 F      70    51-70        27.5 No     0                    No      
-## 4 F      40    35-50        24.1 No     0                    No      
-## 5 F      75    71 +         22.8 No     0                    Yes
-```
-
 We can see that two column names contain spaces, which can make life a bit tricky during subsequent operations. For this, `read_excel` provides a `.name_repair` argument, that ensures column names will be syntactic (not containing special characters or reserved words) and work everywhere. (Note: this argument can also be used in the `read_csv()` function.)
 
-
-```r
+```{r}
 tobaccoXLS <- read_excel('tobacco.xlsx', 
                          sheet = 'tobacco_2', 
                          range = 'A1:G101', 
                          .name_repair = 'universal')
-```
 
-```
-## New names:
-## • `age group` -> `age.group`
-## • `cigarettes per day` -> `cigarettes.per.day`
-```
-
-```r
 head(tobaccoXLS, n = 5)
-```
-
-```
-## # A tibble: 5 × 7
-##   gender age   age.group   BMI smoker cigarettes.per.day diseased
-##   <chr>  <chr> <chr>     <dbl> <chr>  <chr>              <chr>   
-## 1 M      75    71 +       29.5 No     0                  No      
-## 2 F      35    35-50      26.1 No     0                  Yes     
-## 3 F      70    51-70      27.5 No     0                  No      
-## 4 F      40    35-50      24.1 No     0                  No      
-## 5 F      75    71 +       22.8 No     0                  Yes
 ```
 
 A really handy cheatsheet for importing data with the tidyverse can be found [here](https://github.com/rstudio/cheatsheets/blob/main/data-import.pdf) 
@@ -230,8 +92,7 @@ A really handy cheatsheet for importing data with the tidyverse can be found [he
 
 To demonstrate the use of R data file format, we go the other way around and start by saving our `tobacco` dataframe as an R object.
 
-
-```r
+```{r}
 saveRDS(tobacco, file = 'tobacco.Rds')
 ```
 
@@ -239,8 +100,7 @@ saveRDS(tobacco, file = 'tobacco.Rds')
 
 Loading the data is equally simple:
 
-
-```r
+```{r, output.lines=10}
 # first we remove the tobacco data object to make sure everything works
 rm(tobacco)
 
@@ -248,24 +108,9 @@ rm(tobacco)
 readRDS('tobacco.Rds')
 ```
 
-```
-##      gender age age.gr       BMI smoker cigs.per.day diseased         disease
-## 1         M  75   71 + 29.502246     No            0       No            <NA>
-## 2         F  35  35-50 26.149894     No            0      Yes    Neurological
-## 3         F  70  51-70 27.531829     No            0       No            <NA>
-## 4         F  40  35-50 24.058318     No            0       No            <NA>
-## 5         F  75   71 + 22.774862     No            0      Yes         Hearing
-## 6         M  38  35-50 21.464121     No            0       No            <NA>
-## 7         M  45  35-50 18.948411     No            0       No            <NA>
-## 8      <NA>  59  51-70 30.376773     No            0       No            <NA>
-## 9         F  29  18-34 21.408103    Yes           38       No            <NA>
-...
-```
-
 At first sight this looks like it has worked. However, you might also have noticed that there is no newly created object in your global environment. This means, although R successfully loaded the data, it was not assigned to an object and essentially lost; this is one of the key differences between `saveRDS`/`readRDS` and `save`/`load` (see below)). We therefore need to assign the read-in data to an object
 
-
-```r
+```{r}
 # read data and assign to an object called tobacco
 tobacco <- readRDS('tobacco.Rds')
 
@@ -273,27 +118,9 @@ tobacco <- readRDS('tobacco.Rds')
 head(tobacco)
 ```
 
-```
-##   gender age age.gr      BMI smoker cigs.per.day diseased      disease
-## 1      M  75   71 + 29.50225     No            0       No         <NA>
-## 2      F  35  35-50 26.14989     No            0      Yes Neurological
-## 3      F  70  51-70 27.53183     No            0       No         <NA>
-## 4      F  40  35-50 24.05832     No            0       No         <NA>
-## 5      F  75   71 + 22.77486     No            0      Yes      Hearing
-## 6      M  38  35-50 21.46412     No            0       No         <NA>
-##   samp.wgts
-## 1  1.062500
-## 2  1.044177
-## 3  1.049383
-## 4  1.044177
-## 5  1.062500
-## 6  1.044177
-```
-
 An alternative way is the use of the `Rdata` file format. 
 
-
-```r
+```{r}
 # save our dataframe in Rdata format
 save(tobacco, file = "tobacco.Rdata")  
 
@@ -306,8 +133,7 @@ load("tobacco.Rdata")
 
 As you will have noticed, in this case we do not need to explicitly assign the loaded data to object; instead, the original name of the dataframe will be used. Another advantage of using this format is that we can save multiple objects at once
 
-
-```r
+```{r}
 # save both dataframe in one file
 save(tobacco, tobaccoXLS, file = 'tobacco_datasets.Rda')
 
@@ -336,37 +162,18 @@ Although we assume that you are likely already familiar with different types of 
 
 We have already come across some of them when we imported the `tobacco` data in the previous section. To check what types of data are contained in this dataset we can use the `class()` function; for example
 
-
-```r
+```{r}
 # get the data type of column 'gender'
 class(tobacco$gender)
-```
 
-```
-## [1] "character"
-```
-
-```r
 # get the data type of column 'BMI'
 class(tobacco$BMI)
 ```
 
-```
-## [1] "numeric"
-```
-
 Instead of doing this for every column separately, we can apply this function across the whole dataframe with `sapply`
 
-
-```r
+```{r}
 sapply(tobacco, class)
-```
-
-```
-##       gender          age       age.gr          BMI       smoker cigs.per.day 
-##  "character"    "integer"  "character"    "numeric"  "character"    "integer" 
-##     diseased      disease    samp.wgts 
-##  "character"  "character"    "numeric"
 ```
 
 
@@ -376,47 +183,25 @@ Here's a brief overview of what these data types are and what they are generally
 
 A variable will be automatically stored as *numeric* data if the values are numbers or contain decimals. Depending on the function used to import data, a variable can also be assigned explicitly as *integer* if it does not contain any decimals. 
 
-
-```r
+```{r}
 # define a vector of three numerical values
 x <- c(4, 3, 5)
 
 # get the data type
 class(x)
-```
 
-```
-## [1] "numeric"
-```
-
-```r
 # compare to the imported data column 'age'
 class(tobacco$age)
 ```
 
-```
-## [1] "integer"
-```
-
 We can also *force* R to convert a numeric variable into an integer, and vice versa  
 
-
-```r
+```{r}
 x <- as.integer(x)
 class(x)
-```
 
-```
-## [1] "integer"
-```
-
-```r
 tobacco$age <- as.numeric(tobacco$age)
 class(tobacco$age)
-```
-
-```
-## [1] "numeric"
 ```
 
 ---
@@ -425,46 +210,24 @@ class(tobacco$age)
 
 Character is the general data type to store text (strings), such as words, sentences etc. 
 
-
-```r
+```{r}
 # first example
 a <- "this is a character data type"
 class(a)
-```
 
-```
-## [1] "character"
-```
-
-```r
 # second example
 b <- "1"  # enclosing a number in quotes will define it as a character type
 class(b)
-```
 
-```
-## [1] "character"
-```
-
-```r
 # type conversion from numeric to character
 c <- 12.3
 d <- as.character(c)
 class(d)
-```
 
-```
-## [1] "character"
-```
-
-```r
 # automatic 'conversion'
 v <- c(1, 2, 3, "4")  
 class(v)
-```
 
-```
-## [1] "character"
 ```
 
 ---
@@ -473,34 +236,20 @@ class(v)
 
 At a first glance, factor variables look very similar to character types. However, factors are used to denote *categorical* variables, i.e. those that can only take a (pre-determined) limited number of values. 
 
-
-```r
+```{r}
 # convert v into a categorical variable
 f1 <- factor(v)
 
 # printing it will already reveal the difference to v as the factor levels are provided alongside the values
 f1
-```
 
-```
-## [1] 1 2 3 4
-## Levels: 1 2 3 4
-```
-
-```r
 # this works also on numeric variables
 f2 <- factor(c(1, 2, 3, 4))
 f2
 ```
 
-```
-## [1] 1 2 3 4
-## Levels: 1 2 3 4
-```
-
 Looking at our tobacco dataframe we can see that some columns denote categorical variables (gender, age group, smoker, diseased and disease) and should be converted accordingly, which can be done either using the function `as.factor()` or just `factor()`. Here we will use `dplyr`'s `mutate()` function to convert all five columns simultaneously.
-
-```r
+```{r}
 tobacco <- tobacco %>%
   mutate(gender = factor(gender),
          age.gr = factor(age.gr),
@@ -512,32 +261,19 @@ tobacco <- tobacco %>%
 sapply(tobacco, class)
 ```
 
-```
-##       gender          age       age.gr          BMI       smoker cigs.per.day 
-##     "factor"    "numeric"     "factor"    "numeric"     "factor"    "integer" 
-##     diseased      disease    samp.wgts 
-##     "factor"     "factor"    "numeric"
-```
-
 ---
 
 ### Logical {-}
 
 Logical variables can only take on two values> `TRUE` and `FALSE` (which can also be abbreviated as `T` and `F`, respectively). These are common data types when used with logical operation, e.g.
-
-```r
+```{r}
 x <- 5
 y <- 7
 
 x > y  # read is 'is x greater than y'
 ```
-
-```
-## [1] FALSE
-```
 or 
-
-```r
+```{r}
 if(x > y){
   print("x is greater than y")
 }else{
@@ -545,42 +281,21 @@ if(x > y){
 }
 ```
 
-```
-## [1] "x is not greater than y"
-```
-
 Furthermore, a logical TRUE can be numerically interpreted as 1 and a FALSE as 0. 
-
-```r
+```{r}
 as.integer(x < y)
 ```
 
-```
-## [1] 1
-```
-
 This fact can be used in a variety of cases, as shown in the example below (try to understand what exactly is going on)
-
-```r
+```{r}
 # define a vector with 15 elements 
 v <- c(2, 6, 4, 8, 7, 8, 4, 1, 5, 8, 2, 9, 11, 4, 7)
 
 # are the elements less than or equal to 5
 v <= 5
-```
 
-```
-##  [1]  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
-## [13] FALSE  TRUE FALSE
-```
-
-```r
 # how many elements are less than or equal to 5 
 sum(v <= 5)
-```
-
-```
-## [1] 7
 ```
 
 ---
@@ -590,140 +305,40 @@ sum(v <= 5)
 More often than not we will find ourselves confronted with datasets that are not complete. That is, some information might be missing for some of the variables, and we need to find a way to deal with those cases. In R, missing values are usually represented by `NA`. Note: when importing data we can specify the value or symbol used to represent missing data.
 
 We can test for the presence of missing values using the `is.na()` function
-
-```r
+```{r}
 v <- c(1, 4, 2, NA, 8, 9)
 is.na(v)
 ```
-
-```
-## [1] FALSE FALSE FALSE  TRUE FALSE FALSE
-```
 which confirms that there is a missing number between elements 3 and 5. To find the exact location we could use 
-
-```r
+```{r}
 which(is.na(v))
 ```
 
-```
-## [1] 4
-```
-
 The `is.na()` function can also be applied to data frames, as shown below 
-
-```r
+```{r, output.lines=10}
 is.na(tobacco)
 ```
-
-```
-##         gender   age age.gr   BMI smoker cigs.per.day diseased disease
-##    [1,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
-##    [2,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE   FALSE
-##    [3,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
-##    [4,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
-##    [5,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE   FALSE
-##    [6,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
-##    [7,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
-##    [8,]   TRUE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
-##    [9,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
-...
-```
 and in combination with some other functions can be used to get crucial information about the degree of *missingness* in our data
-
-```r
+```{r}
 # count the number of missing entries in each column and convert to percentage
 100 * colSums(is.na(tobacco)) / nrow(tobacco) 
 ```
 
-```
-##       gender          age       age.gr          BMI       smoker cigs.per.day 
-##          2.2          2.5          2.5          2.6          0.0          3.5 
-##     diseased      disease    samp.wgts 
-##          0.0         77.8          0.0
-```
-
 The big question always comes down to how to deal with missing data. The easiest approach is to just delete / ignore those cases, and there are two commonly used ways of doing this, with `na.omit()` or `complete.cases()`. The first function returns an object with all missing values removed
-
-```r
+```{r}
 # create a new data frame based on tobacco with all rows removed that contain NAs
 tobacco_noNAs <- na.omit(tobacco)
 head(tobacco_noNAs, 10)
 ```
 
-```
-##    gender age age.gr      BMI smoker cigs.per.day diseased         disease
-## 2       F  35  35-50 26.14989     No            0      Yes    Neurological
-## 5       F  75   71 + 22.77486     No            0      Yes         Hearing
-## 15      M  47  35-50 29.04873    Yes           21      Yes Musculoskeletal
-## 16      M  76   71 + 23.13594    Yes           29      Yes          Vision
-## 20      M  73   71 + 26.73234     No            0      Yes           Heart
-## 22      F  28  18-34 23.52206    Yes           15      Yes          Cancer
-## 24      F  80   71 + 26.31107     No            0      Yes    Hypertension
-## 29      F  68  51-70 27.20262     No            0      Yes Musculoskeletal
-## 32      F  71   71 + 26.82957     No            0      Yes    Neurological
-## 39      F  22  18-34 21.23634    Yes           34      Yes           Heart
-##    samp.wgts
-## 2  1.0441767
-## 5  1.0625000
-## 15 1.0441767
-## 16 1.0625000
-## 20 1.0625000
-## 22 0.8614232
-## 24 1.0625000
-## 29 1.0493827
-## 32 1.0625000
-## 39 0.8614232
-```
-
 The other option is to use the `comple.cases()` function, which returns a logical vector indicating which rows contain no missing values (returned as `TRUE`)
-
-```r
+```{r, output.lines = 10}
 complete.cases(tobacco)
 ```
-
-```
-##    [1] FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-##   [13] FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE
-##   [25] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
-##   [37] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
-##   [49]  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE
-##   [61] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
-##   [73] FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
-##   [85] FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE
-##   [97] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE
-##  [109] FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
-...
-```
 and this can then be used to *subset* the data, i.e. we select only those rows that have full information for all variables
-
-```r
+```{r}
 tobacco_noNAs <- tobacco[complete.cases(tobacco),]
 head(tobacco_noNAs, 10)
-```
-
-```
-##    gender age age.gr      BMI smoker cigs.per.day diseased         disease
-## 2       F  35  35-50 26.14989     No            0      Yes    Neurological
-## 5       F  75   71 + 22.77486     No            0      Yes         Hearing
-## 15      M  47  35-50 29.04873    Yes           21      Yes Musculoskeletal
-## 16      M  76   71 + 23.13594    Yes           29      Yes          Vision
-## 20      M  73   71 + 26.73234     No            0      Yes           Heart
-## 22      F  28  18-34 23.52206    Yes           15      Yes          Cancer
-## 24      F  80   71 + 26.31107     No            0      Yes    Hypertension
-## 29      F  68  51-70 27.20262     No            0      Yes Musculoskeletal
-## 32      F  71   71 + 26.82957     No            0      Yes    Neurological
-## 39      F  22  18-34 21.23634    Yes           34      Yes           Heart
-##    samp.wgts
-## 2  1.0441767
-## 5  1.0625000
-## 15 1.0441767
-## 16 1.0625000
-## 20 1.0625000
-## 22 0.8614232
-## 24 1.0625000
-## 29 1.0493827
-## 32 1.0625000
-## 39 0.8614232
 ```
 
 Although this works, there are two major issues with this approach
@@ -734,27 +349,18 @@ Although this works, there are two major issues with this approach
 If you compare the original dataset with the reduced one you will notice two things: first, it is much smaller (203 observations compared to 1000), which is a reduction by over 70% even though only one of the variables contains more than 4% missing data; and second, the data now only contains observation of those individuals who are diseased, which would obviously bias our downstream analysis. Omitting missing data should thus only be done in exceptional circumstances and with great caution.
 
 The safer, alternative strategies are either *data imputation*, which essentially tries to *guess* the missing values based on other information contained in the data (this is not covered as part of this workshop, but if you are interested you could have a look at [this site](https://www.r-bloggers.com/2023/01/imputation-in-r-top-3-ways-for-imputing-missing-data/)), or simply *ignoring* the missing data and relying on the fact that most R functions have their own way of dealing with missing values; e.g. compare  
-
-```r
+```{r}
 # sum over all elements in v produces NA
 sum(v)
 ```
-
-```
-## [1] NA
-```
 with
-
-```r
+```{r}
 # telling sum() to ignore, or remove NA's, solves this issue
 sum(v, na.rm = TRUE)
 ```
 
-```
-## [1] 24
-```
-
 **Beware:** different functions have different default settings when it comes to handling NA's; always look in the help file to make sure they do what you want them to do!
 
-<!--chapter:end:1-Data_handling.Rmd-->
+---
+
 

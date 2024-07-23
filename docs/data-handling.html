@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1 Data handling | Introduction to statistical data analysis in R</title>
+  <meta name="description" content="Intro to Stats with R" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1 Data handling | Introduction to statistical data analysis in R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Intro to Stats with R" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1 Data handling | Introduction to statistical data analysis in R" />
+  
+  <meta name="twitter:description" content="Intro to Stats with R" />
+  
+
+<meta name="author" content="Mario Recker" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script language="javascript"> 
+    function toggle(id) {
+        var ele = document.getElementById("toggleText" + id);
+        var text = document.getElementById("displayText" + id);
+        var buttonText = text.innerHTML.replace("Show: ", "");
+        buttonText = buttonText.replace("Hide: ", "");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "Show: " + buttonText;
+        } else {
+            ele.style.display = "block";
+            text.innerHTML = "Hide: " + buttonText;
+        }
+    } 
+</script>
+
+<script language="javascript">
+    function openCode(evt, codeName, id) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent" + id);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks" + id);
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(codeName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<script language="javascript">
+    function hide(id){
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-structure"><i class="fa fa-check"></i>Workshop structure</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="data-handling.html"><a href="data-handling.html"><i class="fa fa-check"></i><b>1</b> Data handling</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#importing-data"><i class="fa fa-check"></i>Importing data</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#csv-files"><i class="fa fa-check"></i>CSV files</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#excel-files"><i class="fa fa-check"></i>Excel files</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#r-data-files"><i class="fa fa-check"></i>R data files</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#data-types"><i class="fa fa-check"></i>Data types</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#numeric-integer"><i class="fa fa-check"></i>Numeric / integer</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#character"><i class="fa fa-check"></i>Character</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#factor"><i class="fa fa-check"></i>Factor</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#logical"><i class="fa fa-check"></i>Logical</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#missing-data"><i class="fa fa-check"></i>Missing data</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to statistical data analysis in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-handling" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> Data handling<a href="data-handling.html#data-handling" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="importing-data" class="section level2 unnumbered hasAnchor">
+<h2>Importing data<a href="data-handling.html#importing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>An essential part of data analysis is the ability to read (and store) external datasets. There are a myriad of different ways this can be done in R, partially depending on the file type / software originally used to store the data. Here we focus on three different file formats:</p>
+<ul>
+<li>CSV files (<em>filename</em>.csv)</li>
+<li>Excel files (<em>filename</em>.xls or <em>filename</em>.xlsx)</li>
+<li>R data format (<em>filename</em>.rds or <em>filename</em>.RData)</li>
+</ul>
+<p>The main difference between the approaches is that an <code>Rds</code> file stores data in a (R specific) binary format, meaning that you need R to read it. The same goes for Excel files. CSV files, in comparison, are (human readable) text files that can be opened by a number of different programs. In fact, on most operating systems, these are opened by Excel or a text editor by default. The decision which approach you should use often depends on whether you are the only one working with the data or whether you like the added benefit of viewing (or manipulating) data outside the R environment.</p>
+<blockquote>
+<p><strong>Note:</strong> Excel is known to occasionally cause havoc with data (mostly due to it changing data types by itself), we are urging caution when handling Excel files. Always check the validity of your data before starting with your analysis!</p>
+</blockquote>
+<hr />
+<div id="csv-files" class="section level3 unnumbered hasAnchor">
+<h3>CSV files<a href="data-handling.html#csv-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>CSV (Comma-Separated Values) is a widely used data format separating values with commas or other delimiters (e.g. semi-colon or tab).</p>
+<p>There are different function pairs for reading CSV files, such as the inbuilt <code>read.table()</code> or <code>read.csv()</code>, and their equivalent functions for writing CSV files. Here we will use the <code>read_csv()</code> function, which is part of the <code>readr</code> package (included in <code>tidyverse</code>). Note: this function is strictly for comma-separated files, <code>read_csv2()</code> reads semicolon-separated and the <code>read_delim()</code> function reads files with any separating character; for full fucntion details, see [here] (<a href="https://www.rdocumentation.org/packages/readr/versions/2.1.5/topics/read_delim" class="uri">https://www.rdocumentation.org/packages/readr/versions/2.1.5/topics/read_delim</a>).</p>
+<p>As an example we will be using the <code>tobacco.csv</code> file that contains a simulated dataset on tobacco use and health of 1000 individuals. Please make sure that the file is contained in your current working directory.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-handling.html#cb1-1" tabindex="-1"></a>tobacco <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&#39;tobacco.csv&#39;</span>)</span></code></pre></div>
+<p>Check if this worked by printing out the first 5 rows</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="data-handling.html#cb2-1" tabindex="-1"></a><span class="fu">head</span>(tobacco, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>##   gender age age.gr      BMI smoker cigs.per.day diseased      disease
+## 1      M  75   71 + 29.50225     No            0       No         &lt;NA&gt;
+## 2      F  35  35-50 26.14989     No            0      Yes Neurological
+## 3      F  70  51-70 27.53183     No            0       No         &lt;NA&gt;
+## 4      F  40  35-50 24.05832     No            0       No         &lt;NA&gt;
+## 5      F  75   71 + 22.77486     No            0      Yes      Hearing
+##   samp.wgts
+## 1  1.062500
+## 2  1.044177
+## 3  1.049383
+## 4  1.044177
+## 5  1.062500</code></pre>
+<p>In an equivalent fashion we can save data in CSV format using the <code>write_csv()</code> function.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="data-handling.html#cb4-1" tabindex="-1"></a><span class="fu">write_csv</span>(tobacco, <span class="st">&quot;myData.csv&quot;</span>)  <span class="co"># make sure you do not overwrite the original data file!!</span></span></code></pre></div>
+<hr />
+</div>
+<div id="excel-files" class="section level3 unnumbered hasAnchor">
+<h3>Excel files<a href="data-handling.html#excel-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Although we discourage the use of Excel for data handling, it is still one of the most common methods for storing data. We therefore briefly show you one method of how to read Excel files using the <code>read_excel</code> function from the <code>readxl</code> package. NOTE: although <code>readxl</code> will be installed as part of tidyverse, you will still need to load it explicitly, because it is not a core tidyverse package.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="data-handling.html#cb5-1" tabindex="-1"></a><span class="co"># load library</span></span>
+<span id="cb5-2"><a href="data-handling.html#cb5-2" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb5-3"><a href="data-handling.html#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="data-handling.html#cb5-4" tabindex="-1"></a><span class="co"># read in excel data file</span></span>
+<span id="cb5-5"><a href="data-handling.html#cb5-5" tabindex="-1"></a>tobaccoXLS <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&#39;tobacco.xlsx&#39;</span>)</span>
+<span id="cb5-6"><a href="data-handling.html#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="data-handling.html#cb5-7" tabindex="-1"></a><span class="co"># print first few rows</span></span>
+<span id="cb5-8"><a href="data-handling.html#cb5-8" tabindex="-1"></a><span class="fu">head</span>(tobaccoXLS, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 9
+##   gender age   age.gr BMI         smoker cigs.per.day diseased disease samp.wgts
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;       &lt;dbl&gt;
+## 1 M      75    71 +   29.5022463… No     0            No       NA           1.06
+## 2 F      35    35-50  26.1498941… No     0            Yes      Neurol…      1.04
+## 3 F      70    51-70  27.5318291… No     0            No       NA           1.05
+## 4 F      40    35-50  24.0583177… No     0            No       NA           1.04
+## 5 F      75    71 +   22.7748622… No     0            Yes      Hearing      1.06</code></pre>
+<p>This functions offers a great deal of flexibility, from specifying which sheet to import (by default it will import the first one), specifying the data range, or <em>repairing</em> column names for easier downstream analysis.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="data-handling.html#cb7-1" tabindex="-1"></a><span class="co"># specify the name of the sheet and only load the first 100 rows and 7 columns</span></span>
+<span id="cb7-2"><a href="data-handling.html#cb7-2" tabindex="-1"></a>tobaccoXLS <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&#39;tobacco.xlsx&#39;</span>, <span class="at">sheet =</span> <span class="st">&#39;tobacco_2&#39;</span>, <span class="at">range =</span> <span class="st">&#39;A1:G101&#39;</span>)</span>
+<span id="cb7-3"><a href="data-handling.html#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="data-handling.html#cb7-4" tabindex="-1"></a><span class="do">## which is equivalent to</span></span>
+<span id="cb7-5"><a href="data-handling.html#cb7-5" tabindex="-1"></a><span class="co"># dat &lt;- read_excel(&#39;tobacco.xlsx&#39;, range = &#39;tobacco_2!A1:G101&#39;)</span></span>
+<span id="cb7-6"><a href="data-handling.html#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="data-handling.html#cb7-7" tabindex="-1"></a><span class="co"># check the first 5 rows</span></span>
+<span id="cb7-8"><a href="data-handling.html#cb7-8" tabindex="-1"></a><span class="fu">head</span>(tobaccoXLS, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 7
+##   gender age   `age group`   BMI smoker `cigarettes per day` diseased
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;                &lt;chr&gt;   
+## 1 M      75    71 +         29.5 No     0                    No      
+## 2 F      35    35-50        26.1 No     0                    Yes     
+## 3 F      70    51-70        27.5 No     0                    No      
+## 4 F      40    35-50        24.1 No     0                    No      
+## 5 F      75    71 +         22.8 No     0                    Yes</code></pre>
+<p>We can see that two column names contain spaces, which can make life a bit tricky during subsequent operations. For this, <code>read_excel</code> provides a <code>.name_repair</code> argument, that ensures column names will be syntactic (not containing special characters or reserved words) and work everywhere. (Note: this argument can also be used in the <code>read_csv()</code> function.)</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="data-handling.html#cb9-1" tabindex="-1"></a>tobaccoXLS <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&#39;tobacco.xlsx&#39;</span>, </span>
+<span id="cb9-2"><a href="data-handling.html#cb9-2" tabindex="-1"></a>                         <span class="at">sheet =</span> <span class="st">&#39;tobacco_2&#39;</span>, </span>
+<span id="cb9-3"><a href="data-handling.html#cb9-3" tabindex="-1"></a>                         <span class="at">range =</span> <span class="st">&#39;A1:G101&#39;</span>, </span>
+<span id="cb9-4"><a href="data-handling.html#cb9-4" tabindex="-1"></a>                         <span class="at">.name_repair =</span> <span class="st">&#39;universal&#39;</span>)</span></code></pre></div>
+<pre><code>## New names:
+## • `age group` -&gt; `age.group`
+## • `cigarettes per day` -&gt; `cigarettes.per.day`</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="data-handling.html#cb11-1" tabindex="-1"></a><span class="fu">head</span>(tobaccoXLS, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 7
+##   gender age   age.group   BMI smoker cigarettes.per.day diseased
+##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;              &lt;chr&gt;   
+## 1 M      75    71 +       29.5 No     0                  No      
+## 2 F      35    35-50      26.1 No     0                  Yes     
+## 3 F      70    51-70      27.5 No     0                  No      
+## 4 F      40    35-50      24.1 No     0                  No      
+## 5 F      75    71 +       22.8 No     0                  Yes</code></pre>
+<p>A really handy cheatsheet for importing data with the tidyverse can be found <a href="https://github.com/rstudio/cheatsheets/blob/main/data-import.pdf">here</a></p>
+<hr />
+</div>
+<div id="r-data-files" class="section level3 unnumbered hasAnchor">
+<h3>R data files<a href="data-handling.html#r-data-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To demonstrate the use of R data file format, we go the other way around and start by saving our <code>tobacco</code> dataframe as an R object.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="data-handling.html#cb13-1" tabindex="-1"></a><span class="fu">saveRDS</span>(tobacco, <span class="at">file =</span> <span class="st">&#39;tobacco.Rds&#39;</span>)</span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> the file will be saved in your current working directory. If you want to save it in a different folder you need to provide the full file path, e.g. <code>saveRDS(df, file = '.../StatsWithR//Data/myData.Rds')</code>.</p>
+</blockquote>
+<p>Loading the data is equally simple:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="data-handling.html#cb14-1" tabindex="-1"></a><span class="co"># first we remove the tobacco data object to make sure everything works</span></span>
+<span id="cb14-2"><a href="data-handling.html#cb14-2" tabindex="-1"></a><span class="fu">rm</span>(tobacco)</span>
+<span id="cb14-3"><a href="data-handling.html#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="data-handling.html#cb14-4" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb14-5"><a href="data-handling.html#cb14-5" tabindex="-1"></a><span class="fu">readRDS</span>(<span class="st">&#39;tobacco.Rds&#39;</span>)</span></code></pre></div>
+<pre><code>##      gender age age.gr       BMI smoker cigs.per.day diseased         disease
+## 1         M  75   71 + 29.502246     No            0       No            &lt;NA&gt;
+## 2         F  35  35-50 26.149894     No            0      Yes    Neurological
+## 3         F  70  51-70 27.531829     No            0       No            &lt;NA&gt;
+## 4         F  40  35-50 24.058318     No            0       No            &lt;NA&gt;
+## 5         F  75   71 + 22.774862     No            0      Yes         Hearing
+## 6         M  38  35-50 21.464121     No            0       No            &lt;NA&gt;
+## 7         M  45  35-50 18.948411     No            0       No            &lt;NA&gt;
+## 8      &lt;NA&gt;  59  51-70 30.376773     No            0       No            &lt;NA&gt;
+## 9         F  29  18-34 21.408103    Yes           38       No            &lt;NA&gt;
+...</code></pre>
+<p>At first sight this looks like it has worked. However, you might also have noticed that there is no newly created object in your global environment. This means, although R successfully loaded the data, it was not assigned to an object and essentially lost; this is one of the key differences between <code>saveRDS</code>/<code>readRDS</code> and <code>save</code>/<code>load</code> (see below)). We therefore need to assign the read-in data to an object</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="data-handling.html#cb16-1" tabindex="-1"></a><span class="co"># read data and assign to an object called tobacco</span></span>
+<span id="cb16-2"><a href="data-handling.html#cb16-2" tabindex="-1"></a>tobacco <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&#39;tobacco.Rds&#39;</span>)</span>
+<span id="cb16-3"><a href="data-handling.html#cb16-3" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="data-handling.html#cb16-4" tabindex="-1"></a><span class="co"># see if it works</span></span>
+<span id="cb16-5"><a href="data-handling.html#cb16-5" tabindex="-1"></a><span class="fu">head</span>(tobacco)</span></code></pre></div>
+<pre><code>##   gender age age.gr      BMI smoker cigs.per.day diseased      disease
+## 1      M  75   71 + 29.50225     No            0       No         &lt;NA&gt;
+## 2      F  35  35-50 26.14989     No            0      Yes Neurological
+## 3      F  70  51-70 27.53183     No            0       No         &lt;NA&gt;
+## 4      F  40  35-50 24.05832     No            0       No         &lt;NA&gt;
+## 5      F  75   71 + 22.77486     No            0      Yes      Hearing
+## 6      M  38  35-50 21.46412     No            0       No         &lt;NA&gt;
+##   samp.wgts
+## 1  1.062500
+## 2  1.044177
+## 3  1.049383
+## 4  1.044177
+## 5  1.062500
+## 6  1.044177</code></pre>
+<p>An alternative way is the use of the <code>Rdata</code> file format.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="data-handling.html#cb18-1" tabindex="-1"></a><span class="co"># save our dataframe in Rdata format</span></span>
+<span id="cb18-2"><a href="data-handling.html#cb18-2" tabindex="-1"></a><span class="fu">save</span>(tobacco, <span class="at">file =</span> <span class="st">&quot;tobacco.Rdata&quot;</span>)  </span>
+<span id="cb18-3"><a href="data-handling.html#cb18-3" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="data-handling.html#cb18-4" tabindex="-1"></a><span class="co"># remove from our environment</span></span>
+<span id="cb18-5"><a href="data-handling.html#cb18-5" tabindex="-1"></a><span class="fu">rm</span>(tobacco)</span>
+<span id="cb18-6"><a href="data-handling.html#cb18-6" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="data-handling.html#cb18-7" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb18-8"><a href="data-handling.html#cb18-8" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;tobacco.Rdata&quot;</span>)</span></code></pre></div>
+<p>As you will have noticed, in this case we do not need to explicitly assign the loaded data to object; instead, the original name of the dataframe will be used. Another advantage of using this format is that we can save multiple objects at once</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="data-handling.html#cb19-1" tabindex="-1"></a><span class="co"># save both dataframe in one file</span></span>
+<span id="cb19-2"><a href="data-handling.html#cb19-2" tabindex="-1"></a><span class="fu">save</span>(tobacco, tobaccoXLS, <span class="at">file =</span> <span class="st">&#39;tobacco_datasets.Rda&#39;</span>)</span>
+<span id="cb19-3"><a href="data-handling.html#cb19-3" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="data-handling.html#cb19-4" tabindex="-1"></a><span class="co"># remove from environment</span></span>
+<span id="cb19-5"><a href="data-handling.html#cb19-5" tabindex="-1"></a><span class="fu">rm</span>(tobacco, tobaccoXLS)</span>
+<span id="cb19-6"><a href="data-handling.html#cb19-6" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="data-handling.html#cb19-7" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb19-8"><a href="data-handling.html#cb19-8" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&#39;tobacco_datasets.Rda&#39;</span>)</span></code></pre></div>
+<p>One of the advantages of saving data in an R data format is that it is more space efficient. By default, <code>saveRDS()</code> (or <code>save()</code>) compresses the data, which can significantly shrink the size of the stored data. On the downside, it can also take a bit longer to load the data subsequently.</p>
+<hr />
+<hr />
+</div>
+</div>
+<div id="data-types" class="section level2 unnumbered hasAnchor">
+<h2>Data types<a href="data-handling.html#data-types" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Although we assume that you are likely already familiar with different types of data, this is just a reminder of the most common data types in R</p>
+<ul>
+<li>numeric / integer</li>
+<li>character</li>
+<li>factor</li>
+<li>logical</li>
+</ul>
+<p>We have already come across some of them when we imported the <code>tobacco</code> data in the previous section. To check what types of data are contained in this dataset we can use the <code>class()</code> function; for example</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="data-handling.html#cb20-1" tabindex="-1"></a><span class="co"># get the data type of column &#39;gender&#39;</span></span>
+<span id="cb20-2"><a href="data-handling.html#cb20-2" tabindex="-1"></a><span class="fu">class</span>(tobacco<span class="sc">$</span>gender)</span></code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="data-handling.html#cb22-1" tabindex="-1"></a><span class="co"># get the data type of column &#39;BMI&#39;</span></span>
+<span id="cb22-2"><a href="data-handling.html#cb22-2" tabindex="-1"></a><span class="fu">class</span>(tobacco<span class="sc">$</span>BMI)</span></code></pre></div>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<p>Instead of doing this for every column separately, we can apply this function across the whole dataframe with <code>sapply</code></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="data-handling.html#cb24-1" tabindex="-1"></a><span class="fu">sapply</span>(tobacco, class)</span></code></pre></div>
+<pre><code>##       gender          age       age.gr          BMI       smoker cigs.per.day 
+##  &quot;character&quot;    &quot;integer&quot;  &quot;character&quot;    &quot;numeric&quot;  &quot;character&quot;    &quot;integer&quot; 
+##     diseased      disease    samp.wgts 
+##  &quot;character&quot;  &quot;character&quot;    &quot;numeric&quot;</code></pre>
+<p>Here’s a brief overview of what these data types are and what they are generally used for.</p>
+<div id="numeric-integer" class="section level3 unnumbered hasAnchor">
+<h3>Numeric / integer<a href="data-handling.html#numeric-integer" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A variable will be automatically stored as <em>numeric</em> data if the values are numbers or contain decimals. Depending on the function used to import data, a variable can also be assigned explicitly as <em>integer</em> if it does not contain any decimals.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="data-handling.html#cb26-1" tabindex="-1"></a><span class="co"># define a vector of three numerical values</span></span>
+<span id="cb26-2"><a href="data-handling.html#cb26-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
+<span id="cb26-3"><a href="data-handling.html#cb26-3" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="data-handling.html#cb26-4" tabindex="-1"></a><span class="co"># get the data type</span></span>
+<span id="cb26-5"><a href="data-handling.html#cb26-5" tabindex="-1"></a><span class="fu">class</span>(x)</span></code></pre></div>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="data-handling.html#cb28-1" tabindex="-1"></a><span class="co"># compare to the imported data column &#39;age&#39;</span></span>
+<span id="cb28-2"><a href="data-handling.html#cb28-2" tabindex="-1"></a><span class="fu">class</span>(tobacco<span class="sc">$</span>age)</span></code></pre></div>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<p>We can also <em>force</em> R to convert a numeric variable into an integer, and vice versa</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="data-handling.html#cb30-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(x)</span>
+<span id="cb30-2"><a href="data-handling.html#cb30-2" tabindex="-1"></a><span class="fu">class</span>(x)</span></code></pre></div>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="data-handling.html#cb32-1" tabindex="-1"></a>tobacco<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(tobacco<span class="sc">$</span>age)</span>
+<span id="cb32-2"><a href="data-handling.html#cb32-2" tabindex="-1"></a><span class="fu">class</span>(tobacco<span class="sc">$</span>age)</span></code></pre></div>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<hr />
+</div>
+<div id="character" class="section level3 unnumbered hasAnchor">
+<h3>Character<a href="data-handling.html#character" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Character is the general data type to store text (strings), such as words, sentences etc.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="data-handling.html#cb34-1" tabindex="-1"></a><span class="co"># first example</span></span>
+<span id="cb34-2"><a href="data-handling.html#cb34-2" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="st">&quot;this is a character data type&quot;</span></span>
+<span id="cb34-3"><a href="data-handling.html#cb34-3" tabindex="-1"></a><span class="fu">class</span>(a)</span></code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="data-handling.html#cb36-1" tabindex="-1"></a><span class="co"># second example</span></span>
+<span id="cb36-2"><a href="data-handling.html#cb36-2" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="st">&quot;1&quot;</span>  <span class="co"># enclosing a number in quotes will define it as a character type</span></span>
+<span id="cb36-3"><a href="data-handling.html#cb36-3" tabindex="-1"></a><span class="fu">class</span>(b)</span></code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="data-handling.html#cb38-1" tabindex="-1"></a><span class="co"># type conversion from numeric to character</span></span>
+<span id="cb38-2"><a href="data-handling.html#cb38-2" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fl">12.3</span></span>
+<span id="cb38-3"><a href="data-handling.html#cb38-3" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">as.character</span>(c)</span>
+<span id="cb38-4"><a href="data-handling.html#cb38-4" tabindex="-1"></a><span class="fu">class</span>(d)</span></code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="data-handling.html#cb40-1" tabindex="-1"></a><span class="co"># automatic &#39;conversion&#39;</span></span>
+<span id="cb40-2"><a href="data-handling.html#cb40-2" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="st">&quot;4&quot;</span>)  </span>
+<span id="cb40-3"><a href="data-handling.html#cb40-3" tabindex="-1"></a><span class="fu">class</span>(v)</span></code></pre></div>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<hr />
+</div>
+<div id="factor" class="section level3 unnumbered hasAnchor">
+<h3>Factor<a href="data-handling.html#factor" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>At a first glance, factor variables look very similar to character types. However, factors are used to denote <em>categorical</em> variables, i.e. those that can only take a (pre-determined) limited number of values.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="data-handling.html#cb42-1" tabindex="-1"></a><span class="co"># convert v into a categorical variable</span></span>
+<span id="cb42-2"><a href="data-handling.html#cb42-2" tabindex="-1"></a>f1 <span class="ot">&lt;-</span> <span class="fu">factor</span>(v)</span>
+<span id="cb42-3"><a href="data-handling.html#cb42-3" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="data-handling.html#cb42-4" tabindex="-1"></a><span class="co"># printing it will already reveal the difference to v as the factor levels are provided alongside the values</span></span>
+<span id="cb42-5"><a href="data-handling.html#cb42-5" tabindex="-1"></a>f1</span></code></pre></div>
+<pre><code>## [1] 1 2 3 4
+## Levels: 1 2 3 4</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="data-handling.html#cb44-1" tabindex="-1"></a><span class="co"># this works also on numeric variables</span></span>
+<span id="cb44-2"><a href="data-handling.html#cb44-2" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>))</span>
+<span id="cb44-3"><a href="data-handling.html#cb44-3" tabindex="-1"></a>f2</span></code></pre></div>
+<pre><code>## [1] 1 2 3 4
+## Levels: 1 2 3 4</code></pre>
+<p>Looking at our tobacco dataframe we can see that some columns denote categorical variables (gender, age group, smoker, diseased and disease) and should be converted accordingly, which can be done either using the function <code>as.factor()</code> or just <code>factor()</code>. Here we will use <code>dplyr</code>’s <code>mutate()</code> function to convert all five columns simultaneously.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="data-handling.html#cb46-1" tabindex="-1"></a>tobacco <span class="ot">&lt;-</span> tobacco <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="data-handling.html#cb46-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender =</span> <span class="fu">factor</span>(gender),</span>
+<span id="cb46-3"><a href="data-handling.html#cb46-3" tabindex="-1"></a>         <span class="at">age.gr =</span> <span class="fu">factor</span>(age.gr),</span>
+<span id="cb46-4"><a href="data-handling.html#cb46-4" tabindex="-1"></a>         <span class="at">smoker =</span> <span class="fu">factor</span>(smoker),</span>
+<span id="cb46-5"><a href="data-handling.html#cb46-5" tabindex="-1"></a>         <span class="at">diseased =</span> <span class="fu">factor</span>(diseased),</span>
+<span id="cb46-6"><a href="data-handling.html#cb46-6" tabindex="-1"></a>         <span class="at">disease =</span> <span class="fu">factor</span>(disease))</span>
+<span id="cb46-7"><a href="data-handling.html#cb46-7" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="data-handling.html#cb46-8" tabindex="-1"></a><span class="co"># check if this worked</span></span>
+<span id="cb46-9"><a href="data-handling.html#cb46-9" tabindex="-1"></a><span class="fu">sapply</span>(tobacco, class)</span></code></pre></div>
+<pre><code>##       gender          age       age.gr          BMI       smoker cigs.per.day 
+##     &quot;factor&quot;    &quot;numeric&quot;     &quot;factor&quot;    &quot;numeric&quot;     &quot;factor&quot;    &quot;integer&quot; 
+##     diseased      disease    samp.wgts 
+##     &quot;factor&quot;     &quot;factor&quot;    &quot;numeric&quot;</code></pre>
+<hr />
+</div>
+<div id="logical" class="section level3 unnumbered hasAnchor">
+<h3>Logical<a href="data-handling.html#logical" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Logical variables can only take on two values&gt; <code>TRUE</code> and <code>FALSE</code> (which can also be abbreviated as <code>T</code> and <code>F</code>, respectively). These are common data types when used with logical operation, e.g.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="data-handling.html#cb48-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb48-2"><a href="data-handling.html#cb48-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb48-3"><a href="data-handling.html#cb48-3" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="data-handling.html#cb48-4" tabindex="-1"></a>x <span class="sc">&gt;</span> y  <span class="co"># read is &#39;is x greater than y&#39;</span></span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<p>or</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="data-handling.html#cb50-1" tabindex="-1"></a><span class="cf">if</span>(x <span class="sc">&gt;</span> y){</span>
+<span id="cb50-2"><a href="data-handling.html#cb50-2" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;x is greater than y&quot;</span>)</span>
+<span id="cb50-3"><a href="data-handling.html#cb50-3" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb50-4"><a href="data-handling.html#cb50-4" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;x is not greater than y&quot;</span>)</span>
+<span id="cb50-5"><a href="data-handling.html#cb50-5" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;x is not greater than y&quot;</code></pre>
+<p>Furthermore, a logical TRUE can be numerically interpreted as 1 and a FALSE as 0.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="data-handling.html#cb52-1" tabindex="-1"></a><span class="fu">as.integer</span>(x <span class="sc">&lt;</span> y)</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<p>This fact can be used in a variety of cases, as shown in the example below (try to understand what exactly is going on)</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="data-handling.html#cb54-1" tabindex="-1"></a><span class="co"># define a vector with 15 elements </span></span>
+<span id="cb54-2"><a href="data-handling.html#cb54-2" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">4</span>, <span class="dv">7</span>)</span>
+<span id="cb54-3"><a href="data-handling.html#cb54-3" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="data-handling.html#cb54-4" tabindex="-1"></a><span class="co"># are the elements less than or equal to 5</span></span>
+<span id="cb54-5"><a href="data-handling.html#cb54-5" tabindex="-1"></a>v <span class="sc">&lt;=</span> <span class="dv">5</span></span></code></pre></div>
+<pre><code>##  [1]  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
+## [13] FALSE  TRUE FALSE</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="data-handling.html#cb56-1" tabindex="-1"></a><span class="co"># how many elements are less than or equal to 5 </span></span>
+<span id="cb56-2"><a href="data-handling.html#cb56-2" tabindex="-1"></a><span class="fu">sum</span>(v <span class="sc">&lt;=</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## [1] 7</code></pre>
+<hr />
+</div>
+</div>
+<div id="missing-data" class="section level2 unnumbered hasAnchor">
+<h2>Missing data<a href="data-handling.html#missing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>More often than not we will find ourselves confronted with datasets that are not complete. That is, some information might be missing for some of the variables, and we need to find a way to deal with those cases. In R, missing values are usually represented by <code>NA</code>. Note: when importing data we can specify the value or symbol used to represent missing data.</p>
+<p>We can test for the presence of missing values using the <code>is.na()</code> function</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="data-handling.html#cb58-1" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="cn">NA</span>, <span class="dv">8</span>, <span class="dv">9</span>)</span>
+<span id="cb58-2"><a href="data-handling.html#cb58-2" tabindex="-1"></a><span class="fu">is.na</span>(v)</span></code></pre></div>
+<pre><code>## [1] FALSE FALSE FALSE  TRUE FALSE FALSE</code></pre>
+<p>which confirms that there is a missing number between elements 3 and 5. To find the exact location we could use</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="data-handling.html#cb60-1" tabindex="-1"></a><span class="fu">which</span>(<span class="fu">is.na</span>(v))</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<p>The <code>is.na()</code> function can also be applied to data frames, as shown below</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="data-handling.html#cb62-1" tabindex="-1"></a><span class="fu">is.na</span>(tobacco)</span></code></pre></div>
+<pre><code>##         gender   age age.gr   BMI smoker cigs.per.day diseased disease
+##    [1,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
+##    [2,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE   FALSE
+##    [3,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
+##    [4,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
+##    [5,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE   FALSE
+##    [6,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
+##    [7,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
+##    [8,]   TRUE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
+##    [9,]  FALSE FALSE  FALSE FALSE  FALSE        FALSE    FALSE    TRUE
+...</code></pre>
+<p>and in combination with some other functions can be used to get crucial information about the degree of <em>missingness</em> in our data</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="data-handling.html#cb64-1" tabindex="-1"></a><span class="co"># count the number of missing entries in each column and convert to percentage</span></span>
+<span id="cb64-2"><a href="data-handling.html#cb64-2" tabindex="-1"></a><span class="dv">100</span> <span class="sc">*</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(tobacco)) <span class="sc">/</span> <span class="fu">nrow</span>(tobacco) </span></code></pre></div>
+<pre><code>##       gender          age       age.gr          BMI       smoker cigs.per.day 
+##          2.2          2.5          2.5          2.6          0.0          3.5 
+##     diseased      disease    samp.wgts 
+##          0.0         77.8          0.0</code></pre>
+<p>The big question always comes down to how to deal with missing data. The easiest approach is to just delete / ignore those cases, and there are two commonly used ways of doing this, with <code>na.omit()</code> or <code>complete.cases()</code>. The first function returns an object with all missing values removed</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="data-handling.html#cb66-1" tabindex="-1"></a><span class="co"># create a new data frame based on tobacco with all rows removed that contain NAs</span></span>
+<span id="cb66-2"><a href="data-handling.html#cb66-2" tabindex="-1"></a>tobacco_noNAs <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(tobacco)</span>
+<span id="cb66-3"><a href="data-handling.html#cb66-3" tabindex="-1"></a><span class="fu">head</span>(tobacco_noNAs, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    gender age age.gr      BMI smoker cigs.per.day diseased         disease
+## 2       F  35  35-50 26.14989     No            0      Yes    Neurological
+## 5       F  75   71 + 22.77486     No            0      Yes         Hearing
+## 15      M  47  35-50 29.04873    Yes           21      Yes Musculoskeletal
+## 16      M  76   71 + 23.13594    Yes           29      Yes          Vision
+## 20      M  73   71 + 26.73234     No            0      Yes           Heart
+## 22      F  28  18-34 23.52206    Yes           15      Yes          Cancer
+## 24      F  80   71 + 26.31107     No            0      Yes    Hypertension
+## 29      F  68  51-70 27.20262     No            0      Yes Musculoskeletal
+## 32      F  71   71 + 26.82957     No            0      Yes    Neurological
+## 39      F  22  18-34 21.23634    Yes           34      Yes           Heart
+##    samp.wgts
+## 2  1.0441767
+## 5  1.0625000
+## 15 1.0441767
+## 16 1.0625000
+## 20 1.0625000
+## 22 0.8614232
+## 24 1.0625000
+## 29 1.0493827
+## 32 1.0625000
+## 39 0.8614232</code></pre>
+<p>The other option is to use the <code>comple.cases()</code> function, which returns a logical vector indicating which rows contain no missing values (returned as <code>TRUE</code>)</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="data-handling.html#cb68-1" tabindex="-1"></a><span class="fu">complete.cases</span>(tobacco)</span></code></pre></div>
+<pre><code>##    [1] FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+##   [13] FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE
+##   [25] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
+##   [37] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
+##   [49]  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE
+##   [61] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
+##   [73] FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+##   [85] FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE
+##   [97] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE
+##  [109] FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+...</code></pre>
+<p>and this can then be used to <em>subset</em> the data, i.e. we select only those rows that have full information for all variables</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="data-handling.html#cb70-1" tabindex="-1"></a>tobacco_noNAs <span class="ot">&lt;-</span> tobacco[<span class="fu">complete.cases</span>(tobacco),]</span>
+<span id="cb70-2"><a href="data-handling.html#cb70-2" tabindex="-1"></a><span class="fu">head</span>(tobacco_noNAs, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    gender age age.gr      BMI smoker cigs.per.day diseased         disease
+## 2       F  35  35-50 26.14989     No            0      Yes    Neurological
+## 5       F  75   71 + 22.77486     No            0      Yes         Hearing
+## 15      M  47  35-50 29.04873    Yes           21      Yes Musculoskeletal
+## 16      M  76   71 + 23.13594    Yes           29      Yes          Vision
+## 20      M  73   71 + 26.73234     No            0      Yes           Heart
+## 22      F  28  18-34 23.52206    Yes           15      Yes          Cancer
+## 24      F  80   71 + 26.31107     No            0      Yes    Hypertension
+## 29      F  68  51-70 27.20262     No            0      Yes Musculoskeletal
+## 32      F  71   71 + 26.82957     No            0      Yes    Neurological
+## 39      F  22  18-34 21.23634    Yes           34      Yes           Heart
+##    samp.wgts
+## 2  1.0441767
+## 5  1.0625000
+## 15 1.0441767
+## 16 1.0625000
+## 20 1.0625000
+## 22 0.8614232
+## 24 1.0625000
+## 29 1.0493827
+## 32 1.0625000
+## 39 0.8614232</code></pre>
+<p>Although this works, there are two major issues with this approach</p>
+<ul>
+<li>data loss</li>
+<li>data bias</li>
+</ul>
+<p>If you compare the original dataset with the reduced one you will notice two things: first, it is much smaller (203 observations compared to 1000), which is a reduction by over 70% even though only one of the variables contains more than 4% missing data; and second, the data now only contains observation of those individuals who are diseased, which would obviously bias our downstream analysis. Omitting missing data should thus only be done in exceptional circumstances and with great caution.</p>
+<p>The safer, alternative strategies are either <em>data imputation</em>, which essentially tries to <em>guess</em> the missing values based on other information contained in the data (this is not covered as part of this workshop, but if you are interested you could have a look at <a href="https://www.r-bloggers.com/2023/01/imputation-in-r-top-3-ways-for-imputing-missing-data/">this site</a>), or simply <em>ignoring</em> the missing data and relying on the fact that most R functions have their own way of dealing with missing values; e.g. compare</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="data-handling.html#cb72-1" tabindex="-1"></a><span class="co"># sum over all elements in v produces NA</span></span>
+<span id="cb72-2"><a href="data-handling.html#cb72-2" tabindex="-1"></a><span class="fu">sum</span>(v)</span></code></pre></div>
+<pre><code>## [1] NA</code></pre>
+<p>with</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="data-handling.html#cb74-1" tabindex="-1"></a><span class="co"># telling sum() to ignore, or remove NA&#39;s, solves this issue</span></span>
+<span id="cb74-2"><a href="data-handling.html#cb74-2" tabindex="-1"></a><span class="fu">sum</span>(v, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 24</code></pre>
+<p><strong>Beware:</strong> different functions have different default settings when it comes to handling NA’s; always look in the help file to make sure they do what you want them to do!</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

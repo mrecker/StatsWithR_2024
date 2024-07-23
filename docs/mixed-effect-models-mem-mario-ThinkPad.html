@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Mixed Effect Models (MEM) | Introduction to statistical data analysis in R (2024)</title>
+  <meta name="description" content="Intro to Stats with R" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 Mixed Effect Models (MEM) | Introduction to statistical data analysis in R (2024)" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Intro to Stats with R" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 Mixed Effect Models (MEM) | Introduction to statistical data analysis in R (2024)" />
+  
+  <meta name="twitter:description" content="Intro to Stats with R" />
+  
+
+<meta name="author" content="Mario Recker" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="linear-models-lm.html"/>
+<link rel="next" href="generalised-linear-models-glm.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script language="javascript"> 
+    function toggle(id) {
+        var ele = document.getElementById("toggleText" + id);
+        var text = document.getElementById("displayText" + id);
+        var buttonText = text.innerHTML.replace("Show: ", "");
+        buttonText = buttonText.replace("Hide: ", "");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "Show: " + buttonText;
+        } else {
+            ele.style.display = "block";
+            text.innerHTML = "Hide: " + buttonText;
+        }
+    } 
+</script>
+
+<script language="javascript">
+    function openCode(evt, codeName, id) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent" + id);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks" + id);
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(codeName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<script language="javascript">
+    function hide(id){
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-structure"><i class="fa fa-check"></i>Workshop structure</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html"><i class="fa fa-check"></i><b>1</b> General introduction to R/RStudio</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#setting-up-an-r-session"><i class="fa fa-check"></i><b>1.1</b> Setting up an R session</a></li>
+<li class="chapter" data-level="1.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#r-packages"><i class="fa fa-check"></i><b>1.2</b> R packages</a></li>
+<li class="chapter" data-level="1.3" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#variables-vectors-and-data-frames-in-r"><i class="fa fa-check"></i><b>1.3</b> Variables, vectors and data frames in R</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#data-frames"><i class="fa fa-check"></i><b>1.3.1</b> Data frames</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#functions-in-r"><i class="fa fa-check"></i><b>1.4</b> Functions in R</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#useful-inbuilt-functions"><i class="fa fa-check"></i><b>1.4.1</b> Useful inbuilt functions</a></li>
+<li class="chapter" data-level="1.4.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#custom-functions"><i class="fa fa-check"></i><b>1.4.2</b> Custom functions</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#basic-plotting-in-r"><i class="fa fa-check"></i><b>1.5</b> Basic plotting in R</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#scatter-plot"><i class="fa fa-check"></i><b>1.5.1</b> Scatter plot</a></li>
+<li class="chapter" data-level="1.5.2" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#line-graph"><i class="fa fa-check"></i><b>1.5.2</b> Line graph</a></li>
+<li class="chapter" data-level="1.5.3" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#combined-graph"><i class="fa fa-check"></i><b>1.5.3</b> Combined graph</a></li>
+<li class="chapter" data-level="1.5.4" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#barplot"><i class="fa fa-check"></i><b>1.5.4</b> Barplot</a></li>
+<li class="chapter" data-level="1.5.5" data-path="general-introduction-to-rrstudio.html"><a href="general-introduction-to-rrstudio.html#boxplots"><i class="fa fa-check"></i><b>1.5.5</b> Boxplots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html"><i class="fa fa-check"></i><b>2</b> Data wrangling and visualisation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#introduction"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
+<li class="chapter" data-level="2.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#loading-and-saving-data"><i class="fa fa-check"></i><b>2.2</b> Loading and saving data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#save-load-data-as-an-r-object"><i class="fa fa-check"></i><b>2.2.1</b> Save / load data as an R object</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#save-load-as-a-csv-file"><i class="fa fa-check"></i><b>2.2.2</b> Save / load as a CSV file</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#handling-excel-files"><i class="fa fa-check"></i><b>2.2.3</b> Handling Excel files</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#cheatsheet"><i class="fa fa-check"></i><b>2.2.4</b> Cheatsheet</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#visualisation-using-ggplot"><i class="fa fa-check"></i><b>2.3</b> Visualisation using <code>ggplot</code></a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#aesthetics"><i class="fa fa-check"></i><b>2.3.1</b> Aesthetics</a></li>
+<li class="chapter" data-level="2.3.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#geoms"><i class="fa fa-check"></i><b>2.3.2</b> Geoms</a></li>
+<li class="chapter" data-level="2.3.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#labels"><i class="fa fa-check"></i><b>2.3.3</b> Labels</a></li>
+<li class="chapter" data-level="2.3.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#faceting"><i class="fa fa-check"></i><b>2.3.4</b> Faceting</a></li>
+<li class="chapter" data-level="2.3.5" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#statistical-transformation"><i class="fa fa-check"></i><b>2.3.5</b> Statistical transformation</a></li>
+<li class="chapter" data-level="2.3.6" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#scales"><i class="fa fa-check"></i><b>2.3.6</b> Scales</a></li>
+<li class="chapter" data-level="2.3.7" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#assigning-plots-to-objects"><i class="fa fa-check"></i><b>2.3.7</b> Assigning plots to objects</a></li>
+<li class="chapter" data-level="2.3.8" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#putting-it-all-together"><i class="fa fa-check"></i><b>2.3.8</b> Putting it all together</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#data-wrangling"><i class="fa fa-check"></i><b>2.4</b> Data wrangling</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#tidy-data"><i class="fa fa-check"></i><b>2.4.1</b> Tidy data</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#filter-rows"><i class="fa fa-check"></i><b>2.4.2</b> Filter rows</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#sort-rows"><i class="fa fa-check"></i><b>2.4.3</b> Sort rows</a></li>
+<li class="chapter" data-level="2.4.4" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#select-columns"><i class="fa fa-check"></i><b>2.4.4</b> Select columns</a></li>
+<li class="chapter" data-level="2.4.5" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#grouping-and-summarising"><i class="fa fa-check"></i><b>2.4.5</b> Grouping and summarising</a></li>
+<li class="chapter" data-level="2.4.6" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#reshaping-datasets"><i class="fa fa-check"></i><b>2.4.6</b> Reshaping datasets</a></li>
+<li class="chapter" data-level="2.4.7" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#mutate"><i class="fa fa-check"></i><b>2.4.7</b> Mutate</a></li>
+<li class="chapter" data-level="2.4.8" data-path="data-wrangling-and-visualisation.html"><a href="data-wrangling-and-visualisation.html#dealing-with-missing-data"><i class="fa fa-check"></i><b>2.4.8</b> Dealing with missing data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html"><i class="fa fa-check"></i><b>3</b> Introduction to statistical modelling in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#what-is-a-statistical-model"><i class="fa fa-check"></i>What is a statistical model?</a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#descriptive-vs.-inferential-statistics"><i class="fa fa-check"></i>Descriptive vs. inferential statistics</a></li>
+<li class="chapter" data-level="3.1" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#univariate-analysis"><i class="fa fa-check"></i><b>3.1</b> Univariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#mean-vs.-median"><i class="fa fa-check"></i><strong>Mean vs. median</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#standard-deviation"><i class="fa fa-check"></i><strong>Standard deviation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#interquartile-range"><i class="fa fa-check"></i><strong>Interquartile range</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#skewness"><i class="fa fa-check"></i><strong>Skewness</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#kurtosis"><i class="fa fa-check"></i><strong>Kurtosis</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#multivariate-analysis"><i class="fa fa-check"></i><b>3.2</b> Multivariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#contingency-tables"><i class="fa fa-check"></i><strong>Contingency tables</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#pearson-correlation"><i class="fa fa-check"></i><strong>Pearson correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#spearmans-rank-correlation"><i class="fa fa-check"></i><strong>Spearman’s rank correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="introduction-to-statistical-modelling-in-r.html"><a href="introduction-to-statistical-modelling-in-r.html#correlation-vs.-causation"><i class="fa fa-check"></i><strong>Correlation vs. causation</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="linear-models-lm.html"><a href="linear-models-lm.html"><i class="fa fa-check"></i><b>4</b> Linear Models (LM)</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#simple-linear-regression"><i class="fa fa-check"></i><b>4.1</b> Simple linear regression</a></li>
+<li class="chapter" data-level="4.2" data-path="linear-models-lm.html"><a href="linear-models-lm.html#linear-regression-in-r"><i class="fa fa-check"></i><b>4.2</b> Linear regression in R</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="linear-models-lm.html"><a href="linear-models-lm.html#using-the-summary-function"><i class="fa fa-check"></i><b>4.2.1</b> <strong>Using the <code>summary()</code> function</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="linear-models-lm.html"><a href="linear-models-lm.html#model-checking"><i class="fa fa-check"></i><b>4.3</b> Model checking</a>
+<ul>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-fitted"><i class="fa fa-check"></i><strong>Residuals vs Fitted</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#normal-q-q"><i class="fa fa-check"></i><strong>Normal Q-Q</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#scale-location"><i class="fa fa-check"></i><strong>Scale-Location</strong></a></li>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#residuals-vs-leverage"><i class="fa fa-check"></i><strong>Residuals vs Leverage</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="linear-models-lm.html"><a href="linear-models-lm.html#prediction"><i class="fa fa-check"></i><b>4.4</b> Prediction</a>
+<ul>
+<li class="chapter" data-level="" data-path="linear-models-lm.html"><a href="linear-models-lm.html#confidence-vs-prediction-interval"><i class="fa fa-check"></i><strong>Confidence vs prediction interval</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="linear-models-lm.html"><a href="linear-models-lm.html#multiple-linear-regression"><i class="fa fa-check"></i><b>4.5</b> Multiple linear regression</a></li>
+<li class="chapter" data-level="4.6" data-path="linear-models-lm.html"><a href="linear-models-lm.html#categorical-explanatory-variables"><i class="fa fa-check"></i><b>4.6</b> Categorical explanatory variables</a></li>
+<li class="chapter" data-level="4.7" data-path="linear-models-lm.html"><a href="linear-models-lm.html#interactions"><i class="fa fa-check"></i><b>4.7</b> Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html"><i class="fa fa-check"></i><b>5</b> Mixed Effect Models (MEM)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#model-checking-1"><i class="fa fa-check"></i><b>5.1</b> Model checking</a></li>
+<li class="chapter" data-level="5.2" data-path="mixed-effect-models-mem.html"><a href="mixed-effect-models-mem.html#further-reading"><i class="fa fa-check"></i><b>5.2</b> Further reading</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html"><i class="fa fa-check"></i><b>6</b> Generalised Linear Models (GLM)</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#link-functions"><i class="fa fa-check"></i><b>6.1</b> Link functions</a></li>
+<li class="chapter" data-level="6.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-for-count-data"><i class="fa fa-check"></i><b>6.2</b> Poisson regression (for count data)</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background"><i class="fa fa-check"></i><b>6.2.1</b> Background</a></li>
+<li class="chapter" data-level="6.2.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#poisson-regression-in-r"><i class="fa fa-check"></i><b>6.2.2</b> Poisson regression in R</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-for-binary-data"><i class="fa fa-check"></i><b>6.3</b> Logistic regression (for binary data)</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#background-1"><i class="fa fa-check"></i><b>6.3.1</b> Background</a></li>
+<li class="chapter" data-level="6.3.2" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#logistic-regression-in-r"><i class="fa fa-check"></i><b>6.3.2</b> Logistic regression in R</a></li>
+<li class="chapter" data-level="" data-path="generalised-linear-models-glm.html"><a href="generalised-linear-models-glm.html#odds-ratios"><i class="fa fa-check"></i>Odds ratios</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="survival-analysis.html"><a href="survival-analysis.html"><i class="fa fa-check"></i><b>7</b> Survival Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="survival-analysis.html"><a href="survival-analysis.html#terminology-and-notation"><i class="fa fa-check"></i><b>7.1</b> Terminology and notation</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="survival-analysis.html"><a href="survival-analysis.html#censoring"><i class="fa fa-check"></i><b>7.1.1</b> Censoring</a></li>
+<li class="chapter" data-level="7.1.2" data-path="survival-analysis.html"><a href="survival-analysis.html#survival-and-hazard-functions"><i class="fa fa-check"></i><b>7.1.2</b> Survival and hazard functions</a></li>
+<li class="chapter" data-level="7.1.3" data-path="survival-analysis.html"><a href="survival-analysis.html#calculating-survival-times-in-r"><i class="fa fa-check"></i><b>7.1.3</b> Calculating survival times in R</a></li>
+<li class="chapter" data-level="7.1.4" data-path="survival-analysis.html"><a href="survival-analysis.html#r-libraries-and-example-data"><i class="fa fa-check"></i><b>7.1.4</b> R libraries and example data</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="survival-analysis.html"><a href="survival-analysis.html#kaplan-meier"><i class="fa fa-check"></i><b>7.2</b> Kaplan-Meier</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="survival-analysis.html"><a href="survival-analysis.html#median-survival-time"><i class="fa fa-check"></i><b>7.2.1</b> <strong>Median survival time</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="survival-analysis.html"><a href="survival-analysis.html#cox-regression-model"><i class="fa fa-check"></i><b>7.3</b> Cox regression model</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to statistical data analysis in R (2024)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="mixed-effect-models-mem" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Mixed Effect Models (MEM)<a href="mixed-effect-models-mem.html#mixed-effect-models-mem" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>One of the key assumptions of linear models is that the data is independent and identically distributed (i.i.d.). This means that our data sample is a true representation of the underlying population and that we have sampled without any (intentional or unintentional) bias. Sometimes this is not the case, however, meaning that there could be some systematic difference between some of our samples. We have come across a situation like this in the previous example, where samples taken during the rainy season showed a different pattern with temperature than those sampled during the off-season. We dealt with this by adding <code>rainfall</code> as a categorical variable into our model. This worked not only because there were only two possible levels for <code>rainfall</code> but also because we care about the identity of those levels, i.e. we wanted to estimate how incidence changes for <code>rainfall = yes</code> and <code>rainfall = no</code>. In other cases we might still want to account for underlying differences in our data by including a categorical variable we believe is having an influence but without caring about their identity. These variables are referred to <em>random effect</em> variables, as opposed to <em>fixed effect</em> variables that we considered so far. And models that include random and fixed effects are known as <em>mixed effect models</em> or <em>random effect models</em>.</p>
+<ul>
+<li><strong>Fixed effects</strong> are (continuous or categorical) exploratory variables that we believe have an effect on the response and that we are interested in making conclusions about. Their effects is constant (fixed) across individuals.</li>
+<li><strong>Random effects</strong> are categorical variables with many levels that are themselves drawn from a population of possible levels. Although they are believed to have an influence on the response, we are not interested in their identity.</li>
+</ul>
+<p>Here we only briefly touch upon mixed effect models and how to analyse them in R using the <code>lme4</code> package and by means of the <code>sleepstudy</code> dataset that is provided by <code>lme4</code>, which contains experimental data on the effect of sleep deprivation on reaction time. The data file has three variables</p>
+<ul>
+<li><code>Reaction</code>: average reaction time (ms)</li>
+<li><code>Days</code>: number of days of sleep deprivation</li>
+<li><code>Subject</code>: subject number on which observation was made</li>
+</ul>
+<p>You can find out more about this study through the help function <code>?sleepstudy</code>.</p>
+<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="mixed-effect-models-mem.html#cb278-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load library for mixed effect modelling</span></span>
+<span id="cb278-2"><a href="mixed-effect-models-mem.html#cb278-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb278-3"><a href="mixed-effect-models-mem.html#cb278-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb278-4"><a href="mixed-effect-models-mem.html#cb278-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get a summary of the sleep study dataset</span></span>
+<span id="cb278-5"><a href="mixed-effect-models-mem.html#cb278-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sleepstudy)</span></code></pre></div>
+<pre><code>##     Reaction          Days        Subject   
+##  Min.   :194.3   Min.   :0.0   308    : 10  
+##  1st Qu.:255.4   1st Qu.:2.0   309    : 10  
+##  Median :288.7   Median :4.5   310    : 10  
+##  Mean   :298.5   Mean   :4.5   330    : 10  
+##  3rd Qu.:336.8   3rd Qu.:7.0   331    : 10  
+##  Max.   :466.4   Max.   :9.0   332    : 10  
+##                                (Other):120</code></pre>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="mixed-effect-models-mem.html#cb280-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the number of study participants</span></span>
+<span id="cb280-2"><a href="mixed-effect-models-mem.html#cb280-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Number of participants: &quot;</span>,<span class="fu">length</span>(<span class="fu">unique</span>(sleepstudy<span class="sc">$</span>Subject))))</span></code></pre></div>
+<pre><code>## [1] &quot;Number of participants: 18&quot;</code></pre>
+<p>From the data summary we see that there were 10 observations made for 18 individuals. Therefore, <code>Subject</code> fits our definition of a *random effect`: we believe that there is a difference between study participants but we do not care about the individuals themselves.</p>
+<p>We can convince ourselves about the difference between study participants by plotting the data for two subjects:</p>
+<img src="_main_files/figure-html/unnamed-chunk-183-1.png" style="display: block; margin: auto;" />
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+Recreate the above graph but for all individuals in the study.
+</div>
+</div>
+<button id="displayTextunnamed-chunk-185" onclick="javascript:toggle(&#39;unnamed-chunk-185&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-185" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="mixed-effect-models-mem.html#cb282-1" aria-hidden="true" tabindex="-1"></a>sleepstudy <span class="sc">%&gt;%</span></span>
+<span id="cb282-2"><a href="mixed-effect-models-mem.html#cb282-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Subject <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">308</span>, <span class="dv">309</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb282-3"><a href="mixed-effect-models-mem.html#cb282-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Days, <span class="at">y =</span> Reaction)) <span class="sc">+</span></span>
+<span id="cb282-4"><a href="mixed-effect-models-mem.html#cb282-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">&#39;red&#39;</span>, <span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>) <span class="sc">+</span></span>
+<span id="cb282-5"><a href="mixed-effect-models-mem.html#cb282-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb282-6"><a href="mixed-effect-models-mem.html#cb282-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">+</span>  <span class="co"># make scale discrete</span></span>
+<span id="cb282-7"><a href="mixed-effect-models-mem.html#cb282-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>Subject)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-523-1.png" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+<p>How do we model this data? There are principally three approaches: (1) pool all the data and don’t care about individual-level differences, (2) add <code>Subject</code> as a fixed effect as well as the interaction term <code>Days:Subject</code>, and (3) treat <code>Subject</code> as a <em>random effect</em>. Here we are only going to compare (1) and (3) and leave (2) as an exercise.</p>
+<p>Before we start we need to make some minor modification to the data. First, we want to make sure that <code>Subject</code> is being treated like a categorical and not a continuous variable. Second, the first two days (day 0 and day 1) were for adaptation and training, meaning that sleep deprivation started counting at day 2 so we discard the first two days and then recode to make sure we start with day 0.</p>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="mixed-effect-models-mem.html#cb283-1" aria-hidden="true" tabindex="-1"></a>sleep <span class="ot">&lt;-</span> sleepstudy <span class="sc">%&gt;%</span></span>
+<span id="cb283-2"><a href="mixed-effect-models-mem.html#cb283-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Subject =</span> <span class="fu">factor</span>(Subject)) <span class="sc">%&gt;%</span></span>
+<span id="cb283-3"><a href="mixed-effect-models-mem.html#cb283-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Days =</span> Days <span class="sc">-</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb283-4"><a href="mixed-effect-models-mem.html#cb283-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Days<span class="sc">&gt;=</span><span class="dv">0</span>)</span></code></pre></div>
+The <code>lmer()</code> function (from the <code>lme4</code> package) uses a very similar syntax as the by now familiar <code>lm()</code> function but where the model formula now takes on the form
+<center>
+<code>response ~ fixed1 + fixed2 + ... + (ran1 + ran2 + ...| ran_factor1) + ...</code>
+</center>
+<p>That is, fixed effects (and their interactions) are entered exactly as before. New is the presence of the term <code>(ran1 + ran2 + ...| ran_factor1)</code>, which represents the random effects associated with a particular random factor. For our dataset there are three possibilities for how the random effects might influence the response, given here together with the specific formula syntax:</p>
+<ul>
+<li><em>random intercepts only</em>: <code>Response ~ Days + (1 | Subject)</code></li>
+<li><em>random slopes only</em>: <code>Response ~ Days + (0 Days | Subject)</code></li>
+<li><em>random slope and intersect</em>: <code>Response ~ Days + (Days | Subject)</code></li>
+</ul>
+<p>The most reasonable model would be the last, which allows for both the intercept and the slope to vary between individuals. So let’s fit this model</p>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="mixed-effect-models-mem.html#cb284-1" aria-hidden="true" tabindex="-1"></a>fit_mm <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Reaction <span class="sc">~</span> Days <span class="sc">+</span> (Days<span class="sc">|</span>Subject), <span class="at">data =</span> sleep)</span>
+<span id="cb284-2"><a href="mixed-effect-models-mem.html#cb284-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_mm)</span></code></pre></div>
+<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+## Formula: Reaction ~ Days + (Days | Subject)
+##    Data: sleep
+## 
+## REML criterion at convergence: 1404.1
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -4.0157 -0.3541  0.0069  0.4681  5.0732 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev. Corr
+##  Subject  (Intercept) 958.35   30.957       
+##           Days         45.78    6.766   0.18
+##  Residual             651.60   25.526       
+## Number of obs: 144, groups:  Subject, 18
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept)  267.967      8.266  32.418
+## Days          11.435      1.845   6.197
+## 
+## Correlation of Fixed Effects:
+##      (Intr)
+## Days -0.062</code></pre>
+<p>The model summary now contains a lot more information. Let’s highlight the two most important sections.</p>
+<div id="fixed-effects" class="section level4 unnumbered hasAnchor">
+<h4><strong>Fixed effects</strong><a href="mixed-effect-models-mem.html#fixed-effects" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>There are two fixed effects: <code>(Intercept)</code> and <code>Days</code> which tell us the average reaction time without any sleep deprivation and the increase in reaction time with each day of sleep deprivation. You will notice that compared to the simpler modelling framework, <em>P</em> values are not provided anymore, and there are various reasons as to why. However, if you wish to make statements regarding the statistical significance of these estimates, you can either look at the confidence intervals (based on parametric boostrapping)</p>
+<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="mixed-effect-models-mem.html#cb286-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(fit_mm, <span class="at">level=</span><span class="fl">0.95</span>)</span></code></pre></div>
+<pre><code>## Computing profile confidence intervals ...</code></pre>
+<pre><code>##                   2.5 %      97.5 %
+## .sig01       19.0979934  46.3366599
+## .sig02       -0.4051073   0.8058951
+## .sig03        4.0079284  10.2487351
+## .sigma       22.4666029  29.3494509
+## (Intercept) 251.3443396 284.5904989
+## Days          7.7245247  15.1463328</code></pre>
+<p>The ones you are most interested in are the two bottom ones, and as neither crosses 0 you can be sure that the effects are statistically significant.</p>
+<p>The other option is to calculate <em>P</em> values from the <em>t</em> values (the underlying maths goes beyon the scope of this workshop)</p>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb289-1"><a href="mixed-effect-models-mem.html#cb289-1" aria-hidden="true" tabindex="-1"></a>tvals <span class="ot">&lt;-</span> <span class="fu">fixef</span>(fit_mm) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(<span class="fu">vcov</span>(fit_mm)))</span>
+<span id="cb289-2"><a href="mixed-effect-models-mem.html#cb289-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="fu">abs</span>(tvals)))</span></code></pre></div>
+<pre><code>## (Intercept)        Days 
+## 0.00000e+00 5.75197e-10</code></pre>
+<p>This again provides strong evidence for rejecting the null hypotheses that sleep deprivation does not effect reaction time.</p>
+</div>
+<div id="random-effects" class="section level4 unnumbered hasAnchor">
+<h4><strong>Random effects</strong><a href="mixed-effect-models-mem.html#random-effects" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>This part of the summary looks more unfamiliar and explaining each part of this is beyond this workshop, as it requires more indepth knowledge about variance and covariance matrices and stats in general. So the only part you might want to take a look at is the <code>Variance</code> of the two <code>Groups</code> entries <code>Subject</code> and <code>Residual</code>. This tells you how much of the total variance in your data is being absorbed by the random effects (on slope and intercept). In this case this amounts to <span class="math inline">\(\sim 61\)</span>% (100% * (958.35 + 45.78)/(958.35 + 45.78 + 651.60)), meaning that inter-subject variation explain the majority of the ‘noise’ in your data.</p>
+<p>If we are interested in the estimated random effects, these can be pulled out using <code>ranef()</code> (similar to <code>fixef()</code> for accessing estimates of the fixed effects)</p>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="mixed-effect-models-mem.html#cb291-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ranef</span>(fit_mm) </span></code></pre></div>
+<pre><code>## $Subject
+##     (Intercept)        Days
+## 308  24.4992891   8.6020000
+## 309 -59.3723102  -8.1277534
+## 310 -39.4762764  -7.4292365
+## 330   1.3500428  -2.3845976
+## 331  18.4576169  -3.7477340
+## 332  30.5270040  -4.8936899
+## 333  13.3682027   0.2888639
+## 334 -18.1583020   3.8436686
+## 335 -16.9737887 -12.0702333
+## 337  44.5850842  10.1760837
+## 349 -26.6839022   2.1946699
+## 350  -5.9657957   8.1758613
+## 351  -5.5710355  -2.3718494
+## 352  46.6347253  -0.5616377
+## 369   0.9616395   1.7385130
+## 370 -18.5216778   5.6317534
+## 371  -7.3431320   0.2729282
+## 372  17.6826159   0.6623897
+## 
+## with conditional variances for &quot;Subject&quot;</code></pre>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+
+<ol style="list-style-type: decimal">
+<li>Fit a linear regression model to the pooled data ignoring the effect of <code>Subject</code> and compare the estimated effect sizes.</li>
+<li>Fit a linear regression model using <code>Subject</code> as a categorical fixed effect and compare the estimated effect sizes</li>
+<li>Fit a mixed effect model as before but assume that <code>Subject</code> only affects the intersect. How does this compare to the previous model with random slope and intersect?
+</div>
+</div></li>
+</ol>
+<p><br></p>
+</div>
+<div id="model-checking-1" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Model checking<a href="mixed-effect-models-mem.html#model-checking-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We need to be just as conscious of testing the assumptions of mixed effects models as we are with any other model. These assumptions include:</p>
+<ol style="list-style-type: decimal">
+<li>Within-group errors are independent and normally distributed with mean zero and variance<br />
+</li>
+<li>Within-group errors are independent of the random effects</li>
+<li>Random effects are normally distributed with mean zero</li>
+</ol>
+<p>Two commonly used plots to check these assumptions are:</p>
+<ol style="list-style-type: decimal">
+<li>A simple plot of residuals against fitted values, irrespective of random effects (note we have to do this “by hand” here):</li>
+</ol>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="mixed-effect-models-mem.html#cb293-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_mm)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-191-1.png" style="display: block; margin: auto;" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Plotting the residuals against the fitted values, separately for each level of the random effect, using the <code>coplot()</code> function:</li>
+</ol>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="mixed-effect-models-mem.html#cb294-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coplot</span>(<span class="fu">resid</span>(fit_mm) <span class="sc">~</span> <span class="fu">fitted</span>(fit_mm) <span class="sc">|</span> sleep<span class="sc">$</span>Subject)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-192-1.png" style="display: block; margin: auto;" /></p>
+</div>
+<div id="further-reading" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Further reading<a href="mixed-effect-models-mem.html#further-reading" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Due to time constraints we cannot go into more details of <em>random</em> or <em>mixed effects models</em>. The interested reader will find the following (free) resources useful:</p>
+<ul>
+<li><a href="https://ourcodingclub.github.io/tutorials/mixed-models/">Introduction to Linear Mixed Models</a></li>
+<li><a href="https://bookdown.org/roback/bookdown-BeyondMLR/">Beyond Multiple Linear Regression</a></li>
+<li><a href="https://m-clark.github.io/mixed-models-with-R/random_intercepts.html">Mixed Models with R</a></li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="linear-models-lm.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="generalised-linear-models-glm.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
