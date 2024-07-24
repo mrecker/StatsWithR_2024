@@ -1,0 +1,276 @@
+# Descriptive statistics in R
+
+The first thing we need to do is clarify the distinction between *descriptive* and *inferential* statistics. In simple terms, the former deals with the quantitative and/or visual *description* of a sample taken from the population, whereas the latter tries to make *inferences* about the properties of a population based on this sample. And this is an important point to remember: we usually never know the entire state of the population (or the underlying probability distribution that generated the data), we only have access to a (usually significantly smaller) sample of it. And statistics will help us to get a sense of how well this sample might represent the population and the uncertainty attached to any inferences we wish to make about it.
+
+
+## Univariate analysis 
+
+As defined earlier, descriptive statistics is concerned with the quantitative and/or visual description of a data sample. We can broadly distinguish two cases:
+
+  (i) a univariate analysis, where we describe a single variable, for example by its central tendency (e.g. mean or median) and dispersal (e.g. variance or quartiles)
+  (ii) multivariate analysis, where our data sample consist of more than one variable and where we are interested in the relationship between pairs of variables (e.g. correlation or covariance). 
+
+Here we will introduce you the concept univariate analysis, and you are probably already familiar with most of the material dealt with in this section. We therefore only briefly touch upon some of them, showing how to do generate descriptive statistics in R - first by hand and then using some nifty R packages / functions that will make your life a lot easier. 
+
+Statistics that we will cover include:
+
+  - mean
+  - median
+  - standard deviation
+  - interquartile range
+  - skewness
+
+---
+
+```{r, echo=F, results=F, message=F, warning=F}
+library(ggthemr)
+ggthemr("pale")
+# ggthemr_reset()
+```
+
+### Mean vs. median {-}
+
+As you will know, the mean and the median are two very different statistics. The first is the average value of a data sample, i.e. $\mu = 1/n \sum y_i$ (with $y_i$ being individual data points or values of your sample), whereas the median separates the lower half and upper half of a data sample (i.e. is the value in the middle if you were to order all values form smallest to biggest). How much these two differ, however, depends on how the data is distributed. To demonstrates this, let's calculate both and compare for different distributions
+
+```{r}
+# sample based on normal distribution
+normSample <- rnorm(1000, mean = 10, sd = 1)
+print(c(mean(normSample), median(normSample)))
+
+# sample based on normal distribution
+poisSample <- rpois(1000, lambda = 10)
+print(c(mean(poisSample), median(poisSample)))
+
+# sample based on normal distribution
+expSample <- rexp(1000, rate = 0.1)
+print(c(mean(expSample), median(expSample)))
+```
+
+We can see that for the first two samples, both the mean and median are fairly similar. For the sample based on an exponential distribution, however, they are very different. Therefore, whether the mean is an adequate representation (or statistics) of your data crucially depends on how the data is distributed!  
+
+---
+
+### Standard deviation {-}
+
+The standard deviation (SD) is a measure of the dispersal of a set of values and how much these values vary from the sample mean. A low standard variation means that most values are close to the mean, whereas a high standard deviation means that values are spread far way from the mean (which in itself should give you an indication of the usefulness of using the mean to describe your samples in the first case). Mathematically, the standard deviation, usually denoted $\sigma$, is given as
+$$ \sigma = \sqrt{ \frac{1}{n} \sum (y_i - \mu)^2 } $$
+However, it is much easier to understand this visually, here demonstrated by two normal distributions with the same mean but one with SD=1 and one with SD=4
+
+```{r}
+data.frame(SD1 = rnorm(10000, sd = 1),
+           SD4 = rnorm(10000, sd = 4)) %>%
+  ggplot() +
+  geom_density(aes(x = SD1, fill = 'SD=1'), alpha = 0.3) +
+  geom_density(aes(x = SD4, fill = 'SD=4'), alpha = 0.3) +
+  geom_vline(xintercept = 0, col = 'blue', linetype = 'dashed') +
+  labs(x = '',
+       fill = '') +
+  theme(legend.position = 'top')
+```
+
+---
+
+### Interquartile range {-}
+
+Another measure of the spread of data is the so-called interquartile range, or IQR for short. The IQR is defined as the difference between the 75th percentile (third quartile, or Q3) and the 25th percentiles of the data (lower quartile, or Q1). Therefore, the IQR = Q3 − Q1. 
+
+In R we can get the IQR's simply through the function `IQR()`
+```{r}
+# interquartile range of sample based on normal distribution
+IQR(normSample)
+
+# interquartile range of sample based on Poisson distribution
+IQR(poisSample)
+
+# interquartile range of sample based on exponential distribution
+IQR(expSample)
+```
+
+IQR's form the basis of box-and-whisker plots, where the boxes show the median (Q2) and interquartile range (Q1 and Q3) and the lower and upper whiskers are defined as $Q1 - 1.5 \times IQR$ and $Q3 + 1.5 \times IQR$, respectively. Data points outside these rangers are considered *outliers*.
+
+```{r}
+sampleDist <- data.frame(normal = normSample,
+                         poisson = poisSample,
+                         exponential = expSample) 
+
+ggplot(sampleDist) +
+  geom_boxplot(aes(x = 1, y = normal, fill = 'normal')) +
+  geom_boxplot(aes(x = 2, y = poisson, fill = 'Poisson')) +
+  geom_boxplot(aes(x = 3, y = exponential, fill = 'exponential')) +
+  scale_x_continuous(breaks = c(1, 2, 3), 
+                     labels = c('Normal', 'Poisson', 'Exponential')) +
+  labs(x = 'Distribution',
+       y = 'Value') +
+  theme(legend.position = '', 
+        text = element_text(size=14))
+```
+
+---
+
+### Skewness {-}
+
+Skewness tells us whether the data is symmetric or asymmetrically distributed, an we can distinguish between a *positive skew*, where the right tail of the distribution is longer, and *negative skew*, where the left tail is longer. Let's have a look at our three samples based on the normal, Poisson and exponential distribution:
+
+```{r}
+sampleDist %>%
+  gather(distribution, value, normal:exponential) %>%
+  ggplot(aes(x = value, fill = distribution)) +
+  geom_density() +
+  facet_wrap(~distribution, scales = 'free') +
+  geom_vline(xintercept = 10, col = 'blue', linetype = 'dashed') +
+  labs(x = '',
+       fill = '') +
+  theme(legend.position = '')
+```
+
+What is clear is that the exponential distribution has a significant *positive* skew. The R library `moments` provides useful functions to measure the shape of a distribution. Let's use this here and see whether it agrees with our assessment *by eye*
+```{r}
+# if you do not have this library, install it with install.packages("moments")
+library(moments)
+
+# calculate skewness of normal-based samples
+skewness(normSample)
+
+# calculate skewness of normal-based samples
+skewness(poisSample)
+
+# calculate skewness of normal-based samples
+skewness(expSample)
+```
+
+The results are very much as expected, with the sample based on the exponential distribution being by far the most skewed. And this offers one explanation for why the mean and median differs so much: although the bulk of the data lies on the left hand side, the long tail to the right has a significant effect on the mean, such that it is no longer representative of the average value of a data sampled from this distribution (i.e. most values would be smaller than the mean). 
+
+Note, although the skewness for the samples based on the normal distribution is also positive, the value is very small. The same goes for the ones based on the Poisson distribution. What shall we do with this information? I.e. is there evidence that the they are all skewed and hence sufficiently different from a normal distribution? Thankfully the `moments` package provides us with the tool to check this statistically based on *kurtosis*, which is a measure of how much of the data is found in the tails of the distribution.  
+
+---
+
+### Kurtosis {-}
+
+The kurtosis of a distribution is a measure of whether or not it is heavy-tailed or light-tailed *relative to a normal distribution*: 
+
+  - the kurtosis of a normal distribution is 3
+  - if the kurtosis is <3, this means that it has fewer and less extreme outliers than the normal distribution
+  - if the kurtosis is >3, this means that it has more outliers than the normal distribution.
+
+> **Note:** some formulars substract 3 from the kurtosis, resulting in either negative or positive values (with the normal distribution being 0)
+
+The `moments` package also provides the functionality to calculate the kurtosis of a data sample. For our data this looks like
+
+```{r}
+# calculate skewness of normal-based samples
+kurtosis(normSample)
+
+# calculate skewness of normal-based samples
+kurtosis(poisSample)
+
+# calculate skewness of normal-based samples
+kurtosis(expSample)
+```
+
+Once again, the last data sample stands out by having a kurtosis much greater than 3, meaning it has far more outliers than would be expected if the data came from a normal distribution (as can be seen in the boxplot above, where outliers are indicated by open circles). 
+
+As mentioned earlier, `moments` offers a statistical test (the so-called Jarque-Bera Normality Test), which compare a given data sample to a normal distribution, with the **Null Hypothesis (H$_0$)** being that the data has a skewness and kurtosis that matches a normal distribution. Let's put this to the test for our three samples.
+
+```{r}
+# samples based on normal distribution
+jarque.test(normSample)
+
+# samples based on Poisson distribution
+jarque.test(poisSample)
+
+# samples based on exponential distribution
+jarque.test(expSample)
+
+```
+
+And this provides evidence that the data samples based on the Poisson and exponential distribution are statistically different from the normal distribution. 
+
+---
+
+### Data summaries {-}
+
+The reason we care about univariate statistics is that most downstream analyses and statistical tests intrinsically rely on them. For example, we often report on the *mean* of some numeric variable, such as age; however, as we have seen, the mean is not a good representative in case the data is very skewed, in which case the median is a better statistic. Comparing two populations is often done using a t-test, which not only compares their *means* but also makes very strong assumptions about the *distribution*. It is therefore crucial to get a good overview of our data *before* we start with the analyses.
+
+As we have seen, getting summary statistics by hand is relatively easy but can become cumbersome for large datasets with many variables. Thankfully, there are plenty of R functions out there that make our lives a lot easier. First, we are going to use inbuilt functions (that do not rely on external libraries) and then briefly introduce the `summarytools` package.
+
+One of the easiest way to get a summary overview of the data is to use the inbuilt `summary()` function
+```{r}
+## remember to read in the data, in case you start a new session
+# tobacco <- read_csv('tobacco.csv') %>%
+#   mutate(gender = factor(gender),
+#          age.gr = factor(age.gr),
+#          smoker = factor(smoker),
+#          diseased = factor(diseased),
+#          disease = factor(disease))
+
+summary(tobacco)
+```
+This summary provides us with some of the most important information about our data. Besides revealing the different data types and data ranges, plus summary statistics, we can also get an idea how much data is missing for what variable. Furthermore, for categorical variables we also get information about how many observations fall into the different categories.
+
+Regarding categorical variables, we are often interested how these are distributed, not just across the whole data but also with respect to other categorical variables, in which case we refer to cross-tabulation or *contingency tables*. Even though this is not strictly part of *univariate* analysis, it makes sense to show how we can use the inbuilt `table()` function to easily tabulate categorical data.
+```{r}
+## create a table based on individuals' disease status 
+table(tobacco$diseased)
+
+## create a contingency table of disease status stratified by gender + add cat names
+table(Diseased = tobacco$diseased, 
+      Gender = tobacco$gender)
+```
+
+We can go one step further and obtain *stratified* summary statistics using the inbuilt `aggregate()` function, which we here use to get the mean age and mean BMI stratified by gender and disease status
+```{r}
+aggregate(cbind(age, BMI) ~ gender + diseased,
+  data = tobacco,
+  mean
+)
+```
+Based on this table we would conclude that diseased individuals are on average older and have a higher BMI than disease-free individuals and with not discernible difference between males and females. In later sections we will learn hot to test this statistically.
+
+Before moving on it might be worth it to show how the same can also be achieved using `dplyr` (part of the `tidyverse`)
+```{r, message=F}
+tobacco %>%
+  filter(!is.na(age) & !is.na(BMI) & !is.na(gender) & !is.na(diseased)) %>%
+  group_by(gender, diseased) %>%
+  summarise(mean_age = mean(age),
+            mean_BMI = mean(BMI))
+```
+
+```{task, title = 'Question'}
+What does `filter(!is.na(age) & !is.na(BMI) & !is.na(gender) & !is.na(diseased))` achieve, and what happens is we run the code without?
+```
+
+
+To finish off this section we briefly introduce the `summarytools` package, which provides a number of useful tools to help us to summarise our data. The first tool, or function, is `dfsummary()`, which can be seen as an extension to the inbuilt `summary()` and provides us with almost everything we need in one go.
+```{r, message=F}
+# load the library
+library(summarytools)
+
+# get a summary of our dataframe
+dfSummary(tobacco)
+```
+
+The next function we introduce, `ctable()`. is an extension to the `table()` function mentioned earlier
+```{r}
+ctable(tobacco$smoker, tobacco$diseased)
+```
+
+This does not seem to offer much more, except that we can easily ask it to run a statistical test ($\chi^2$-test) on the resulting table
+```{r}
+ctable(tobacco$smoker, tobacco$diseased, chisq = T)
+```
+Without going into much of the details at this point, the *p.value* of 0 indicates that there is strong statistical evidence that disease status is dependent on smoking - pretty much as we would expect.
+
+A slightly more useful addition is when we combine `ctable` with `stby`, which allows us to create contingency tables with respect to a third categorical variable; for example
+```{r}
+stby(list(tobacco$diseased, tobacco$gender), tobacco$smoker, ctable)
+```
+
+Finally we are going to mention the `tableby()` function of the `arsenal` package, which is a highly customisable and powerful tool to provide detailed and publication-ready data summaries (more information can be found [here](https://cran.r-project.org/web/packages/arsenal/vignettes/tableby.html)).
+```{r, results = 'asis', message=F}
+#load required library
+library(arsenal)
+
+# create a simple table 
+tab1 <- tableby(diseased ~ gender + smoker + BMI + age, data=tobacco)
+summary(tab1)
+```

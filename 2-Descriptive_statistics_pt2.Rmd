@@ -1,0 +1,158 @@
+
+## Multivariate analysis
+
+In a multivariate analysis we are usually interested in the relationship between pairs of variables. Here we will briefly go through three commonly used methods to examine how two or more variables are related: 
+
+  - contingency tables, which we have already come across in the previous section 
+  - Pearson correlation 
+  - Spearman rank correlation
+
+
+### Contingency tables {-}
+
+Contingency tables are types of tables that display the frequency distribution of two variables against each other. As an example, say we had data from a clinical trial where patients were given either a treatment or a placebo and we are interested in how many people recovered from a disease within 5 days. In each arm we had 100 individuals and in the treatment group 73 individuals recovered and in the placebo group 64. In table format this would thus look like this
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(kableExtra)
+
+trial <- data.frame(teatment = c('drug A', 'placebo'),
+                    recovered = c(73, 64),
+                    disease = c(27, 36))
+
+kable(trial, align='lcc') %>%  
+  kable_styling(full_width = F)
+```
+
+We can see that there were more individuals who recovered in the treatment arm of the study. But how do we know that this was not due to chance? To answer this question we have to briefly tap into inferential statistics. And two common methods to provide functions to perform statistical tests on contingency tables: **Pearson's chi-squared test** and **Fisher's exact test**. We are not going into the details of where they differ but only mention that Fisher's exact test is non-parametric, typically defined on a 2 x 2 contingency table, and, importantly, works with small sample sizes. The chi-squared (or $\chi^2$) test, on the other hand, works on more than one variables but usualy requires larger sample sizes.
+
+#### **Pearson's chi-squared test** {-}
+
+Perform a chi-squared test in R is straightforward using the `chisq.test()` function.
+
+```{r}
+# define our contingency table
+trial <- data.frame(recovered = c(73, 64),
+                    disease = c(27, 36))
+
+# add row names (not necessary)
+row.names(trial) <- c('drug A', 'placebo')
+
+# run test
+chisq.test(trial)
+```
+
+Because data can come in different formats, here we provide an example of how to create a simple contingency table if your data only had the recorded outcome, for example as *recovered / not recovered* or recovered *yes / no*, stored in two columns, one for the treatment arm and one for the placebo arm.
+
+```{r}
+# recorded outcome recovered yes / no
+trialData <- data.frame(drug = c(rep('recovered',73), rep('not recovered', 27)),
+                        placebo = c(rep('recovered',64), rep('not recovered', 36)))
+
+# first turn into "tidy" format
+trialData <- trialData %>%
+  gather(treatment, outcome, drug:placebo)
+
+# create a contingency table
+contTable <- table(trialData)
+
+# perform chi-sq test 
+chisq.test(contTable)
+```
+
+#### **Fisher's exact test** {-}
+
+Fisher's exact test work in a very similar way and directly on a 2 x 2 contingency table. For large sample sizes you will notice that both test give you similar test statistics, but as mentioned, it is more powerful when sample sizes are small.
+
+```{r}
+# run Fisher's exact test on previously defined contingency matrix
+fisher.test(contTable)
+```
+
+As you will have noticed, this test works on and also reports odds ratio, which is a handy "side effect" of using this function.
+
+
+### **Pearson correlation** {-}
+
+The aim of the *Pearson correlation coefficient*, or most commonly referred to simply as *correlation coefficient*, is to establish a line of best fit through a dataset of two variables and measure how far away the data are from the expected values (the best fit line). Values range between +1 (perfect positive correlation) to -1 (perfect negative correlation), and any value in between. Here are some examples
+
+```{r, echo=FALSE, warning=FALSE, fig.width=8, fig.height=3}
+library(patchwork)
+
+x = runif(30, 1, 5)
+y1 = x + rnorm(20, 0, 0.2)
+y2 = 5 - x + rnorm(30, 0, 0.2)
+y3 = 2.5 + rnorm(30, 0, 0.6)
+
+rho1 <- round(cor(x, y1), 2)
+rho2 <- round(cor(x, y2), 2)
+rho3 <- round(cor(x, y3), 2)
+
+data.frame(x = x, y1 = y1, y2 = y2, y3 = y3) %>%
+  gather(ys, y, y1:y3) %>%
+  mutate(ys = case_when(ys == 'y1' ~ paste0("rho = ",rho1),
+                        ys == 'y2' ~ paste0("rho = ",rho2),
+                        ys == 'y3' ~ paste0("rho = ",rho3))) %>%
+  ggplot(aes(x = x, y = y, col = ys)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F) +
+  facet_wrap(~ys, scales = 'free') +
+  theme_classic() +
+  theme(legend.position = '') 
+
+```
+
+To calculate the correlation coefficient in R between two vectors $x$ and $y$ we simply call the `cor(x,y)` function. And if we are further interested in whether the correlation (or lack of it) is statistically significant we can use the `cor.test(x,y)` function.
+
+```{task}
+Create a data.frame with two simulated (artifical) data samples. Plot this data using `ggplot` and add a linear regression line (remember `geom_smooth()`?). Then test whether there is a correlation between the two variables and if so, test whether this is statistically significant.
+```
+
+```{solution}
+
+``{r}
+# sample from uniform distribution
+x <- runif(50, 1, 5)
+
+# assume linear relationship between x and y plus some Gaussian noise
+y <- 2.3*x + rnorm(50,0,1)
+
+# create data.frame
+df <- data.frame(x = x, y = y)
+
+# plot
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F)
+
+# test for correlation
+cor.test(x,y)
+``
+
+```
+
+$~$
+  
+  ### **Spearman's rank correlation** {-}
+  
+  In comparison to Pearson's correlation, Spearman's rank correlation is a non-parametric measure of how the *ranking* of two variables are correlated. In fact, the Spearman correlation is equal to the Pearson correlation between the rank values of two variables. So instead of comparing the values, here we compare their ranks, or their indices when ordered from smallest to largest. As before, the values for Spearman's rho ($\rho$) can range from -1 to +1. Without providing any more detail, here is an example of how to calculate Spearman's rho in R
+
+```{r}
+Age <- c(9, 11, 1, 7, 6, 5, 10, 3, 4, 4)
+OD <- c(478, 755, 399, 512, 458, 444, 716, 399, 491, 456)
+
+# use the same function as before but define method = 'spearman'
+cor(Age, OD, method = 'spearman')
+
+# and test for significance
+cor.test(Age, OD, method = 'spearman')
+```
+
+```{task}
+Compare the two correlation coefficients for different data. 
+```
+
+### **Correlation vs. causation** {-}
+
+**Beware:** even a very high correlation between two variables does not infer causality - causality can only be inferred through careful experimental design in a well-controlled setting. A good example how looking purely at correlation can be misleading is this one (taken from [Spurious Correlations](https://tylervigen.com/spurious-correlations))
+
+![$\rho = 0.947$!](images/bedsheet_correlation.png)

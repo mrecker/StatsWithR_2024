@@ -359,7 +359,7 @@ with
 sum(v, na.rm = TRUE)
 ```
 
-**Beware:** different functions have different default settings when it comes to handling NA's; always look in the help file to make sure they do what you want them to do!
+> **Beware:** different functions have different default settings when it comes to handling NA's; always look in the help file to make sure they do what you want them to do!
 
 ---
 

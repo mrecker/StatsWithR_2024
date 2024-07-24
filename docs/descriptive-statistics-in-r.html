@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Descriptive statistics in R | Introduction to statistical data analysis in R</title>
+  <meta name="description" content="Intro to Stats with R" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2 Descriptive statistics in R | Introduction to statistical data analysis in R" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Intro to Stats with R" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Descriptive statistics in R | Introduction to statistical data analysis in R" />
+  
+  <meta name="twitter:description" content="Intro to Stats with R" />
+  
+
+<meta name="author" content="Mario Recker" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-handling.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script language="javascript"> 
+    function toggle(id) {
+        var ele = document.getElementById("toggleText" + id);
+        var text = document.getElementById("displayText" + id);
+        var buttonText = text.innerHTML.replace("Show: ", "");
+        buttonText = buttonText.replace("Hide: ", "");
+        if(ele.style.display == "block") {
+            ele.style.display = "none";
+            text.innerHTML = "Show: " + buttonText;
+        } else {
+            ele.style.display = "block";
+            text.innerHTML = "Hide: " + buttonText;
+        }
+    } 
+</script>
+
+<script language="javascript">
+    function openCode(evt, codeName, id) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent" + id);
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks" + id);
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(codeName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<script language="javascript">
+    function hide(id){
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#workshop-structure"><i class="fa fa-check"></i>Workshop structure</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="data-handling.html"><a href="data-handling.html"><i class="fa fa-check"></i><b>1</b> Data handling</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#importing-data"><i class="fa fa-check"></i>Importing data</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#csv-files"><i class="fa fa-check"></i>CSV files</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#excel-files"><i class="fa fa-check"></i>Excel files</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#r-data-files"><i class="fa fa-check"></i>R data files</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#data-types"><i class="fa fa-check"></i>Data types</a>
+<ul>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#numeric-integer"><i class="fa fa-check"></i>Numeric / integer</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#character"><i class="fa fa-check"></i>Character</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#factor"><i class="fa fa-check"></i>Factor</a></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#logical"><i class="fa fa-check"></i>Logical</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="data-handling.html"><a href="data-handling.html#missing-data"><i class="fa fa-check"></i>Missing data</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html"><i class="fa fa-check"></i><b>2</b> Descriptive statistics in R</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#univariate-analysis"><i class="fa fa-check"></i><b>2.1</b> Univariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#mean-vs.-median"><i class="fa fa-check"></i>Mean vs. median</a></li>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#standard-deviation"><i class="fa fa-check"></i>Standard deviation</a></li>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#interquartile-range"><i class="fa fa-check"></i>Interquartile range</a></li>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#skewness"><i class="fa fa-check"></i>Skewness</a></li>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#kurtosis"><i class="fa fa-check"></i>Kurtosis</a></li>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#data-summaries"><i class="fa fa-check"></i>Data summaries</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#multivariate-analysis"><i class="fa fa-check"></i><b>2.2</b> Multivariate analysis</a>
+<ul>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#contingency-tables"><i class="fa fa-check"></i>Contingency tables</a></li>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#pearson-correlation"><i class="fa fa-check"></i><strong>Pearson correlation</strong></a></li>
+<li class="chapter" data-level="" data-path="descriptive-statistics-in-r.html"><a href="descriptive-statistics-in-r.html#correlation-vs.-causation"><i class="fa fa-check"></i><strong>Correlation vs. causation</strong></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to statistical data analysis in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="descriptive-statistics-in-r" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Descriptive statistics in R<a href="descriptive-statistics-in-r.html#descriptive-statistics-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The first thing we need to do is clarify the distinction between <em>descriptive</em> and <em>inferential</em> statistics. In simple terms, the former deals with the quantitative and/or visual <em>description</em> of a sample taken from the population, whereas the latter tries to make <em>inferences</em> about the properties of a population based on this sample. And this is an important point to remember: we usually never know the entire state of the population (or the underlying probability distribution that generated the data), we only have access to a (usually significantly smaller) sample of it. And statistics will help us to get a sense of how well this sample might represent the population and the uncertainty attached to any inferences we wish to make about it.</p>
+<div id="univariate-analysis" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Univariate analysis<a href="descriptive-statistics-in-r.html#univariate-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As defined earlier, descriptive statistics is concerned with the quantitative and/or visual description of a data sample. We can broadly distinguish two cases:</p>
+<ol style="list-style-type: lower-roman">
+<li>a univariate analysis, where we describe a single variable, for example by its central tendency (e.g. mean or median) and dispersal (e.g. variance or quartiles)</li>
+<li>multivariate analysis, where our data sample consist of more than one variable and where we are interested in the relationship between pairs of variables (e.g. correlation or covariance).</li>
+</ol>
+<p>Here we will introduce you the concept univariate analysis, and you are probably already familiar with most of the material dealt with in this section. We therefore only briefly touch upon some of them, showing how to do generate descriptive statistics in R - first by hand and then using some nifty R packages / functions that will make your life a lot easier.</p>
+<p>Statistics that we will cover include:</p>
+<ul>
+<li>mean</li>
+<li>median</li>
+<li>standard deviation</li>
+<li>interquartile range</li>
+<li>skewness</li>
+</ul>
+<hr />
+<div id="mean-vs.-median" class="section level3 unnumbered hasAnchor">
+<h3>Mean vs. median<a href="descriptive-statistics-in-r.html#mean-vs.-median" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As you will know, the mean and the median are two very different statistics. The first is the average value of a data sample, i.e. <span class="math inline">\(\mu = 1/n \sum y_i\)</span> (with <span class="math inline">\(y_i\)</span> being individual data points or values of your sample), whereas the median separates the lower half and upper half of a data sample (i.e. is the value in the middle if you were to order all values form smallest to biggest). How much these two differ, however, depends on how the data is distributed. To demonstrates this, let’s calculate both and compare for different distributions</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="descriptive-statistics-in-r.html#cb76-1" tabindex="-1"></a><span class="co"># sample based on normal distribution</span></span>
+<span id="cb76-2"><a href="descriptive-statistics-in-r.html#cb76-2" tabindex="-1"></a>normSample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>, <span class="at">mean =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb76-3"><a href="descriptive-statistics-in-r.html#cb76-3" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(<span class="fu">mean</span>(normSample), <span class="fu">median</span>(normSample)))</span></code></pre></div>
+<pre><code>## [1] 9.965866 9.972984</code></pre>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="descriptive-statistics-in-r.html#cb78-1" tabindex="-1"></a><span class="co"># sample based on normal distribution</span></span>
+<span id="cb78-2"><a href="descriptive-statistics-in-r.html#cb78-2" tabindex="-1"></a>poisSample <span class="ot">&lt;-</span> <span class="fu">rpois</span>(<span class="dv">1000</span>, <span class="at">lambda =</span> <span class="dv">10</span>)</span>
+<span id="cb78-3"><a href="descriptive-statistics-in-r.html#cb78-3" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(<span class="fu">mean</span>(poisSample), <span class="fu">median</span>(poisSample)))</span></code></pre></div>
+<pre><code>## [1]  9.944 10.000</code></pre>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="descriptive-statistics-in-r.html#cb80-1" tabindex="-1"></a><span class="co"># sample based on normal distribution</span></span>
+<span id="cb80-2"><a href="descriptive-statistics-in-r.html#cb80-2" tabindex="-1"></a>expSample <span class="ot">&lt;-</span> <span class="fu">rexp</span>(<span class="dv">1000</span>, <span class="at">rate =</span> <span class="fl">0.1</span>)</span>
+<span id="cb80-3"><a href="descriptive-statistics-in-r.html#cb80-3" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(<span class="fu">mean</span>(expSample), <span class="fu">median</span>(expSample)))</span></code></pre></div>
+<pre><code>## [1] 9.583209 6.828290</code></pre>
+<p>We can see that for the first two samples, both the mean and median are fairly similar. For the sample based on an exponential distribution, however, they are very different. Therefore, whether the mean is an adequate representation (or statistics) of your data crucially depends on how the data is distributed!</p>
+<hr />
+</div>
+<div id="standard-deviation" class="section level3 unnumbered hasAnchor">
+<h3>Standard deviation<a href="descriptive-statistics-in-r.html#standard-deviation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The standard deviation (SD) is a measure of the dispersal of a set of values and how much these values vary from the sample mean. A low standard variation means that most values are close to the mean, whereas a high standard deviation means that values are spread far way from the mean (which in itself should give you an indication of the usefulness of using the mean to describe your samples in the first case). Mathematically, the standard deviation, usually denoted <span class="math inline">\(\sigma\)</span>, is given as
+<span class="math display">\[ \sigma = \sqrt{ \frac{1}{n} \sum (y_i - \mu)^2 } \]</span>
+However, it is much easier to understand this visually, here demonstrated by two normal distributions with the same mean but one with SD=1 and one with SD=4</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="descriptive-statistics-in-r.html#cb82-1" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">SD1 =</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
+<span id="cb82-2"><a href="descriptive-statistics-in-r.html#cb82-2" tabindex="-1"></a>           <span class="at">SD4 =</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="at">sd =</span> <span class="dv">4</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb82-3"><a href="descriptive-statistics-in-r.html#cb82-3" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb82-4"><a href="descriptive-statistics-in-r.html#cb82-4" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> SD1, <span class="at">fill =</span> <span class="st">&#39;SD=1&#39;</span>), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb82-5"><a href="descriptive-statistics-in-r.html#cb82-5" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> SD4, <span class="at">fill =</span> <span class="st">&#39;SD=4&#39;</span>), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb82-6"><a href="descriptive-statistics-in-r.html#cb82-6" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&#39;blue&#39;</span>, <span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>) <span class="sc">+</span></span>
+<span id="cb82-7"><a href="descriptive-statistics-in-r.html#cb82-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;&#39;</span>,</span>
+<span id="cb82-8"><a href="descriptive-statistics-in-r.html#cb82-8" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&#39;&#39;</span>) <span class="sc">+</span></span>
+<span id="cb82-9"><a href="descriptive-statistics-in-r.html#cb82-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;top&#39;</span>)</span></code></pre></div>
+<pre><code>## Warning: The `scale_name` argument of `discrete_scale()` is deprecated as of ggplot2 3.5.0.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
+<p><img src="_main_files/figure-html/unnamed-chunk-38-1.png" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="interquartile-range" class="section level3 unnumbered hasAnchor">
+<h3>Interquartile range<a href="descriptive-statistics-in-r.html#interquartile-range" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Another measure of the spread of data is the so-called interquartile range, or IQR for short. The IQR is defined as the difference between the 75th percentile (third quartile, or Q3) and the 25th percentiles of the data (lower quartile, or Q1). Therefore, the IQR = Q3 − Q1.</p>
+<p>In R we can get the IQR’s simply through the function <code>IQR()</code></p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="descriptive-statistics-in-r.html#cb84-1" tabindex="-1"></a><span class="co"># interquartile range of sample based on normal distribution</span></span>
+<span id="cb84-2"><a href="descriptive-statistics-in-r.html#cb84-2" tabindex="-1"></a><span class="fu">IQR</span>(normSample)</span></code></pre></div>
+<pre><code>## [1] 1.375224</code></pre>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="descriptive-statistics-in-r.html#cb86-1" tabindex="-1"></a><span class="co"># interquartile range of sample based on Poisson distribution</span></span>
+<span id="cb86-2"><a href="descriptive-statistics-in-r.html#cb86-2" tabindex="-1"></a><span class="fu">IQR</span>(poisSample)</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="descriptive-statistics-in-r.html#cb88-1" tabindex="-1"></a><span class="co"># interquartile range of sample based on exponential distribution</span></span>
+<span id="cb88-2"><a href="descriptive-statistics-in-r.html#cb88-2" tabindex="-1"></a><span class="fu">IQR</span>(expSample)</span></code></pre></div>
+<pre><code>## [1] 10.74354</code></pre>
+<p>IQR’s form the basis of box-and-whisker plots, where the boxes show the median (Q2) and interquartile range (Q1 and Q3) and the lower and upper whiskers are defined as <span class="math inline">\(Q1 - 1.5 \times IQR\)</span> and <span class="math inline">\(Q3 + 1.5 \times IQR\)</span>, respectively. Data points outside these rangers are considered <em>outliers</em>.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="descriptive-statistics-in-r.html#cb90-1" tabindex="-1"></a>sampleDist <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">normal =</span> normSample,</span>
+<span id="cb90-2"><a href="descriptive-statistics-in-r.html#cb90-2" tabindex="-1"></a>                         <span class="at">poisson =</span> poisSample,</span>
+<span id="cb90-3"><a href="descriptive-statistics-in-r.html#cb90-3" tabindex="-1"></a>                         <span class="at">exponential =</span> expSample) </span>
+<span id="cb90-4"><a href="descriptive-statistics-in-r.html#cb90-4" tabindex="-1"></a></span>
+<span id="cb90-5"><a href="descriptive-statistics-in-r.html#cb90-5" tabindex="-1"></a><span class="fu">ggplot</span>(sampleDist) <span class="sc">+</span></span>
+<span id="cb90-6"><a href="descriptive-statistics-in-r.html#cb90-6" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> normal, <span class="at">fill =</span> <span class="st">&#39;normal&#39;</span>)) <span class="sc">+</span></span>
+<span id="cb90-7"><a href="descriptive-statistics-in-r.html#cb90-7" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> poisson, <span class="at">fill =</span> <span class="st">&#39;Poisson&#39;</span>)) <span class="sc">+</span></span>
+<span id="cb90-8"><a href="descriptive-statistics-in-r.html#cb90-8" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> exponential, <span class="at">fill =</span> <span class="st">&#39;exponential&#39;</span>)) <span class="sc">+</span></span>
+<span id="cb90-9"><a href="descriptive-statistics-in-r.html#cb90-9" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), </span>
+<span id="cb90-10"><a href="descriptive-statistics-in-r.html#cb90-10" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;Normal&#39;</span>, <span class="st">&#39;Poisson&#39;</span>, <span class="st">&#39;Exponential&#39;</span>)) <span class="sc">+</span></span>
+<span id="cb90-11"><a href="descriptive-statistics-in-r.html#cb90-11" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Distribution&#39;</span>,</span>
+<span id="cb90-12"><a href="descriptive-statistics-in-r.html#cb90-12" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&#39;Value&#39;</span>) <span class="sc">+</span></span>
+<span id="cb90-13"><a href="descriptive-statistics-in-r.html#cb90-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;&#39;</span>, </span>
+<span id="cb90-14"><a href="descriptive-statistics-in-r.html#cb90-14" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>))</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-40-1.png" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="skewness" class="section level3 unnumbered hasAnchor">
+<h3>Skewness<a href="descriptive-statistics-in-r.html#skewness" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Skewness tells us whether the data is symmetric or asymmetrically distributed, an we can distinguish between a <em>positive skew</em>, where the right tail of the distribution is longer, and <em>negative skew</em>, where the left tail is longer. Let’s have a look at our three samples based on the normal, Poisson and exponential distribution:</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="descriptive-statistics-in-r.html#cb91-1" tabindex="-1"></a>sampleDist <span class="sc">%&gt;%</span></span>
+<span id="cb91-2"><a href="descriptive-statistics-in-r.html#cb91-2" tabindex="-1"></a>  <span class="fu">gather</span>(distribution, value, normal<span class="sc">:</span>exponential) <span class="sc">%&gt;%</span></span>
+<span id="cb91-3"><a href="descriptive-statistics-in-r.html#cb91-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> distribution)) <span class="sc">+</span></span>
+<span id="cb91-4"><a href="descriptive-statistics-in-r.html#cb91-4" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb91-5"><a href="descriptive-statistics-in-r.html#cb91-5" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>distribution, <span class="at">scales =</span> <span class="st">&#39;free&#39;</span>) <span class="sc">+</span></span>
+<span id="cb91-6"><a href="descriptive-statistics-in-r.html#cb91-6" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">10</span>, <span class="at">col =</span> <span class="st">&#39;blue&#39;</span>, <span class="at">linetype =</span> <span class="st">&#39;dashed&#39;</span>) <span class="sc">+</span></span>
+<span id="cb91-7"><a href="descriptive-statistics-in-r.html#cb91-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;&#39;</span>,</span>
+<span id="cb91-8"><a href="descriptive-statistics-in-r.html#cb91-8" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&#39;&#39;</span>) <span class="sc">+</span></span>
+<span id="cb91-9"><a href="descriptive-statistics-in-r.html#cb91-9" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;&#39;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/unnamed-chunk-41-1.png" style="display: block; margin: auto;" /></p>
+<p>What is clear is that the exponential distribution has a significant <em>positive</em> skew. The R library <code>moments</code> provides useful functions to measure the shape of a distribution. Let’s use this here and see whether it agrees with our assessment <em>by eye</em></p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="descriptive-statistics-in-r.html#cb92-1" tabindex="-1"></a><span class="co"># if you do not have this library, install it with install.packages(&quot;moments&quot;)</span></span>
+<span id="cb92-2"><a href="descriptive-statistics-in-r.html#cb92-2" tabindex="-1"></a><span class="fu">library</span>(moments)</span>
+<span id="cb92-3"><a href="descriptive-statistics-in-r.html#cb92-3" tabindex="-1"></a></span>
+<span id="cb92-4"><a href="descriptive-statistics-in-r.html#cb92-4" tabindex="-1"></a><span class="co"># calculate skewness of normal-based samples</span></span>
+<span id="cb92-5"><a href="descriptive-statistics-in-r.html#cb92-5" tabindex="-1"></a><span class="fu">skewness</span>(normSample)</span></code></pre></div>
+<pre><code>## [1] -0.02358933</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="descriptive-statistics-in-r.html#cb94-1" tabindex="-1"></a><span class="co"># calculate skewness of normal-based samples</span></span>
+<span id="cb94-2"><a href="descriptive-statistics-in-r.html#cb94-2" tabindex="-1"></a><span class="fu">skewness</span>(poisSample)</span></code></pre></div>
+<pre><code>## [1] 0.2504185</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="descriptive-statistics-in-r.html#cb96-1" tabindex="-1"></a><span class="co"># calculate skewness of normal-based samples</span></span>
+<span id="cb96-2"><a href="descriptive-statistics-in-r.html#cb96-2" tabindex="-1"></a><span class="fu">skewness</span>(expSample)</span></code></pre></div>
+<pre><code>## [1] 1.793003</code></pre>
+<p>The results are very much as expected, with the sample based on the exponential distribution being by far the most skewed. And this offers one explanation for why the mean and median differs so much: although the bulk of the data lies on the left hand side, the long tail to the right has a significant effect on the mean, such that it is no longer representative of the average value of a data sampled from this distribution (i.e. most values would be smaller than the mean).</p>
+<p>Note, although the skewness for the samples based on the normal distribution is also positive, the value is very small. The same goes for the ones based on the Poisson distribution. What shall we do with this information? I.e. is there evidence that the they are all skewed and hence sufficiently different from a normal distribution? Thankfully the <code>moments</code> package provides us with the tool to check this statistically based on <em>kurtosis</em>, which is a measure of how much of the data is found in the tails of the distribution.</p>
+<hr />
+</div>
+<div id="kurtosis" class="section level3 unnumbered hasAnchor">
+<h3>Kurtosis<a href="descriptive-statistics-in-r.html#kurtosis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The kurtosis of a distribution is a measure of whether or not it is heavy-tailed or light-tailed <em>relative to a normal distribution</em>:</p>
+<ul>
+<li>the kurtosis of a normal distribution is 3</li>
+<li>if the kurtosis is &lt;3, this means that it has fewer and less extreme outliers than the normal distribution</li>
+<li>if the kurtosis is &gt;3, this means that it has more outliers than the normal distribution.</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> some formulars substract 3 from the kurtosis, resulting in either negative or positive values (with the normal distribution being 0)</p>
+</blockquote>
+<p>The <code>moments</code> package also provides the functionality to calculate the kurtosis of a data sample. For our data this looks like</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="descriptive-statistics-in-r.html#cb98-1" tabindex="-1"></a><span class="co"># calculate skewness of normal-based samples</span></span>
+<span id="cb98-2"><a href="descriptive-statistics-in-r.html#cb98-2" tabindex="-1"></a><span class="fu">kurtosis</span>(normSample)</span></code></pre></div>
+<pre><code>## [1] 2.922701</code></pre>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="descriptive-statistics-in-r.html#cb100-1" tabindex="-1"></a><span class="co"># calculate skewness of normal-based samples</span></span>
+<span id="cb100-2"><a href="descriptive-statistics-in-r.html#cb100-2" tabindex="-1"></a><span class="fu">kurtosis</span>(poisSample)</span></code></pre></div>
+<pre><code>## [1] 2.905605</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="descriptive-statistics-in-r.html#cb102-1" tabindex="-1"></a><span class="co"># calculate skewness of normal-based samples</span></span>
+<span id="cb102-2"><a href="descriptive-statistics-in-r.html#cb102-2" tabindex="-1"></a><span class="fu">kurtosis</span>(expSample)</span></code></pre></div>
+<pre><code>## [1] 7.846492</code></pre>
+<p>Once again, the last data sample stands out by having a kurtosis much greater than 3, meaning it has far more outliers than would be expected if the data came from a normal distribution (as can be seen in the boxplot above, where outliers are indicated by open circles).</p>
+<p>As mentioned earlier, <code>moments</code> offers a statistical test (the so-called Jarque-Bera Normality Test), which compare a given data sample to a normal distribution, with the <strong>Null Hypothesis (H<span class="math inline">\(_0\)</span>)</strong> being that the data has a skewness and kurtosis that matches a normal distribution. Let’s put this to the test for our three samples.</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="descriptive-statistics-in-r.html#cb104-1" tabindex="-1"></a><span class="co"># samples based on normal distribution</span></span>
+<span id="cb104-2"><a href="descriptive-statistics-in-r.html#cb104-2" tabindex="-1"></a><span class="fu">jarque.test</span>(normSample)</span></code></pre></div>
+<pre><code>## 
+##  Jarque-Bera Normality Test
+## 
+## data:  normSample
+## JB = 0.3417, p-value = 0.8429
+## alternative hypothesis: greater</code></pre>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="descriptive-statistics-in-r.html#cb106-1" tabindex="-1"></a><span class="co"># samples based on Poisson distribution</span></span>
+<span id="cb106-2"><a href="descriptive-statistics-in-r.html#cb106-2" tabindex="-1"></a><span class="fu">jarque.test</span>(poisSample)</span></code></pre></div>
+<pre><code>## 
+##  Jarque-Bera Normality Test
+## 
+## data:  poisSample
+## JB = 10.823, p-value = 0.004465
+## alternative hypothesis: greater</code></pre>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="descriptive-statistics-in-r.html#cb108-1" tabindex="-1"></a><span class="co"># samples based on exponential distribution</span></span>
+<span id="cb108-2"><a href="descriptive-statistics-in-r.html#cb108-2" tabindex="-1"></a><span class="fu">jarque.test</span>(expSample)</span></code></pre></div>
+<pre><code>## 
+##  Jarque-Bera Normality Test
+## 
+## data:  expSample
+## JB = 1514.5, p-value &lt; 2.2e-16
+## alternative hypothesis: greater</code></pre>
+<p>And this provides evidence that the data samples based on the Poisson and exponential distribution are statistically different from the normal distribution.</p>
+<hr />
+</div>
+<div id="data-summaries" class="section level3 unnumbered hasAnchor">
+<h3>Data summaries<a href="descriptive-statistics-in-r.html#data-summaries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The reason we care about univariate statistics is that most downstream analyses and statistical tests intrinsically rely on them. For example, we often report on the <em>mean</em> of some numeric variable, such as age; however, as we have seen, the mean is not a good representative in case the data is very skewed, in which case the median is a better statistic. Comparing two populations is often done using a t-test, which not only compares their <em>means</em> but also makes very strong assumptions about the <em>distribution</em>. It is therefore crucial to get a good overview of our data <em>before</em> we start with the analyses.</p>
+<p>As we have seen, getting summary statistics by hand is relatively easy but can become cumbersome for large datasets with many variables. Thankfully, there are plenty of R functions out there that make our lives a lot easier. First, we are going to use inbuilt functions (that do not rely on external libraries) and then briefly introduce the <code>summarytools</code> package.</p>
+<p>One of the easiest way to get a summary overview of the data is to use the inbuilt <code>summary()</code> function</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="descriptive-statistics-in-r.html#cb110-1" tabindex="-1"></a><span class="do">## remember to read in the data, in case you start a new session</span></span>
+<span id="cb110-2"><a href="descriptive-statistics-in-r.html#cb110-2" tabindex="-1"></a><span class="co"># tobacco &lt;- read_csv(&#39;tobacco.csv&#39;) %&gt;%</span></span>
+<span id="cb110-3"><a href="descriptive-statistics-in-r.html#cb110-3" tabindex="-1"></a><span class="co">#   mutate(gender = factor(gender),</span></span>
+<span id="cb110-4"><a href="descriptive-statistics-in-r.html#cb110-4" tabindex="-1"></a><span class="co">#          age.gr = factor(age.gr),</span></span>
+<span id="cb110-5"><a href="descriptive-statistics-in-r.html#cb110-5" tabindex="-1"></a><span class="co">#          smoker = factor(smoker),</span></span>
+<span id="cb110-6"><a href="descriptive-statistics-in-r.html#cb110-6" tabindex="-1"></a><span class="co">#          diseased = factor(diseased),</span></span>
+<span id="cb110-7"><a href="descriptive-statistics-in-r.html#cb110-7" tabindex="-1"></a><span class="co">#          disease = factor(disease))</span></span>
+<span id="cb110-8"><a href="descriptive-statistics-in-r.html#cb110-8" tabindex="-1"></a></span>
+<span id="cb110-9"><a href="descriptive-statistics-in-r.html#cb110-9" tabindex="-1"></a><span class="fu">summary</span>(tobacco)</span></code></pre></div>
+<pre><code>##   gender         age         age.gr         BMI         smoker   
+##  F   :489   Min.   :18.0   18-34:258   Min.   : 8.826   No :702  
+##  M   :489   1st Qu.:34.0   35-50:241   1st Qu.:22.927   Yes:298  
+##  NA&#39;s: 22   Median :50.0   51-70:317   Median :25.620            
+##             Mean   :49.6   71 + :159   Mean   :25.731            
+##             3rd Qu.:66.0   NA&#39;s : 25   3rd Qu.:28.649            
+##             Max.   :80.0               Max.   :39.439            
+##             NA&#39;s   :25                 NA&#39;s   :26                
+##   cigs.per.day    diseased          disease      samp.wgts     
+##  Min.   : 0.000   No :776   Hypertension: 36   Min.   :0.8614  
+##  1st Qu.: 0.000   Yes:224   Cancer      : 34   1st Qu.:0.8614  
+##  Median : 0.000             Cholesterol : 21   Median :1.0442  
+##  Mean   : 6.782             Heart       : 20   Mean   :1.0000  
+##  3rd Qu.:11.000             Pulmonary   : 20   3rd Qu.:1.0494  
+##  Max.   :40.000             (Other)     : 91   Max.   :1.0625  
+##  NA&#39;s   :35                 NA&#39;s        :778</code></pre>
+<p>This summary provides us with some of the most important information about our data. Besides revealing the different data types and data ranges, plus summary statistics, we can also get an idea how much data is missing for what variable. Furthermore, for categorical variables we also get information about how many observations fall into the different categories.</p>
+<p>Regarding categorical variables, we are often interested how these are distributed, not just across the whole data but also with respect to other categorical variables, in which case we refer to cross-tabulation or <em>contingency tables</em>. Even though this is not strictly part of <em>univariate</em> analysis, it makes sense to show how we can use the inbuilt <code>table()</code> function to easily tabulate categorical data.</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="descriptive-statistics-in-r.html#cb112-1" tabindex="-1"></a><span class="do">## create a table based on individuals&#39; disease status </span></span>
+<span id="cb112-2"><a href="descriptive-statistics-in-r.html#cb112-2" tabindex="-1"></a><span class="fu">table</span>(tobacco<span class="sc">$</span>diseased)</span></code></pre></div>
+<pre><code>## 
+##  No Yes 
+## 776 224</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="descriptive-statistics-in-r.html#cb114-1" tabindex="-1"></a><span class="do">## create a contingency table of disease status stratified by gender + add cat names</span></span>
+<span id="cb114-2"><a href="descriptive-statistics-in-r.html#cb114-2" tabindex="-1"></a><span class="fu">table</span>(<span class="at">Diseased =</span> tobacco<span class="sc">$</span>diseased, </span>
+<span id="cb114-3"><a href="descriptive-statistics-in-r.html#cb114-3" tabindex="-1"></a>      <span class="at">Gender =</span> tobacco<span class="sc">$</span>gender)</span></code></pre></div>
+<pre><code>##         Gender
+## Diseased   F   M
+##      No  378 379
+##      Yes 111 110</code></pre>
+<p>We can go one step further and obtain <em>stratified</em> summary statistics using the inbuilt <code>aggregate()</code> function, which we here use to get the mean age and mean BMI stratified by gender and disease status</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="descriptive-statistics-in-r.html#cb116-1" tabindex="-1"></a><span class="fu">aggregate</span>(<span class="fu">cbind</span>(age, BMI) <span class="sc">~</span> gender <span class="sc">+</span> diseased,</span>
+<span id="cb116-2"><a href="descriptive-statistics-in-r.html#cb116-2" tabindex="-1"></a>  <span class="at">data =</span> tobacco,</span>
+<span id="cb116-3"><a href="descriptive-statistics-in-r.html#cb116-3" tabindex="-1"></a>  mean</span>
+<span id="cb116-4"><a href="descriptive-statistics-in-r.html#cb116-4" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>##   gender diseased      age      BMI
+## 1      F       No 48.59270 25.91337
+## 2      M       No 48.57300 25.11816
+## 3      F      Yes 52.95283 26.81004
+## 4      M      Yes 53.60577 26.01160</code></pre>
+<p>Based on this table we would conclude that diseased individuals are on average older and have a higher BMI than disease-free individuals and with not discernible difference between males and females. In later sections we will learn hot to test this statistically.</p>
+<p>Before moving on it might be worth it to show how the same can also be achieved using <code>dplyr</code> (part of the <code>tidyverse</code>)</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="descriptive-statistics-in-r.html#cb118-1" tabindex="-1"></a>tobacco <span class="sc">%&gt;%</span></span>
+<span id="cb118-2"><a href="descriptive-statistics-in-r.html#cb118-2" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(age) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(BMI) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(gender) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(diseased)) <span class="sc">%&gt;%</span></span>
+<span id="cb118-3"><a href="descriptive-statistics-in-r.html#cb118-3" tabindex="-1"></a>  <span class="fu">group_by</span>(gender, diseased) <span class="sc">%&gt;%</span></span>
+<span id="cb118-4"><a href="descriptive-statistics-in-r.html#cb118-4" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_age =</span> <span class="fu">mean</span>(age),</span>
+<span id="cb118-5"><a href="descriptive-statistics-in-r.html#cb118-5" tabindex="-1"></a>            <span class="at">mean_BMI =</span> <span class="fu">mean</span>(BMI))</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 4
+## # Groups:   gender [2]
+##   gender diseased mean_age mean_BMI
+##   &lt;fct&gt;  &lt;fct&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+## 1 F      No           48.6     25.9
+## 2 F      Yes          53.0     26.8
+## 3 M      No           48.6     25.1
+## 4 M      Yes          53.6     26.0</code></pre>
+<div class="panel panel-default">
+<div class="panel-heading">
+Question
+</div>
+<div class="panel-body">
+What does <code>filter(!is.na(age) &amp; !is.na(BMI) &amp; !is.na(gender) &amp; !is.na(diseased))</code> achieve, and what happens is we run the code without?
+</div>
+</div>
+<p>To finish off this section we briefly introduce the <code>summarytools</code> package, which provides a number of useful tools to help us to summarise our data. The first tool, or function, is <code>dfsummary()</code>, which can be seen as an extension to the inbuilt <code>summary()</code> and provides us with almost everything we need in one go.</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="descriptive-statistics-in-r.html#cb120-1" tabindex="-1"></a><span class="co"># load the library</span></span>
+<span id="cb120-2"><a href="descriptive-statistics-in-r.html#cb120-2" tabindex="-1"></a><span class="fu">library</span>(summarytools)</span>
+<span id="cb120-3"><a href="descriptive-statistics-in-r.html#cb120-3" tabindex="-1"></a></span>
+<span id="cb120-4"><a href="descriptive-statistics-in-r.html#cb120-4" tabindex="-1"></a><span class="co"># get a summary of our dataframe</span></span>
+<span id="cb120-5"><a href="descriptive-statistics-in-r.html#cb120-5" tabindex="-1"></a><span class="fu">dfSummary</span>(tobacco)</span></code></pre></div>
+<pre><code>## Data Frame Summary  
+## tobacco  
+## Dimensions: 1000 x 9  
+## Duplicates: 2  
+## 
+## --------------------------------------------------------------------------------------------------------------
+## No   Variable       Stats / Values            Freqs (% of Valid)    Graph                 Valid      Missing  
+## ---- -------------- ------------------------- --------------------- --------------------- ---------- ---------
+## 1    gender         1. F                      489 (50.0%)           IIIIIIIIII            978        22       
+##      [factor]       2. M                      489 (50.0%)           IIIIIIIIII            (97.8%)    (2.2%)   
+## 
+## 2    age            Mean (sd) : 49.6 (18.3)   63 distinct values    .     .     . . . :   975        25       
+##      [numeric]      min &lt; med &lt; max:                                : : : : : . : : : :   (97.5%)    (2.5%)   
+##                     18 &lt; 50 &lt; 80                                    : : : : : : : : : :                       
+##                     IQR (CV) : 32 (0.4)                             : : : : : : : : : :                       
+##                                                                     : : : : : : : : : :                       
+## 
+## 3    age.gr         1. 18-34                  258 (26.5%)           IIIII                 975        25       
+##      [factor]       2. 35-50                  241 (24.7%)           IIII                  (97.5%)    (2.5%)   
+##                     3. 51-70                  317 (32.5%)           IIIIII                                    
+##                     4. 71 +                   159 (16.3%)           III                                       
+## 
+## 4    BMI            Mean (sd) : 25.7 (4.5)    974 distinct values             :           974        26       
+##      [numeric]      min &lt; med &lt; max:                                        : : :         (97.4%)    (2.6%)   
+##                     8.8 &lt; 25.6 &lt; 39.4                                       : : :                             
+##                     IQR (CV) : 5.7 (0.2)                                  : : : : :                           
+##                                                                         . : : : : : .                         
+## 
+## 5    smoker         1. No                     702 (70.2%)           IIIIIIIIIIIIII        1000       0        
+##      [factor]       2. Yes                    298 (29.8%)           IIIII                 (100.0%)   (0.0%)   
+## 
+## 6    cigs.per.day   Mean (sd) : 6.8 (11.9)    37 distinct values    :                     965        35       
+##      [integer]      min &lt; med &lt; max:                                :                     (96.5%)    (3.5%)   
+##                     0 &lt; 0 &lt; 40                                      :                                         
+##                     IQR (CV) : 11 (1.8)                             :                                         
+##                                                                     :   . . . . . .                           
+## 
+## 7    diseased       1. No                     776 (77.6%)           IIIIIIIIIIIIIII       1000       0        
+##      [factor]       2. Yes                    224 (22.4%)           IIII                  (100.0%)   (0.0%)   
+## 
+## 8    disease        1. Cancer                 34 (15.3%)            III                   222        778      
+##      [factor]       2. Cholesterol            21 ( 9.5%)            I                     (22.2%)    (77.8%)  
+##                     3. Diabetes               14 ( 6.3%)            I                                         
+##                     4. Digestive              12 ( 5.4%)            I                                         
+##                     5. Hearing                14 ( 6.3%)            I                                         
+##                     6. Heart                  20 ( 9.0%)            I                                         
+##                     7. Hypertension           36 (16.2%)            III                                       
+##                     8. Hypotension            11 ( 5.0%)                                                      
+##                     9. Musculoskeletal        19 ( 8.6%)            I                                         
+##                     10. Neurological          10 ( 4.5%)                                                      
+##                     [ 3 others ]              31 (14.0%)            II                                        
+## 
+## 9    samp.wgts      Mean (sd) : 1 (0.1)       0.86!: 267 (26.7%)    IIIII                 1000       0        
+##      [numeric]      min &lt; med &lt; max:          1.04!: 249 (24.9%)    IIII                  (100.0%)   (0.0%)   
+##                     0.9 &lt; 1 &lt; 1.1             1.05!: 324 (32.4%)    IIIIII                                    
+##                     IQR (CV) : 0.2 (0.1)      1.06!: 160 (16.0%)    III                                       
+##                                               ! rounded                                                       
+## --------------------------------------------------------------------------------------------------------------</code></pre>
+<p>The next function we introduce, <code>ctable()</code>. is an extension to the <code>table()</code> function mentioned earlier</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="descriptive-statistics-in-r.html#cb122-1" tabindex="-1"></a><span class="fu">ctable</span>(tobacco<span class="sc">$</span>smoker, tobacco<span class="sc">$</span>diseased)</span></code></pre></div>
+<pre><code>## Cross-Tabulation, Row Proportions  
+## smoker * diseased  
+## Data Frame: tobacco  
+## 
+## -------- ---------- ------------- ------------- ---------------
+##            diseased            No           Yes           Total
+##   smoker                                                       
+##       No              603 (85.9%)    99 (14.1%)    702 (100.0%)
+##      Yes              173 (58.1%)   125 (41.9%)    298 (100.0%)
+##    Total              776 (77.6%)   224 (22.4%)   1000 (100.0%)
+## -------- ---------- ------------- ------------- ---------------</code></pre>
+<p>This does not seem to offer much more, except that we can easily ask it to run a statistical test (<span class="math inline">\(\chi^2\)</span>-test) on the resulting table</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="descriptive-statistics-in-r.html#cb124-1" tabindex="-1"></a><span class="fu">ctable</span>(tobacco<span class="sc">$</span>smoker, tobacco<span class="sc">$</span>diseased, <span class="at">chisq =</span> T)</span></code></pre></div>
+<pre><code>## Cross-Tabulation, Row Proportions  
+## smoker * diseased  
+## Data Frame: tobacco  
+## 
+## 
+## -------- ---------- ------------- ------------- ---------------
+##            diseased            No           Yes           Total
+##   smoker                                                       
+##       No              603 (85.9%)    99 (14.1%)    702 (100.0%)
+##      Yes              173 (58.1%)   125 (41.9%)    298 (100.0%)
+##    Total              776 (77.6%)   224 (22.4%)   1000 (100.0%)
+## -------- ---------- ------------- ------------- ---------------
+## 
+## ----------------------------
+##  Chi.squared   df   p.value 
+## ------------- ---- ---------
+##    91.7088     1       0    
+## ----------------------------</code></pre>
+<p>Without going into much of the details at this point, the <em>p.value</em> of 0 indicates that there is strong statistical evidence that disease status is dependent on smoking - pretty much as we would expect.</p>
+<p>A slightly more useful addition is when we combine <code>ctable</code> with <code>stby</code>, which allows us to create contingency tables with respect to a third categorical variable; for example</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="descriptive-statistics-in-r.html#cb126-1" tabindex="-1"></a><span class="fu">stby</span>(<span class="fu">list</span>(tobacco<span class="sc">$</span>diseased, tobacco<span class="sc">$</span>gender), tobacco<span class="sc">$</span>smoker, ctable)</span></code></pre></div>
+<pre><code>## Cross-Tabulation, Row Proportions  
+## diseased * gender  
+## Data Frame: tobacco  
+## Group: smoker = No  
+## 
+## ---------- -------- ------------- ------------- ----------- --------------
+##              gender             F             M        &lt;NA&gt;          Total
+##   diseased                                                                
+##         No            293 (48.6%)   299 (49.6%)   11 (1.8%)   603 (100.0%)
+##        Yes             49 (49.5%)    47 (47.5%)    3 (3.0%)    99 (100.0%)
+##      Total            342 (48.7%)   346 (49.3%)   14 (2.0%)   702 (100.0%)
+## ---------- -------- ------------- ------------- ----------- --------------
+## 
+## Group: smoker = Yes  
+## 
+## ---------- -------- ------------- ------------- ---------- --------------
+##              gender             F             M       &lt;NA&gt;          Total
+##   diseased                                                               
+##         No             85 (49.1%)    80 (46.2%)   8 (4.6%)   173 (100.0%)
+##        Yes             62 (49.6%)    63 (50.4%)   0 (0.0%)   125 (100.0%)
+##      Total            147 (49.3%)   143 (48.0%)   8 (2.7%)   298 (100.0%)
+## ---------- -------- ------------- ------------- ---------- --------------</code></pre>
+<p>Finally we are going to mention the <code>tableby()</code> function of the <code>arsenal</code> package, which is a highly customisable and powerful tool to provide detailed and publication-ready data summaries (more information can be found <a href="https://cran.r-project.org/web/packages/arsenal/vignettes/tableby.html">here</a>).</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="descriptive-statistics-in-r.html#cb128-1" tabindex="-1"></a><span class="co">#load required library</span></span>
+<span id="cb128-2"><a href="descriptive-statistics-in-r.html#cb128-2" tabindex="-1"></a><span class="fu">library</span>(arsenal)</span>
+<span id="cb128-3"><a href="descriptive-statistics-in-r.html#cb128-3" tabindex="-1"></a></span>
+<span id="cb128-4"><a href="descriptive-statistics-in-r.html#cb128-4" tabindex="-1"></a><span class="co"># create a simple table </span></span>
+<span id="cb128-5"><a href="descriptive-statistics-in-r.html#cb128-5" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> <span class="fu">tableby</span>(diseased <span class="sc">~</span> gender <span class="sc">+</span> smoker <span class="sc">+</span> BMI <span class="sc">+</span> age, <span class="at">data=</span>tobacco)</span>
+<span id="cb128-6"><a href="descriptive-statistics-in-r.html#cb128-6" tabindex="-1"></a><span class="fu">summary</span>(tab1)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="32%" />
+<col width="19%" />
+<col width="19%" />
+<col width="19%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="center">No (N=776)</th>
+<th align="center">Yes (N=224)</th>
+<th align="center">Total (N=1000)</th>
+<th align="right">p value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>gender</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="right">0.939</td>
+</tr>
+<tr class="even">
+<td align="left">   N-Miss</td>
+<td align="center">19</td>
+<td align="center">3</td>
+<td align="center">22</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left">   F</td>
+<td align="center">378 (49.9%)</td>
+<td align="center">111 (50.2%)</td>
+<td align="center">489 (50.0%)</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left">   M</td>
+<td align="center">379 (50.1%)</td>
+<td align="center">110 (49.8%)</td>
+<td align="center">489 (50.0%)</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>smoker</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="right">&lt; 0.001</td>
+</tr>
+<tr class="even">
+<td align="left">   No</td>
+<td align="center">603 (77.7%)</td>
+<td align="center">99 (44.2%)</td>
+<td align="center">702 (70.2%)</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left">   Yes</td>
+<td align="center">173 (22.3%)</td>
+<td align="center">125 (55.8%)</td>
+<td align="center">298 (29.8%)</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>BMI</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td align="left">   N-Miss</td>
+<td align="center">22</td>
+<td align="center">4</td>
+<td align="center">26</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left">   Mean (SD)</td>
+<td align="center">25.532 (4.448)</td>
+<td align="center">26.414 (4.567)</td>
+<td align="center">25.731 (4.488)</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left">   Range</td>
+<td align="center">8.826 - 39.439</td>
+<td align="center">10.346 - 39.208</td>
+<td align="center">8.826 - 39.439</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>age</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="right">0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">   N-Miss</td>
+<td align="center">18</td>
+<td align="center">7</td>
+<td align="center">25</td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left">   Mean (SD)</td>
+<td align="center">48.609 (18.019)</td>
+<td align="center">53.069 (18.839)</td>
+<td align="center">49.602 (18.289)</td>
+<td align="right"></td>
+</tr>
+<tr class="odd">
+<td align="left">   Range</td>
+<td align="center">18.000 - 80.000</td>
+<td align="center">18.000 - 80.000</td>
+<td align="center">18.000 - 80.000</td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div id="multivariate-analysis" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Multivariate analysis<a href="descriptive-statistics-in-r.html#multivariate-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In a multivariate analysis we are usually interested in the relationship between pairs of variables. Here we will briefly go through three commonly used methods to examine how two or more variables are related:</p>
+<ul>
+<li>contingency tables, which we have already come across in the previous section</li>
+<li>Pearson correlation</li>
+<li>Spearman rank correlation</li>
+</ul>
+<div id="contingency-tables" class="section level3 unnumbered hasAnchor">
+<h3>Contingency tables<a href="descriptive-statistics-in-r.html#contingency-tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Contingency tables are types of tables that display the frequency distribution of two variables against each other. As an example, say we had data from a clinical trial where patients were given either a treatment or a placebo and we are interested in how many people recovered from a disease within 5 days. In each arm we had 100 individuals and in the treatment group 73 individuals recovered and in the placebo group 64. In table format this would thus look like this</p>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+teatment
+</th>
+<th style="text-align:center;">
+recovered
+</th>
+<th style="text-align:center;">
+disease
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+drug A
+</td>
+<td style="text-align:center;">
+73
+</td>
+<td style="text-align:center;">
+27
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+placebo
+</td>
+<td style="text-align:center;">
+64
+</td>
+<td style="text-align:center;">
+36
+</td>
+</tr>
+</tbody>
+</table>
+<p>We can see that there were more individuals who recovered in the treatment arm of the study. But how do we know that this was not due to chance? To answer this question we have to briefly tap into inferential statistics. And two common methods to provide functions to perform statistical tests on contingency tables: <strong>Pearson’s chi-squared test</strong> and <strong>Fisher’s exact test</strong>. We are not going into the details of where they differ but only mention that Fisher’s exact test is non-parametric, typically defined on a 2 x 2 contingency table, and, importantly, works with small sample sizes. The chi-squared (or <span class="math inline">\(\chi^2\)</span>) test, on the other hand, works on more than one variables but usualy requires larger sample sizes.</p>
+<div id="pearsons-chi-squared-test" class="section level4 unnumbered hasAnchor">
+<h4><strong>Pearson’s chi-squared test</strong><a href="descriptive-statistics-in-r.html#pearsons-chi-squared-test" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Perform a chi-squared test in R is straightforward using the <code>chisq.test()</code> function.</p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="descriptive-statistics-in-r.html#cb129-1" tabindex="-1"></a><span class="co"># define our contingency table</span></span>
+<span id="cb129-2"><a href="descriptive-statistics-in-r.html#cb129-2" tabindex="-1"></a>trial <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">recovered =</span> <span class="fu">c</span>(<span class="dv">73</span>, <span class="dv">64</span>),</span>
+<span id="cb129-3"><a href="descriptive-statistics-in-r.html#cb129-3" tabindex="-1"></a>                    <span class="at">disease =</span> <span class="fu">c</span>(<span class="dv">27</span>, <span class="dv">36</span>))</span>
+<span id="cb129-4"><a href="descriptive-statistics-in-r.html#cb129-4" tabindex="-1"></a></span>
+<span id="cb129-5"><a href="descriptive-statistics-in-r.html#cb129-5" tabindex="-1"></a><span class="co"># add row names (not necessary)</span></span>
+<span id="cb129-6"><a href="descriptive-statistics-in-r.html#cb129-6" tabindex="-1"></a><span class="fu">row.names</span>(trial) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;drug A&#39;</span>, <span class="st">&#39;placebo&#39;</span>)</span>
+<span id="cb129-7"><a href="descriptive-statistics-in-r.html#cb129-7" tabindex="-1"></a></span>
+<span id="cb129-8"><a href="descriptive-statistics-in-r.html#cb129-8" tabindex="-1"></a><span class="co"># run test</span></span>
+<span id="cb129-9"><a href="descriptive-statistics-in-r.html#cb129-9" tabindex="-1"></a><span class="fu">chisq.test</span>(trial)</span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 
+## data:  trial
+## X-squared = 1.483, df = 1, p-value = 0.2233</code></pre>
+<p>Because data can come in different formats, here we provide an example of how to create a simple contingency table if your data only had the recorded outcome, for example as <em>recovered / not recovered</em> or recovered <em>yes / no</em>, stored in two columns, one for the treatment arm and one for the placebo arm.</p>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="descriptive-statistics-in-r.html#cb131-1" tabindex="-1"></a><span class="co"># recorded outcome recovered yes / no</span></span>
+<span id="cb131-2"><a href="descriptive-statistics-in-r.html#cb131-2" tabindex="-1"></a>trialData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">drug =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&#39;recovered&#39;</span>,<span class="dv">73</span>), <span class="fu">rep</span>(<span class="st">&#39;not recovered&#39;</span>, <span class="dv">27</span>)),</span>
+<span id="cb131-3"><a href="descriptive-statistics-in-r.html#cb131-3" tabindex="-1"></a>                        <span class="at">placebo =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&#39;recovered&#39;</span>,<span class="dv">64</span>), <span class="fu">rep</span>(<span class="st">&#39;not recovered&#39;</span>, <span class="dv">36</span>)))</span>
+<span id="cb131-4"><a href="descriptive-statistics-in-r.html#cb131-4" tabindex="-1"></a></span>
+<span id="cb131-5"><a href="descriptive-statistics-in-r.html#cb131-5" tabindex="-1"></a><span class="co"># first turn into &quot;tidy&quot; format</span></span>
+<span id="cb131-6"><a href="descriptive-statistics-in-r.html#cb131-6" tabindex="-1"></a>trialData <span class="ot">&lt;-</span> trialData <span class="sc">%&gt;%</span></span>
+<span id="cb131-7"><a href="descriptive-statistics-in-r.html#cb131-7" tabindex="-1"></a>  <span class="fu">gather</span>(treatment, outcome, drug<span class="sc">:</span>placebo)</span>
+<span id="cb131-8"><a href="descriptive-statistics-in-r.html#cb131-8" tabindex="-1"></a></span>
+<span id="cb131-9"><a href="descriptive-statistics-in-r.html#cb131-9" tabindex="-1"></a><span class="co"># create a contingency table</span></span>
+<span id="cb131-10"><a href="descriptive-statistics-in-r.html#cb131-10" tabindex="-1"></a>contTable <span class="ot">&lt;-</span> <span class="fu">table</span>(trialData)</span>
+<span id="cb131-11"><a href="descriptive-statistics-in-r.html#cb131-11" tabindex="-1"></a></span>
+<span id="cb131-12"><a href="descriptive-statistics-in-r.html#cb131-12" tabindex="-1"></a><span class="co"># perform chi-sq test </span></span>
+<span id="cb131-13"><a href="descriptive-statistics-in-r.html#cb131-13" tabindex="-1"></a><span class="fu">chisq.test</span>(contTable)</span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 
+## data:  contTable
+## X-squared = 1.483, df = 1, p-value = 0.2233</code></pre>
+</div>
+<div id="fishers-exact-test" class="section level4 unnumbered hasAnchor">
+<h4><strong>Fisher’s exact test</strong><a href="descriptive-statistics-in-r.html#fishers-exact-test" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Fisher’s exact test work in a very similar way and directly on a 2 x 2 contingency table. For large sample sizes you will notice that both test give you similar test statistics, but as mentioned, it is more powerful when sample sizes are small.</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="descriptive-statistics-in-r.html#cb133-1" tabindex="-1"></a><span class="co"># run Fisher&#39;s exact test on previously defined contingency matrix</span></span>
+<span id="cb133-2"><a href="descriptive-statistics-in-r.html#cb133-2" tabindex="-1"></a><span class="fu">fisher.test</span>(contTable)</span></code></pre></div>
+<pre><code>## 
+##  Fisher&#39;s Exact Test for Count Data
+## 
+## data:  contTable
+## p-value = 0.2232
+## alternative hypothesis: true odds ratio is not equal to 1
+## 95 percent confidence interval:
+##  0.3438828 1.2516078
+## sample estimates:
+## odds ratio 
+##  0.6589328</code></pre>
+<p>As you will have noticed, this test works on and also reports odds ratio, which is a handy “side effect” of using this function.</p>
+</div>
+</div>
+<div id="pearson-correlation" class="section level3 unnumbered hasAnchor">
+<h3><strong>Pearson correlation</strong><a href="descriptive-statistics-in-r.html#pearson-correlation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The aim of the <em>Pearson correlation coefficient</em>, or most commonly referred to simply as <em>correlation coefficient</em>, is to establish a line of best fit through a dataset of two variables and measure how far away the data are from the expected values (the best fit line). Values range between +1 (perfect positive correlation) to -1 (perfect negative correlation), and any value in between. Here are some examples</p>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="_main_files/figure-html/unnamed-chunk-59-1.png" style="display: block; margin: auto;" /></p>
+<p>To calculate the correlation coefficient in R between two vectors <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> we simply call the <code>cor(x,y)</code> function. And if we are further interested in whether the correlation (or lack of it) is statistically significant we can use the <code>cor.test(x,y)</code> function.</p>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+Create a data.frame with two simulated (artifical) data samples. Plot this data using <code>ggplot</code> and add a linear regression line (remember <code>geom_smooth()</code>?). Then test whether there is a correlation between the two variables and if so, test whether this is statistically significant.
+</div>
+</div>
+<button id="displayTextunnamed-chunk-61" onclick="javascript:toggle(&#39;unnamed-chunk-61&#39;);">
+Show: Solution
+</button>
+<div id="toggleTextunnamed-chunk-61" style="display: none">
+<div class="panel panel-default">
+<div class="panel-heading panel-heading1">
+Solution
+</div>
+<div class="panel-body">
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="descriptive-statistics-in-r.html#cb136-1" tabindex="-1"></a><span class="co"># sample from uniform distribution</span></span>
+<span id="cb136-2"><a href="descriptive-statistics-in-r.html#cb136-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">50</span>, <span class="dv">1</span>, <span class="dv">5</span>)</span>
+<span id="cb136-3"><a href="descriptive-statistics-in-r.html#cb136-3" tabindex="-1"></a></span>
+<span id="cb136-4"><a href="descriptive-statistics-in-r.html#cb136-4" tabindex="-1"></a><span class="co"># assume linear relationship between x and y plus some Gaussian noise</span></span>
+<span id="cb136-5"><a href="descriptive-statistics-in-r.html#cb136-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">2.3</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">50</span>,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb136-6"><a href="descriptive-statistics-in-r.html#cb136-6" tabindex="-1"></a></span>
+<span id="cb136-7"><a href="descriptive-statistics-in-r.html#cb136-7" tabindex="-1"></a><span class="co"># create data.frame</span></span>
+<span id="cb136-8"><a href="descriptive-statistics-in-r.html#cb136-8" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb136-9"><a href="descriptive-statistics-in-r.html#cb136-9" tabindex="-1"></a></span>
+<span id="cb136-10"><a href="descriptive-statistics-in-r.html#cb136-10" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb136-11"><a href="descriptive-statistics-in-r.html#cb136-11" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb136-12"><a href="descriptive-statistics-in-r.html#cb136-12" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb136-13"><a href="descriptive-statistics-in-r.html#cb136-13" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&#39;lm&#39;</span>, <span class="at">se=</span>F)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="_main_files/figure-html/unnamed-chunk-130-1.png" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="descriptive-statistics-in-r.html#cb138-1" tabindex="-1"></a><span class="co"># test for correlation</span></span>
+<span id="cb138-2"><a href="descriptive-statistics-in-r.html#cb138-2" tabindex="-1"></a><span class="fu">cor.test</span>(x,y)</span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  x and y
+## t = 19.98, df = 48, p-value &lt; 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.9042758 0.9684661
+## sample estimates:
+##       cor 
+## 0.9448115</code></pre>
+</div>
+</div>
+</div>
+<p><span class="math inline">\(~\)</span></p>
+<p>### <strong>Spearman’s rank correlation</strong> {-}</p>
+<p>In comparison to Pearson’s correlation, Spearman’s rank correlation is a non-parametric measure of how the <em>ranking</em> of two variables are correlated. In fact, the Spearman correlation is equal to the Pearson correlation between the rank values of two variables. So instead of comparing the values, here we compare their ranks, or their indices when ordered from smallest to largest. As before, the values for Spearman’s rho (<span class="math inline">\(\rho\)</span>) can range from -1 to +1. Without providing any more detail, here is an example of how to calculate Spearman’s rho in R</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="descriptive-statistics-in-r.html#cb140-1" tabindex="-1"></a>Age <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb140-2"><a href="descriptive-statistics-in-r.html#cb140-2" tabindex="-1"></a>OD <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">478</span>, <span class="dv">755</span>, <span class="dv">399</span>, <span class="dv">512</span>, <span class="dv">458</span>, <span class="dv">444</span>, <span class="dv">716</span>, <span class="dv">399</span>, <span class="dv">491</span>, <span class="dv">456</span>)</span>
+<span id="cb140-3"><a href="descriptive-statistics-in-r.html#cb140-3" tabindex="-1"></a></span>
+<span id="cb140-4"><a href="descriptive-statistics-in-r.html#cb140-4" tabindex="-1"></a><span class="co"># use the same function as before but define method = &#39;spearman&#39;</span></span>
+<span id="cb140-5"><a href="descriptive-statistics-in-r.html#cb140-5" tabindex="-1"></a><span class="fu">cor</span>(Age, OD, <span class="at">method =</span> <span class="st">&#39;spearman&#39;</span>)</span></code></pre></div>
+<pre><code>## [1] 0.8597561</code></pre>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="descriptive-statistics-in-r.html#cb142-1" tabindex="-1"></a><span class="co"># and test for significance</span></span>
+<span id="cb142-2"><a href="descriptive-statistics-in-r.html#cb142-2" tabindex="-1"></a><span class="fu">cor.test</span>(Age, OD, <span class="at">method =</span> <span class="st">&#39;spearman&#39;</span>)</span></code></pre></div>
+<pre><code>## Warning in cor.test.default(Age, OD, method = &quot;spearman&quot;): Cannot compute exact
+## p-value with ties</code></pre>
+<pre><code>## 
+##  Spearman&#39;s rank correlation rho
+## 
+## data:  Age and OD
+## S = 23.14, p-value = 0.001424
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##       rho 
+## 0.8597561</code></pre>
+<div class="panel panel-default">
+<div class="panel-heading">
+Task
+</div>
+<div class="panel-body">
+Compare the two correlation coefficients for different data.
+</div>
+</div>
+</div>
+<div id="correlation-vs.-causation" class="section level3 unnumbered hasAnchor">
+<h3><strong>Correlation vs. causation</strong><a href="descriptive-statistics-in-r.html#correlation-vs.-causation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Beware:</strong> even a very high correlation between two variables does not infer causality - causality can only be inferred through careful experimental design in a well-controlled setting. A good example how looking purely at correlation can be misleading is this one (taken from <a href="https://tylervigen.com/spurious-correlations">Spurious Correlations</a>)</p>
+<div class="float">
+<img src="images/bedsheet_correlation.png" alt="\rho = 0.947!" />
+<div class="figcaption"><span class="math inline">\(\rho = 0.947\)</span>!</div>
+</div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-handling.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

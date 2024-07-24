@@ -1,1 +1,4 @@
 data-handling
+descriptive-statistics-in-r
+univariate-analysis
+multivariate-analysis
